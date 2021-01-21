@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2020",                          
+    "target": "ES6",                          
     "module": "commonjs",                     
     "lib": ["ES6"],                           
     "allowJs": true,                       
@@ -10,19 +10,28 @@
     "typeRoots": [
       "./node_modules/@types",
       "./src/@types"
-    ],                       
+    ],     
+    "strict": true,                  
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
     "esModuleInterop": true,                  
     "resolveJsonModule": true,
-    "experimentalDecorators": true,        
-    "emitDecoratorMetadata": true,         
+    "experimentalDecorators": true,       
+    "emitDecoratorMetadata": true,       
     "skipLibCheck": true,                  
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
       "@controllers/*": ["./src/controllers/*"],
       "@models/*": ["./src/models/*"],
-      "@views/*": ["./src/views/*"],
-      "@config/*": ["./src/config/*"]
+      "@views": ["./src/views/*"],
+      "@config": ["./src/config/*"],
+      "@middlewares": ["./src/middlewares/*"],
     }
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

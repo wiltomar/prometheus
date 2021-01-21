@@ -1,0 +1,30 @@
+{
+  "type": "mssql",
+  "host": "localhost",
+  "port": 1433,
+  "username": "sa",
+  "password": "Syscon13!",
+  "database": "Gerencial",
+  "synchronize": false,
+  "logging": false,
+  "extra": {
+     "driver": "msnodesqlv8"
+  },  
+  "options": {
+     "encrypt": true,
+     "enableArithAbort": true,
+     "trustedConnection": true,
+     "cryptoCredentialsDetails": {
+        "minVersion": "TLSv1"
+      }
+  },
+  "entities": [
+     "src/models/**/*.ts"
+  ],
+  "migrations": [
+     "src/database/migrations/**/*.ts"
+  ],
+  "cli": {
+     "migrationsDir": "src/database/migrations"
+  }
+}
