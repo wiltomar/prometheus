@@ -2,7 +2,6 @@ import {
   Column, Entity, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate, CreateDateColumn,
   UpdateDateColumn, OneToOne,
 } from 'typeorm';
-import bcrypt from 'bcryptjs';
 import Category from './Category';
 
 @Entity('vwProdutos')
