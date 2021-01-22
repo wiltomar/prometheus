@@ -20,7 +20,7 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
     const data = jwt.verify(token, process.env.SECRET_KEY);
 
     const { id } = data as TokenPayload;
-    req.UsuarioID = id;
+    req.id = id;
 
     return next();
   } catch {
