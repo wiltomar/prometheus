@@ -1,13 +1,16 @@
 import { Entity, Column } from 'typeorm';
 import Base from './base';
 
-@Entity('Mosaico.Estabelecimento')
-class Estabelecimento extends Base {
+@Entity('Mosaico.Departamento')
+class Departamento extends Base {
   @Column()
   nome: string;
-
+  
   @Column()
   ativo: boolean;
+
+  @Column()
+  venda: boolean;
 }
 
-export default Estabelecimento;
+export default Departamento;

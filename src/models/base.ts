@@ -1,4 +1,4 @@
-import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 class Base {
   @PrimaryGeneratedColumn('increment')
@@ -9,6 +9,9 @@ class Base {
 
   @UpdateDateColumn()
   edicao: Date;
+
+  @Column()
+  status: number;
 }
 
 export default Base;

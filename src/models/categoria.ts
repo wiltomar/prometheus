@@ -1,6 +1,4 @@
-import {
-  Column, CreateDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Column, JoinColumn, OneToMany } from 'typeorm';
 import Base from './base';
 
 @Entity('Mosaico.Categoria')
@@ -9,10 +7,7 @@ class Categoria extends Base {
   nome: string;
 
   @Column()
-  status: number;
-
-  @Column()
-  apelino: string;
+  apelido: string;
 
   @Column()
   fotoBase64: boolean;

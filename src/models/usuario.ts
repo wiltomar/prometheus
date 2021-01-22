@@ -1,7 +1,4 @@
-import {
-  Column, Entity, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate,
-  CreateDateColumn, UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Column, BeforeInsert, BeforeUpdate } from 'typeorm';
 import bcrypt from 'bcryptjs';
 import Base from './base';
 
@@ -9,9 +6,6 @@ import Base from './base';
 class Usuario extends Base {
   @Column()
   nome: string;
-
-  @Column()
-  status: number;
 
   @Column()
   ativo: number;
