@@ -7,7 +7,7 @@ class DepartamentoController {
   async lista(req: Request, res: Response) {
     try {
       const repositorio = getRepository(Departamento);
-      const departamentos = await repositorio.find({ order: { nome: "ASC" }, where: { ativo: true, venda: true } });
+      const departamentos = await repositorio.find({ order: { nome: 'ASC' }, where: { ativo: true, venda: true } });
 
       return res.status(200).json(departamentos);
     } catch (error) {

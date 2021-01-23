@@ -7,7 +7,7 @@ class CategoriaController {
   async lista(req: Request, res: Response) {
     try {
       const repositorio = getRepository(Categoria);
-      const categorias = await repositorio.find({ order: { nome: "ASC" }, where: { venda: true } });
+      const categorias = await repositorio.find({ order: { nome: 'ASC' }, where: { venda: true } });
 
       return res.status(200).json(categorias);
     } catch (error) {

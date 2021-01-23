@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import authMiddleware from './middlewares/autenticacao.middleware';
 import UsuarioController from '@controllers/usuario.controller';
 import AutenticacaoController from '@controllers/autorizacao.controller';
 import CategoriaController from '@controllers/categoria.controller';
@@ -8,6 +7,7 @@ import EstabelecimentoController from '@controllers/estabelecimento.controller';
 import PrecoController from '@controllers/preco.controller';
 import DepartamentoController from '@controllers/departamento.controller';
 import ClienteTipoController from '@controllers/clientetipo.controller';
+import authMiddleware from './middlewares/autenticacao.middleware';
 
 const router = Router();
 const enderecoAPI = process.env.ADDRESS_API;

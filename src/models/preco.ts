@@ -5,9 +5,6 @@ import Base from './base';
 class Preco extends Base {
   @Column()
   nome: string;
-
-  @Column()
-  status: number;
 }
 
 export default Preco;

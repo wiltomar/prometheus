@@ -1,4 +1,6 @@
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import {
+  Entity, Column, OneToOne, JoinColumn,
+} from 'typeorm';
 import Base from './base';
 import Categoria from './categoria';
 
