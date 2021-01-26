@@ -1,4 +1,6 @@
-import { Entity, Column, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity, Column, JoinColumn, OneToMany,
+} from 'typeorm';
 import Base from './base';
 
 @Entity('Mosaico.Categoria')

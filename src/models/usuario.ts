@@ -1,4 +1,6 @@
-import { Entity, Column, BeforeInsert, BeforeUpdate } from 'typeorm';
+import {
+  Entity, Column, BeforeInsert, BeforeUpdate,
+} from 'typeorm';
 import bcrypt from 'bcryptjs';
 import Base from './base';
 

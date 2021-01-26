@@ -7,7 +7,7 @@ class PrecoController {
   async lista(req: Request, res: Response) {
     try {
       const repositorio = getRepository(Preco);
-      const precos = await repositorio.find({ order: { nome: "ASC" } });
+      const precos = await repositorio.find({ order: { nome: 'ASC' } });
 
       return res.status(200).json(precos);
     } catch (error) {

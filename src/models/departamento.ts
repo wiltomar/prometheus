@@ -5,7 +5,7 @@ import Base from './base';
 class Departamento extends Base {
   @Column()
   nome: string;
-  
+
   @Column()
   ativo: boolean;
 
