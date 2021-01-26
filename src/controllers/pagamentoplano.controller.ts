@@ -7,7 +7,7 @@ class PagamentoPlanoController {
   async lista(req: Request, res: Response) {
     try {
       const repositorio = getRepository(PagamentoPlano);
-      const pagamentoplanos = await repositorio.find({ select: ["id", "nome"], order: { nome: "ASC" } });
+      const pagamentoplanos = await repositorio.find({ select: ['id', 'nome'], order: { nome: 'ASC' } });
 
       return res.status(200).json(pagamentoplanos);
     } catch (error) {
@@ -19,7 +19,7 @@ class PagamentoPlanoController {
     try {
       const repositorio = getRepository(PagamentoPlano);
       const pagamentoplano = await repositorio.findOne(
-        { where: { id: req.params.id }, relations: ['pagamentoforma'] }
+        { where: { id: req.params.id }, relations: ['pagamentoforma'] },
       );
 
       if (!pagamentoplano) {

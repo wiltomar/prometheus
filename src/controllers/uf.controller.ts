@@ -7,7 +7,7 @@ class UFController {
   async lista(req: Request, res: Response) {
     try {
       const repositorio = getRepository(UF);
-      const ufs = await repositorio.find({ order: { nome: "ASC" } });
+      const ufs = await repositorio.find({ order: { nome: 'ASC' } });
 
       return res.status(200).json(ufs);
     } catch (error) {

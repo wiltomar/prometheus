@@ -7,7 +7,7 @@ class PagamentoFormaController {
   async lista(req: Request, res: Response) {
     try {
       const repositorio = getRepository(PagamentoForma);
-      const pagamentoformas = await repositorio.find({ order: { nome: "ASC" } });
+      const pagamentoformas = await repositorio.find({ order: { nome: 'ASC' } });
 
       return res.status(200).json(pagamentoformas);
     } catch (error) {
