@@ -15,23 +15,6 @@ class ProdutoController {
     }
   }
 
-  async buscaPorNome(req: Request, res: Response) {
-    try {
-      const repositorio = getRepository(Produto);
-      const { nome } = req.body;
-
-      const produto = await repositorio.findOne({ where: { nome } });
-
-      if (!produto) {
-        return res.status(404).json({ message: 'Produto não encontrado!' });
-      }
-
-      return res.status(200).json(produto);
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
-    }
-  }
-
   async buscaPorId(req: Request, res: Response) {
     try {
       const repositorio = getRepository(Produto);

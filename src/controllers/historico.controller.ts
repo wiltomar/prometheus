@@ -1,15 +1,15 @@
 import { getRepository } from 'typeorm';
 import { Request, Response } from 'express';
 
-import Preco from '@models/preco';
+import Historico from '@models/historico';
 
-class PrecoController {
+class HistoricoController {
   async lista(req: Request, res: Response) {
     try {
-      const repositorio = getRepository(Preco);
-      const precos = await repositorio.find({ order: { nome: "ASC" } });
+      const repositorio = getRepository(Historico);
+      const historicos = await repositorio.find({ order: { nivel: "ASC" } });
 
-      return res.status(200).json(precos);
+      return res.status(200).json(historicos);
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
@@ -17,20 +17,20 @@ class PrecoController {
 
   async buscaPorId(req: Request, res: Response) {
     try {
-      const repositorio = getRepository(Preco);
-      const preco = await repositorio.findOne(
+      const repositorio = getRepository(Historico);
+      const historico = await repositorio.findOne(
         { where: { id: req.params.id } },
       );
 
-      if (!preco) {
+      if (!historico) {
         return res.status(404).json({ message: 'Preço não encontrado!' });
       }
 
-      return res.status(200).json(preco);
+      return res.status(200).json(historico);
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
   }
 }
 
-export default new PrecoController();
+export default new HistoricoController();
