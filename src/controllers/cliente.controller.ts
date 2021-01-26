@@ -14,15 +14,13 @@ class ClienteController {
     }
   }
 
-
   async lista(req: Request, res: Response) {
     // http://localhost:3000/api/v1/clientes?texto=wiltomar
     try {
       const repositorio = getRepository(Cliente);
-      let texto = req.query.texto;
-      if (!texto)
-        texto = '';
-      const clientes = await repositorio.find({ select: ["id", "nome"], where: { nome: Like(`%${texto}%`) }, order: { nome: "ASC" } });
+      let { texto } = req.query;
+      if (!texto) { texto = ''; }
+      const clientes = await repositorio.find({ select: ['id', 'nome'], where: { nome: Like(`%${texto}%`) }, order: { nome: 'ASC' } });
 
       return res.status(200).json(clientes);
     } catch (error) {

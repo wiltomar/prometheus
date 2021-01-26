@@ -7,7 +7,7 @@ class HistoricoController {
   async lista(req: Request, res: Response) {
     try {
       const repositorio = getRepository(Historico);
-      const historicos = await repositorio.find({ order: { nivel: "ASC" } });
+      const historicos = await repositorio.find({ order: { nivel: 'ASC' } });
 
       return res.status(200).json(historicos);
     } catch (error) {

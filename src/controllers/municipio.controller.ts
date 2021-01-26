@@ -7,7 +7,7 @@ class MunicipioController {
   async lista(req: Request, res: Response) {
     try {
       const repositorio = getRepository(Municipio);
-      const municipios = await repositorio.find({ where: { uf: { id: req.params.ufid } }, order: { nome: "ASC" } });
+      const municipios = await repositorio.find({ where: { uf: { id: req.params.ufid } }, order: { nome: 'ASC' } });
 
       return res.status(200).json(municipios);
     } catch (error) {

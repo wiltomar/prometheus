@@ -1,8 +1,9 @@
 import {
-  Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn,
+  Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BeforeInsert,
+  BeforeUpdate, BaseEntity,
 } from 'typeorm';
 
-class Base {
+abstract class Base extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
@@ -14,6 +15,18 @@ class Base {
 
   @Column()
   status: number;
+
+  @BeforeInsert()
+  setCreateDate(): void {
+    this.inclusao = new Date();
+    this.edicao = this.inclusao;
+    this.status = 0;
+  }
+
+  @BeforeUpdate()
+  setUpdateDate(): void {
+    this.edicao = new Date();
+  }
 }
 
 export default Base;

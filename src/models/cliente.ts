@@ -1,4 +1,6 @@
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import {
+  Entity, Column, OneToOne, JoinColumn,
+} from 'typeorm';
 import Base from './base';
 import Estabelecimento from './estabelecimento';
 import ClienteTipo from './clientetipo';
@@ -64,7 +66,7 @@ class Cliente extends Base {
 
   @Column({ length: 120 })
   telefones: string;
-  
+
   @Column({ length: 120 })
   celulares: string;
 
@@ -96,7 +98,7 @@ class Cliente extends Base {
   rfid: string;
 
   @Column()
-  observacoes: string;  
+  observacoes: string;
 }
 
 export default Cliente;
