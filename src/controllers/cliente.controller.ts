@@ -21,7 +21,6 @@ class ClienteController {
       let { texto } = req.query;
       if (!texto) { texto = ''; }
       const clientes = await repositorio.find({ select: ['id', 'nome'], where: { nome: Like(`%${texto}%`) }, order: { nome: 'ASC' } });
-
       return res.status(200).json(clientes);
     } catch (error) {
       return res.status(500).json({ message: error.message });

@@ -1,11 +1,14 @@
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 import Base from './base';
-import Conexao from './conexao';
 import ContaCorrente from './contacorrente';
+import Lancamento from './lancamento';
 import PagamentoForma from './pagamentoforma';
 
 @Entity('Mosaico.Conta')
 class Conta extends Base {
+  @ManyToOne(() => Lancamento, lancamento => lancamento.contas)
+  lancamento: Lancamento;
+
   @Column()
   natureza: number;
   

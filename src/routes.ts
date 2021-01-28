@@ -13,6 +13,8 @@ import ClienteTipoController from '@controllers/clientetipo.controller';
 import UFController from '@controllers/uf.controller';
 import MunicipioController from '@controllers/municipio.controller';
 import ClienteController from '@controllers/cliente.controller';
+import FilaController from '@controllers/fila.controller';
+import LancamentoController from '@controllers/lancamento.controller';
 import authMiddleware from './middlewares/autenticacao.middleware';
 
 const router = Router();
@@ -47,5 +49,11 @@ router.get(`${enderecoAPI}/municipios/:id`, authMiddleware, MunicipioController.
 router.get(`${enderecoAPI}/clientes`, authMiddleware, ClienteController.lista);
 router.get(`${enderecoAPI}/clientes/:id`, authMiddleware, ClienteController.buscaPorId);
 router.post(`${enderecoAPI}/clientes/grava`, authMiddleware, ClienteController.grava);
+router.get(`${enderecoAPI}/filas`, authMiddleware, FilaController.lista);
+router.get(`${enderecoAPI}/filas/:id`, authMiddleware, FilaController.buscaPorId);
+router.post(`${enderecoAPI}/filas/grava`, authMiddleware, FilaController.grava);
+router.get(`${enderecoAPI}/lancamentos`, authMiddleware, LancamentoController.lista);
+router.get(`${enderecoAPI}/lancamentos/:id`, authMiddleware, LancamentoController.buscaPorId);
+router.post(`${enderecoAPI}/lancamentos/grava`, authMiddleware, LancamentoController.grava);
 
 export default router;

@@ -8,7 +8,7 @@ class Municipio extends Base {
   nome: string;
 
   @OneToOne(() => UF, (uf) => uf.id)
-  @JoinColumn({ name: 'UFID' })
+  @JoinColumn({ name: 'ufid' })
   uf: UF;
 }
 
