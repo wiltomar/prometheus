@@ -19,11 +19,11 @@ class LancamentoController {
       const repositorio = getRepository(Lancamento);
       let { clienteid } = req.query;
       if (!clienteid) { clienteid = '-1'; }
-      //const lancamentos = await repositorio.find({ where: { nome: Like(`%${texto}%`) }, order: { nome: 'ASC' } });
       const lancamentos = await repositorio.find(
-        { where: { cliente: { id: clienteid } },
+        {
           order: { id: 'ASC' },
-          relations: ['conexao', 'estabelecimento', 'historico', 'cliente'] }
+          relations: ['conexao', 'estabelecimento', 'historico', 'cliente'],
+        },
       );
       return res.status(200).json(lancamentos);
     } catch (error) {

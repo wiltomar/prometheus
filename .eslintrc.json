@@ -20,6 +20,7 @@
     ],
     "rules": {
         "import/extensions": "off",
+        "import/no-cyrcle": "on",
         "class-methods-use-this": 0,
         "no-undef": "off",
         "no-unused-vars":"off",

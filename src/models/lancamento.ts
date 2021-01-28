@@ -63,12 +63,10 @@ class Lancamento extends Base {
   @JoinColumn({ name: 'vendedorid' })
   vendedor: Vendedor;
 
-  @OneToMany(() => Pedido, pedido => pedido.lancamento)
-  @JoinColumn({ name: 'lancamentoid' })
+  @OneToMany(() => Pedido, (pedido) => pedido.lancamento, { cascade: true, eager: true })
   pedidos: Pedido[];
 
-  @OneToMany(() => Conta, conta => conta.lancamento)
-  @JoinColumn({ name: 'lancamentoid' })
+  @OneToMany(() => Conta, conta => conta.lancamento, { cascade: true, eager: true })
   contas: Conta[];
 }
 

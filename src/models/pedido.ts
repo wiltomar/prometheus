@@ -1,4 +1,6 @@
-import { Entity, Column, OneToOne, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Entity, Column, OneToOne, JoinColumn, ManyToOne, OneToMany,
+} from 'typeorm';
 import Base from './base';
 import Lancamento from './lancamento';
 import Conexao from './conexao';
@@ -8,7 +10,7 @@ import PedidoProduto from './pedidoproduto';
 
 @Entity('Mosaico.Pedido')
 class Pedido extends Base {
-  @ManyToOne(() => Lancamento, lancamento => lancamento.pedidos)
+  @ManyToOne(() => Lancamento, (lancamento) => lancamento.pedidos)
   lancamento: Lancamento;
 
   @OneToOne(() => Conexao, (conexao) => conexao.id)
@@ -32,7 +34,7 @@ class Pedido extends Base {
   entrega: Date;
 
   @Column()
-  emissao: Date;  
+  emissao: Date;
 
   @OneToOne(() => Vendedor, (vendedor) => vendedor.id)
   @JoinColumn({ name: 'vendedorid' })
@@ -47,7 +49,7 @@ class Pedido extends Base {
   @Column()
   complemento: string;
 
-  @OneToMany(() => PedidoProduto, pedidoProduto => pedidoProduto.pedido)
+  @OneToMany(() => PedidoProduto, (pedidoProduto) => pedidoProduto.pedido, { cascade: true, eager: true })
   pedidoProdutos: PedidoProduto[];
 }
 

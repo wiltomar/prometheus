@@ -1,14 +1,16 @@
-import { Entity, Column, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Entity, Column, OneToOne, JoinColumn, ManyToOne,
+} from 'typeorm';
 import Base from './base';
-import Pedido from './pedido';
 import Conexao from './conexao';
 import Estabelecimento from './estabelecimento';
 import Departamento from './departamento';
 import Produto from './produto';
+import Pedido from './pedido';
 
 @Entity('Mosaico.PedidoProduto')
 class PedidoProduto extends Base {
-  @ManyToOne(() => Pedido, pedido => pedido.pedidoProdutos)
+  @ManyToOne(() => Pedido, (pedido) => pedido.pedidoProdutos)
   pedido: Pedido;
 
   @OneToOne(() => Conexao, (conexao) => conexao.id)
