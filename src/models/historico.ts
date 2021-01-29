@@ -1,21 +1,21 @@
 import { Entity, Column } from 'typeorm';
-import Base from './base';
+import Basex from './basex';
 
-@Entity('Mosaico.Historico')
-class Historico extends Base {
-  @Column()
+@Entity('históricos')
+class Historico extends Basex {
+  @Column({ name: 'descrição' })
   nome: string;
 
-  @Column()
+  @Column({ name: 'nível' })
   nivel: string;
   
-  @Column()
+  @Column({ name: 'natureza' })
   natureza: number;
   
-  @Column()
+  @Column({ name: 'tipo' })
   tipo: number;
   
-  @Column()
+  @Column({ name: 'analítico' })
   analitico: boolean;
 }
 

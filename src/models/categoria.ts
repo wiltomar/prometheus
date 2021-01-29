@@ -1,27 +1,19 @@
-import {
-  Entity, Column, JoinColumn, OneToMany,
-} from 'typeorm';
-import Base from './base';
+import { Entity, Column, JoinColumn, OneToMany } from 'typeorm';
+import XBase from './basex';
 
-@Entity('Mosaico.Categoria')
-class Categoria extends Base {
-  @Column()
+@Entity('categorias')
+class Categoria extends XBase {
+  @Column({ name: 'descrição' })
   nome: string;
 
-  @Column()
+  @Column({ name: 'apelido' })
   apelido: string;
 
-  @Column()
-  fotoBase64: boolean;
-
   @OneToMany(() => Categoria, (categoria) => categoria.id)
-  @JoinColumn({ name: 'categoriaTitularID' })
+  @JoinColumn({ name: 'categoriapaiid' })
   categoriaTitular: Categoria;
 
-  @Column()
-  categoriaTitularID: number;
-
-  @Column()
+  @Column({ name: 'venda' })
   venda: boolean;
 }
 

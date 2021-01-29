@@ -1,31 +1,31 @@
 import { getRepository, Like, Raw } from 'typeorm';
 import { Request, Response } from 'express';
-import Cliente from '@models/cliente';
+import Pessoa from '@models/pessoa';
 
-class ClienteController {
+class PessoaController {
   async grava(req: Request, res: Response) {
     try {
-      const repositorio = getRepository(Cliente);
-      const cliente = repositorio.create(req.body);
-      return res.status(201).json(await repositorio.save(cliente));
+      const repositorio = getRepository(Pessoa);
+      const pessoa = repositorio.create(req.body);
+      return res.status(201).json(await repositorio.save(pessoa));
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
   }
 
   async lista(req: Request, res: Response) {
-    // http://localhost:3000/api/v1/clientes?texto=wiltomar
+    // http://localhost:3000/api/v1/pessoas?texto=wiltomar
     try {
-      const repositorio = getRepository(Cliente);
+      const repositorio = getRepository(Pessoa);
       let { texto } = req.query;
       if (!texto) { texto = ''; }
-      const clientes = await repositorio.find(
+      const pessoas = await repositorio.find(
         {
           select: ['id', 'nome'], 
           where: { nome: Like(`%${texto}%`), status: Raw(alias => `(${alias} & 1) = 0`) }, 
           order: { nome: 'ASC' } 
         });
-      return res.status(200).json(clientes);
+      return res.status(200).json(pessoas);
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
@@ -33,22 +33,21 @@ class ClienteController {
 
   async buscaPorId(req: Request, res: Response) {
     try {
-      const repositorio = getRepository(Cliente);
-      const cliente = await repositorio.findOne(
+      const repositorio = getRepository(Pessoa);
+      const pessoa = await repositorio.findOne(
         {
           where: { id: req.params.id, status: Raw(alias => `(${alias} & 1) = 0`) },
-          relations: ['estabelecimento', 'clientetipo', 'preco', 'municipio'] 
+          relations: ['estabelecimento'] 
         }
       );
-      if (!cliente) {
-        return res.status(404).json({ message: 'Cliente não encontrado!' });
+      if (!pessoa) {
+        return res.status(404).json({ message: 'Pessoa não encontrada!' });
       }
-
-      return res.status(200).json(cliente);
+      return res.status(200).json(pessoa);
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
   }
 }
 
-export default new ClienteController();
+export default new PessoaController();

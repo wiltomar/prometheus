@@ -1,14 +1,22 @@
-import { getRepository } from 'typeorm';
+import { getRepository, Like, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
 import Departamento from '@models/departamento';
 
 class DepartamentoController {
   async lista(req: Request, res: Response) {
+    // http://localhost:3000/api/v1/departamentos?texto=almoxarifado
     try {
       const repositorio = getRepository(Departamento);
-      const departamentos = await repositorio.find({ order: { nome: 'ASC' }, where: { ativo: true, venda: true } });
-
+      let { texto } = req.query;
+      if (!texto) { texto = ''; }
+      const departamentos = await repositorio.find(
+        {
+          select: ['id', 'nome'], 
+          where: { nome: Like(`%${texto}%`), status: Raw(alias => `(${alias} & 1) = 0`), ativo: true, venda: true },
+          order: { nome: 'ASC' }
+        }
+      );
       return res.status(200).json(departamentos);
     } catch (error) {
       return res.status(500).json({ message: error.message });
@@ -19,9 +27,7 @@ class DepartamentoController {
     try {
       const repositorio = getRepository(Departamento);
       const { nome } = req.body;
-
       const departamento = await repositorio.findOne({ where: { nome } });
-
       if (!departamento) {
         return res.status(404).json({ message: 'Departamento não encontrado!' });
       }

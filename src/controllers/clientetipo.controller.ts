@@ -1,14 +1,22 @@
-import { getRepository } from 'typeorm';
+import { getRepository, Like, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
 import ClienteTipo from '@models/clientetipo';
 
 class ClienteTipoController {
   async lista(req: Request, res: Response) {
+    // http://localhost:3000/api/v1/clientetipos?texto=vip
     try {
       const repositorio = getRepository(ClienteTipo);
-      const clientetipos = await repositorio.find();
-
+      let { texto } = req.query;
+      if (!texto) { texto = ''; }
+      const clientetipos = await repositorio.find(
+        {
+          select: ['id', 'nome'], 
+          where: { nome: Like(`%${texto}%`), status: Raw(alias => `(${alias} & 1) = 0`) },
+          order: { nome: 'ASC' }
+        }
+      );
       return res.status(200).json(clientetipos);
     } catch (error) {
       return res.status(500).json({ message: error.message });

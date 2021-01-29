@@ -1,9 +1,9 @@
 import { Entity, Column } from 'typeorm';
-import Base from './base';
+import Basex from './basex';
 
-@Entity('Mosaico.ClienteTipo')
-class ClienteTipo extends Base {
-  @Column()
+@Entity('tiposdecliente')
+class ClienteTipo extends Basex {
+  @Column({ name: 'descrição' })
   nome: string;
 }
 

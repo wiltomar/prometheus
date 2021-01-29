@@ -1,6 +1,5 @@
 import { getRepository } from 'typeorm';
 import { Request, Response } from 'express';
-
 import Lancamento from '@models/lancamento';
 
 class LancamentoController {
@@ -8,6 +7,7 @@ class LancamentoController {
     try {
       const repositorio = getRepository(Lancamento);
       const lancamento = repositorio.create(req.body);
+      //console.log(JSON.stringify(lancamento))
       return res.status(201).json(await repositorio.save(lancamento));
     } catch (error) {
       return res.status(500).json({ message: error.message });
@@ -22,7 +22,7 @@ class LancamentoController {
       const lancamentos = await repositorio.find(
         {
           order: { id: 'ASC' },
-          relations: ['conexao', 'estabelecimento', 'historico', 'cliente'],
+          relations: ['conexao', 'estabelecimento', 'historico', 'cliente']
         },
       );
       return res.status(200).json(lancamentos);
@@ -35,9 +35,11 @@ class LancamentoController {
     try {
       const repositorio = getRepository(Lancamento);
       const lancamento = await repositorio.findOne(
-        { where: { id: req.params.id }, relations: ['conexao', 'estabelecimento', 'historico', 'cliente', 'pedidos', 'pedidos.pedidoProdutos', 'contas'] },
+        {
+          where: { id: req.params.id },
+          relations: ['conexao', 'estabelecimento', 'historico', 'cliente', 'pedidos', 'pedidos.conexao', 'pedidos.pedidoProdutos', 'pedidos.pedidoProdutos.produto', 'contas'] 
+        }
       );
-
       if (!lancamento) {
         return res.status(404).json({ message: 'Lançamento não encontrado!' });
       }

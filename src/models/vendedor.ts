@@ -4,41 +4,33 @@ import Estabelecimento from './estabelecimento';
 
 @Entity('Mosaico.Vendedor')
 class Vendedor extends Base {
-  @Column({ length: 60 })
+
+  /*Código ID, Nome, DataDaInclusão Inclusao, DataDeEdição Edicao, Status, Ativo,
+	Unidade EstabelecimentoID, Comissão Comissao, Foto, Senha, Vendedor,
+	Vendedor Atendente */
+  @Column({ name: 'nome', length: 60 })
   nome: string;
 
-  @Column()
+  @Column({ name: 'ativo' })
   ativo: boolean;
 
   @OneToOne(() => Estabelecimento, (estabelecimento) => estabelecimento.id)
-  @JoinColumn({ name: 'estabelecimentoid' })
+  @JoinColumn({ name: 'unidade' })
   estabelecimento: Estabelecimento;
 
-  @Column()
+  @Column({ name: 'vendedor' })
   atendente: boolean;
 
-  @Column()
-  usuario: boolean;
-  
-  @Column()
-  funcionario: boolean;
-
-  @Column()
-  corretor: boolean;
-
-  @Column()
-  entregador: boolean;  
-
-  @Column()
+  @Column({ name: 'comissão' })
   comissao: number;
 
-  @Column({ length: 120 })
+  @Column({ name: 'telefones', length: 120 })
   telefones: string;
 
-  @Column({ length: 120 })
+  @Column({ name: 'celulares', length: 120 })
   celulares: string;
 
-  @Column({ length: 120 })
+  @Column({ name: 'email', length: 120 })
   email: string;  
 }
 

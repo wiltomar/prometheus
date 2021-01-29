@@ -1,15 +1,15 @@
 import { Entity, Column } from 'typeorm';
-import Base from './base';
+import Basex from './basex';
 
-@Entity('Mosaico.Departamento')
-class Departamento extends Base {
-  @Column()
+@Entity('setores')
+class Departamento extends Basex {
+  @Column({ name: 'descrição' })
   nome: string;
 
-  @Column()
+  @Column({ name: 'ativo' })
   ativo: boolean;
 
-  @Column()
+  @Column({ name: 'venda' })
   venda: boolean;
 }
 

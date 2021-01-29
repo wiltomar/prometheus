@@ -1,32 +1,31 @@
 import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
-import Base from './base';
+import Basex from './basex';
 import Computador from './computador';
 import Usuario from './usuario';
 
-@Entity('Mosaico.Conexao')
-class Conexao extends Base {
-
-  @Column()
+@Entity('conexões')
+class Conexao extends Basex {
+  @Column({ name: 'aplicativo' })
   aplicativo: number;
 
   @OneToOne(() => Usuario, (usuario) => usuario.id)
-  @JoinColumn({ name: 'usuarioid' })
+  @JoinColumn({ name: 'usuário' })
   usuario: Usuario;
 
   @OneToOne(() => Computador, (computador) => computador.id)
-  @JoinColumn({ name: 'computadorid' })
+  @JoinColumn({ name: 'computador' })
   computador: Computador;
 
-  @Column()
+  @Column({ name: 'datadaentrada' })
   inicio: Date;
 
-  @Column()
+  @Column({ name: 'datadasaída' })
   conclusao: Date;
   
-  @Column({ length: 60 })
+  @Column({ name: 's_programa', length: 60 })
   soPrograma: string;
 
-  @Column({ length: 60 })
+  @Column({ name: 's_programaversao', length: 60 })
   soProgramaVersao: string;
 }
 

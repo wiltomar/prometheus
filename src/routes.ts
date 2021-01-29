@@ -13,6 +13,7 @@ import ClienteTipoController from '@controllers/clientetipo.controller';
 import UFController from '@controllers/uf.controller';
 import MunicipioController from '@controllers/municipio.controller';
 import ClienteController from '@controllers/cliente.controller';
+import PessoaController from '@controllers/pessoa.controller';
 import FilaController from '@controllers/fila.controller';
 import LancamentoController from '@controllers/lancamento.controller';
 import authMiddleware from './middlewares/autenticacao.middleware';
@@ -49,6 +50,9 @@ router.get(`${enderecoAPI}/municipios/:id`, authMiddleware, MunicipioController.
 router.get(`${enderecoAPI}/clientes`, authMiddleware, ClienteController.lista);
 router.get(`${enderecoAPI}/clientes/:id`, authMiddleware, ClienteController.buscaPorId);
 router.post(`${enderecoAPI}/clientes/grava`, authMiddleware, ClienteController.grava);
+router.get(`${enderecoAPI}/pessoas`, authMiddleware, PessoaController.lista);
+router.get(`${enderecoAPI}/pessoas/:id`, authMiddleware, PessoaController.buscaPorId);
+router.post(`${enderecoAPI}/pessoas/grava`, authMiddleware, PessoaController.grava);
 router.get(`${enderecoAPI}/filas`, authMiddleware, FilaController.lista);
 router.get(`${enderecoAPI}/filas/:id`, authMiddleware, FilaController.buscaPorId);
 router.post(`${enderecoAPI}/filas/grava`, authMiddleware, FilaController.grava);

@@ -1,52 +1,51 @@
-import {
-  Entity, Column, OneToOne, JoinColumn, ManyToOne, OneToMany,
-} from 'typeorm';
-import Base from './base';
+import { Entity, Column, OneToOne, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import Basex from './basex';
 import Lancamento from './lancamento';
 import Conexao from './conexao';
 import Estabelecimento from './estabelecimento';
 import Vendedor from './vendedor';
 import PedidoProduto from './pedidoproduto';
 
-@Entity('Mosaico.Pedido')
-class Pedido extends Base {
+@Entity('pedidos')
+class Pedido extends Basex {
   @ManyToOne(() => Lancamento, (lancamento) => lancamento.pedidos)
+  @JoinColumn({ name: 'lançamento' })
   lancamento: Lancamento;
 
   @OneToOne(() => Conexao, (conexao) => conexao.id)
-  @JoinColumn({ name: 'conexaoid' })
+  @JoinColumn({ name: 'conexão' })
   conexao: Conexao;
 
-  @Column()
+  @Column({ name: 'tipo' })
   tipo: number;
 
-  @Column()
+  @Column({ name: 'natureza' })
   natureza: number;
 
   @OneToOne(() => Estabelecimento, (estabelecimento) => estabelecimento.id)
-  @JoinColumn({ name: 'estabelecimentoid' })
+  @JoinColumn({ name: 'unidade' })
   estabelecimento: Estabelecimento;
 
-  @Column()
+  @Column({ name: 'datadarequisição' })
   requisicao: Date;
 
-  @Column()
+  @Column({ name: 'datadaentrega' })
   entrega: Date;
 
-  @Column()
+  @Column({ name: 'emissao' })
   emissao: Date;
 
   @OneToOne(() => Vendedor, (vendedor) => vendedor.id)
-  @JoinColumn({ name: 'vendedorid' })
+  @JoinColumn({ name: 'vendedor' })
   vendedor: Vendedor;
 
-  @Column()
+  @JoinColumn({ name: 'comissão' })
   vendedorComissao: number;
 
-  @Column()
+  @Column({ name: 'vendedorcomissaovalor' })
   vendedorComissaoValor: number;
 
-  @Column()
+  @Column({ name: 'complemento' })
   complemento: string;
 
   @OneToMany(() => PedidoProduto, (pedidoProduto) => pedidoProduto.pedido, { cascade: true, eager: true })

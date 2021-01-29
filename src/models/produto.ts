@@ -1,34 +1,29 @@
-import {
-  Entity, Column, OneToOne, JoinColumn,
-} from 'typeorm';
-import Base from './base';
+import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import Basex from './basex';
 import Categoria from './categoria';
 
-@Entity('Mosaico.Produto')
-class Produto extends Base {
-  @Column()
+@Entity('produtos')
+class Produto extends Basex {
+  @Column({ name: 'descrição' })
   nome: string;
 
-  @Column()
+  @Column({ name: 'apelido' })
   apelido: string;
 
-  @Column()
+  @Column({ name: 'ativo' })
   ativo: boolean;
 
-  @Column()
+  @Column({ name: 'tipo' })
   tipo: string;
 
   @OneToOne(() => Categoria, (categoria) => categoria.id)
-  @JoinColumn({ name: 'categoriaID' })
+  @JoinColumn({ name: 'categoria' })
   categoria: Categoria;
 
-  @Column()
-  categoriaID: number;
-
-  @Column()
+  @Column({ name: 'une' })
   un: string;
 
-  @Column()
+  @Column({ name: 'disponível' })
   venda: boolean;
 }
 

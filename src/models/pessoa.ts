@@ -1,44 +1,44 @@
 import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
-import Base from './base';
+import Basex from './basex';
 import Estabelecimento from './estabelecimento';
 
-@Entity('Mosaico.Pessoa')
-class Pessoa extends Base {
-  @Column({ length: 60 })
+@Entity('fornecedores')
+class Pessoa extends Basex {
+  @Column({ name: 'nome', length: 60 })
   nome: string;
 
-  @Column()
+  @Column({ name: 'ativo' })
   ativo: boolean;
 
   @OneToOne(() => Estabelecimento, (estabelecimento) => estabelecimento.id)
-  @JoinColumn({ name: 'estabelecimentoid' })
+  @JoinColumn({ name: 'unidade' })
   estabelecimento: Estabelecimento;
-
-  @Column()
+   
+  @Column({ name: 'vendedor' })
   atendente: boolean;
 
-  @Column()
+  @Column({ name: 'usuário' })
   usuario: boolean;
   
-  @Column()
+  @Column({ name: 'funcionário' })
   funcionario: boolean;
 
-  @Column()
+  @Column({ name: 'corretor' })
   corretor: boolean;
 
-  @Column()
+  @Column({ name: 'entregador' })
   entregador: boolean;  
 
-  @Column()
+  @Column({ name: 'comissão' })
   comissao: number;
 
-  @Column({ length: 120 })
+  @Column({ name: 'telefones', length: 120 })
   telefones: string;
 
-  @Column({ length: 120 })
+  @Column({ name: 'celulares', length: 120 })
   celulares: string;
 
-  @Column({ length: 120 })
+  @Column({ name: 'email', length: 120 })
   email: string;  
 }
 

@@ -1,53 +1,54 @@
 import { Entity, Column, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
-import Base from './base';
+import Basex from './basex';
 import ContaCorrente from './contacorrente';
 import Lancamento from './lancamento';
 import PagamentoForma from './pagamentoforma';
 
-@Entity('Mosaico.Conta')
-class Conta extends Base {
+@Entity('contas')
+class Conta extends Basex {
   @ManyToOne(() => Lancamento, lancamento => lancamento.contas)
+  @JoinColumn({ name: 'lançamento' })
   lancamento: Lancamento;
 
-  @Column()
+  @Column({ name: 'natureza' })
   natureza: number;
   
-  @Column()
+  @Column({ name: 'datadevencimento' })
   vencimento: Date;
 
-  @Column()
+  @Column({ name: 'valordaconta' })
   valor: number;
   
   @OneToOne(() => PagamentoForma, (pagamentoforma) => pagamentoforma.id)
-  @JoinColumn({ name: 'pagamentoformaid' })
+  @JoinColumn({ name: 'formadepagamento' })
   pagamentoforma: PagamentoForma;
 
-  @Column()
+  @Column({ name: 'dataderecebimento' })
   recebimento: Date;
   
-  @Column()
+  @Column({ name: 'datadepagamento' })
   pagamento: Date;
 
-  @Column()
+  @Column({ name: 'acréscimos' })
   acrescimos: number;
 
-  @Column()
+  @Column({ name: 'descontos' })
   descontos: number;
 
-  @Column()
+  @Column({ name: 'valorpago' })
   total: number;
 
   @OneToOne(() => ContaCorrente, (contacorrente) => contacorrente.id)
-  @JoinColumn({ name: 'contacorrenteid' })
+  @JoinColumn({ name: 'contacorrente' })
   contacorrente: ContaCorrente;
   
-  @Column()
+  @Column({ name: 'sp' })
   sp: number;
   
-  @Column()
+  @Column({ name: 'parcela' })
   parcela: number;
 
-  @Column()
+  @Column({ name: 'parcelas' })
   parcelas: number;
 }
 

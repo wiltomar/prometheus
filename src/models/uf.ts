@@ -1,12 +1,12 @@
 import { Entity, Column } from 'typeorm';
-import Base from './base';
+import Basex from './basex';
 
-@Entity('Mosaico.UF')
-class UF extends Base {
-  @Column()
+@Entity('ufs')
+class UF extends Basex {
+  @Column({ name: 'descrição' })
   nome: string;
 
-  @Column()
+  @Column({ name: 'sigla' })
   sigla: string;
 }
 

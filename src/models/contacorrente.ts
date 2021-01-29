@@ -1,23 +1,23 @@
 import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
-import Base from './base';
+import Basex from './basex';
 import Estabelecimento from './estabelecimento';
 
-@Entity('Mosaico.ContaCorrente')
-class ContaCorrente extends Base {
-  @Column()
+@Entity('contascorrentes')
+class ContaCorrente extends Basex {
+  @Column({ name: 'descrição' })
   nome: string;
 
-  @Column()
+  @Column({ name: 'sigla' })
   sigla: string;
 
-  @Column()
+  @Column({ name: 'ativo' })
   ativo: boolean;
 
   @OneToOne(() => Estabelecimento, (estabelecimento) => estabelecimento.id)
-  @JoinColumn({ name: 'estabelecimentoid' })
+  @JoinColumn({ name: 'unidade' })
   estabelecimento: Estabelecimento;
 
-  @Column()
+  @Column({ name: 'tipo' })
   tipo: number;
 }
 
