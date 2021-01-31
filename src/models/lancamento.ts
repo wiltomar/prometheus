@@ -61,14 +61,15 @@ class Lancamento extends Basex {
   total: number;
 
   @OneToOne(() => Vendedor, (vendedor) => vendedor.id)
-  @JoinColumn({ name: 'vendedor' })
+  @JoinColumn({ name: 'vendedor', referencedColumnName: 'id' })
   vendedor: Vendedor;
 
   @OneToMany(() => Pedido, (pedido) => pedido.lancamento, { cascade: true })
-  @JoinColumn({ name: 'lançamento' })
+  @JoinColumn({ name: 'lançamento', referencedColumnName: 'código' })
   pedidos: Pedido[];
 
   @OneToMany(() => Conta, conta => conta.lancamento, { cascade: true })
+  @JoinColumn({ name: 'lançamento', referencedColumnName: 'código' })
   contas: Conta[];
 }
 

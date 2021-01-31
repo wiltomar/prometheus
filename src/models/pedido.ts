@@ -9,7 +9,7 @@ import PedidoProduto from './pedidoproduto';
 @Entity('pedidos')
 class Pedido extends Basex {
   @ManyToOne(() => Lancamento, (lancamento) => lancamento.pedidos)
-  @JoinColumn({ name: 'lançamento' })
+  @JoinColumn({ name: 'lançamento', referencedColumnName: 'id' })
   lancamento: Lancamento;
 
   @OneToOne(() => Conexao, (conexao) => conexao.id)

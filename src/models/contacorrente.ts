@@ -14,7 +14,7 @@ class ContaCorrente extends Basex {
   ativo: boolean;
 
   @OneToOne(() => Estabelecimento, (estabelecimento) => estabelecimento.id)
-  @JoinColumn({ name: 'unidade' })
+  @JoinColumn({ name: 'unidadeid' })
   estabelecimento: Estabelecimento;
 
   @Column({ name: 'tipo' })

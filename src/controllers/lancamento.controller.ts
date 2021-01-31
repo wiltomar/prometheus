@@ -37,7 +37,12 @@ class LancamentoController {
       const lancamento = await repositorio.findOne(
         {
           where: { id: req.params.id },
-          relations: ['conexao', 'estabelecimento', 'historico', 'cliente', 'pedidos', 'pedidos.conexao', 'pedidos.pedidoProdutos', 'pedidos.pedidoProdutos.produto', 'contas'] 
+          relations: [
+            'conexao', 'estabelecimento', 'historico', 'cliente', 
+            'pedidos', 'pedidos.conexao', 'pedidos.estabelecimento', 'pedidos.vendedor', 'pedidos.pedidoProdutos',
+            'pedidos.pedidoProdutos.produto',
+            'contas', 'contas.contacorrente'] // , 'contas.pagamentoforma'
+
         }
       );
       if (!lancamento) {

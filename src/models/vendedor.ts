@@ -1,13 +1,9 @@
 import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
-import Base from './base';
+import Basex from './basex';
 import Estabelecimento from './estabelecimento';
 
-@Entity('Mosaico.Vendedor')
-class Vendedor extends Base {
-
-  /*Código ID, Nome, DataDaInclusão Inclusao, DataDeEdição Edicao, Status, Ativo,
-	Unidade EstabelecimentoID, Comissão Comissao, Foto, Senha, Vendedor,
-	Vendedor Atendente */
+@Entity('fornecedores')
+class Vendedor extends Basex {
   @Column({ name: 'nome', length: 60 })
   nome: string;
 
