@@ -1,9 +1,10 @@
 import { Entity, Column, OneToOne, JoinColumn, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
+import Pedido from './pedido';
 import Conexao from './conexao';
 import Estabelecimento from './estabelecimento';
 import Departamento from './departamento';
 import Produto from './produto';
-import Pedido from './pedido';
+import Lancamento from './lancamento';
 
 @Entity('Pedidos_Produtos')
 class PedidoProduto {
@@ -31,9 +32,13 @@ class PedidoProduto {
     this.edicao = new Date();
   }
 
-  @ManyToOne(() => Pedido, (pedido) => pedido.pedidoProdutos)
-  @JoinColumn({ name: 'pedido' })
-  pedido: Pedido;	
+  @ManyToOne(() => Lancamento, (lancamento) => lancamento.id)
+  @JoinColumn({ name: 'lancamento', referencedColumnName: 'id' })
+  lancamento: Lancamento;
+
+  @ManyToOne(() => Pedido, (pedido) => pedido.id)
+  @JoinColumn({ name: 'pedido', referencedColumnName: 'id' })
+  pedido: Pedido;
 
   @OneToOne(() => Conexao, (conexao) => conexao.id)
   @JoinColumn({ name: 'conexaoid' })

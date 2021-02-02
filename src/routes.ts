@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import authMiddleware from './middlewares/autenticacao.middleware';
 import UsuarioController from '@controllers/usuario.controller';
 import AutenticacaoController from '@controllers/autorizacao.controller';
 import CategoriaController from '@controllers/categoria.controller';
@@ -16,7 +17,7 @@ import ClienteController from '@controllers/cliente.controller';
 import PessoaController from '@controllers/pessoa.controller';
 import FilaController from '@controllers/fila.controller';
 import LancamentoController from '@controllers/lancamento.controller';
-import authMiddleware from './middlewares/autenticacao.middleware';
+import VendaController from '@controllers/venda.controller';
 
 const router = Router();
 const enderecoAPI = process.env.ADDRESS_API;
@@ -59,5 +60,8 @@ router.post(`${enderecoAPI}/filas/grava`, authMiddleware, FilaController.grava);
 router.get(`${enderecoAPI}/lancamentos`, authMiddleware, LancamentoController.lista);
 router.get(`${enderecoAPI}/lancamentos/:id`, authMiddleware, LancamentoController.buscaPorId);
 router.post(`${enderecoAPI}/lancamentos/grava`, authMiddleware, LancamentoController.grava);
+router.get(`${enderecoAPI}/vendas`, authMiddleware, VendaController.lista);
+router.get(`${enderecoAPI}/vendas/:id`, authMiddleware, VendaController.buscaPorId);
+router.post(`${enderecoAPI}/vendas/grava`, authMiddleware, VendaController.grava);
 
 export default router;

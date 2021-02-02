@@ -8,7 +8,7 @@ import PedidoProduto from './pedidoproduto';
 
 @Entity('pedidos')
 class Pedido extends Basex {
-  @ManyToOne(() => Lancamento, (lancamento) => lancamento.pedidos)
+  @ManyToOne(() => Lancamento, lancamento => lancamento.id)
   @JoinColumn({ name: 'lançamento', referencedColumnName: 'id' })
   lancamento: Lancamento;
 
@@ -48,7 +48,7 @@ class Pedido extends Basex {
   @Column({ name: 'complemento' })
   complemento: string;
 
-  @OneToMany(() => PedidoProduto, (pedidoProduto) => pedidoProduto.pedido, { cascade: true, eager: true })
+  @OneToMany(() => PedidoProduto, (pedidoProduto) => pedidoProduto.pedido, { cascade: true })
   pedidoProdutos: PedidoProduto[];
 }
 

@@ -1,14 +1,19 @@
 import { Entity, Column, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 import Basex from './basex';
-import ContaCorrente from './contacorrente';
 import Lancamento from './lancamento';
+import Conexao from './conexao';
 import PagamentoForma from './pagamentoforma';
+import ContaCorrente from './contacorrente';
 
 @Entity('contas')
 class Conta extends Basex {
   @ManyToOne(() => Lancamento, lancamento => lancamento.contas)
   @JoinColumn({ name: 'lançamento' })
   lancamento: Lancamento;
+
+  @OneToOne(() => Conexao, (conexao) => conexao.id)
+  @JoinColumn({ name: 'conexão' })
+  conexao: Conexao;
 
   @Column({ name: 'natureza' })
   natureza: number;
