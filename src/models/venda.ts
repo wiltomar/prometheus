@@ -1,17 +1,18 @@
-import Cliente from './cliente';
-import Departamento from './departamento';
-import Estabelecimento from './estabelecimento';
-import Historico from './historico';
-import PagamentoForma from './pagamentoforma';
-import PagamentoPlano from './pagamentoplano';
+import { EstabelecimentoR } from './estabelecimento';
+import { DepartamentoR } from './departamento';
+import { ClienteR } from './cliente';
+import { HistoricoR } from './historico';
+import { ProdutoR } from './produto';
+import { VendedorR } from './vendedor';
 import Pedido from './pedido';
-import Produto from './produto';
 
 // Wiltomar
 export class VendaItem {    
     id: number;
+    pedido: Pedido;
     item: number;
-    produto: Produto;
+    departamento: DepartamentoR;
+    produto: ProdutoR;
     qde: number;
     preco: number;
     precoTotal: number;
@@ -21,8 +22,8 @@ export class VendaItem {
 export class VendaPagamento {    
     id: number;
     sp: number;
-    pagamentoPlano: PagamentoPlano;
-    pagamentoForma: PagamentoForma;
+    pagamentoPlano: PagamentoPlanoR;
+    pagamentoForma: PagamentoFormaR;
     parcelas: number;
     valor: number;
 }
@@ -30,11 +31,10 @@ export class VendaPagamento {
 export class Venda {
     id: number;
     situacao: string;
-    historico: Historico;
-    estabelecimento: Estabelecimento;
-    departamento: Departamento;
+    historico: HistoricoR;
+    estabelecimento: EstabelecimentoR;
     tipo: number;
-    cliente: Cliente;
+    cliente: ClienteR;
     emissao: Date;
     pedido: Pedido;
     subtotal: number;
@@ -42,6 +42,7 @@ export class Venda {
     frete: number;
     total: number;
     memorando: string;
+    vendedor: VendedorR;
     itens: VendaItem[];
     pagamentos: VendaPagamento[];    
 }

@@ -1,12 +1,13 @@
 import { Entity, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import Basex from './basex';
-import Cliente from './cliente';
+import { ClienteR } from './cliente';
 import Conexao from './conexao';
 import Conta from './conta';
-import Estabelecimento from './estabelecimento';
-import Historico from './historico';
+import { EstabelecimentoR } from './estabelecimento';
+import { HistoricoR } from './historico';
+import LancamentoPagamento from './lancamentopagamento';
 import Pedido from './pedido';
-import Vendedor from './vendedor';
+import { VendedorR } from './vendedor';
 
 @Entity('lançamentos')
 class Lancamento extends Basex {  
@@ -20,17 +21,17 @@ class Lancamento extends Basex {
   @Column({ name: 'atendimento' })
   atendimento: number;
 
-  @OneToOne(() => Estabelecimento, (estabelecimento) => estabelecimento.id)
+  @OneToOne(() => EstabelecimentoR, (estabelecimento) => estabelecimento.id)
   @JoinColumn({ name: 'unidade' })
-  estabelecimento: Estabelecimento;
+  estabelecimento: EstabelecimentoR;
 
-  @OneToOne(() => Historico, (historico) => historico.id)
+  @OneToOne(() => HistoricoR, (historico) => historico.id)
   @JoinColumn({ name: 'histórico' })
-  historico: Historico;
+  historico: HistoricoR;
   
-  @OneToOne(() => Cliente, (cliente) => cliente.id)
+  @OneToOne(() => ClienteR, (cliente) => cliente.id)
   @JoinColumn({ name: 'cliente' })
-  cliente: Cliente;
+  cliente: ClienteR;
 
   @Column({ name: 'memorando' })
   memorando: string;
@@ -60,13 +61,17 @@ class Lancamento extends Basex {
   @Column({ name: 'valortotal' })
   total: number;
 
-  @OneToOne(() => Vendedor, (vendedor) => vendedor.id, { cascade: true })
+  @OneToOne(() => VendedorR, (vendedor) => vendedor.id, { cascade: true })
   @JoinColumn({ name: 'vendedor', referencedColumnName: 'id' })
-  vendedor: Vendedor;
+  vendedor: VendedorR;
 
   @OneToMany(() => Pedido, (pedido) => pedido.lancamento, { cascade: true })
   @JoinColumn({ name: 'lançamento', referencedColumnName: 'código' })
   pedidos: Pedido[];
+
+  @OneToMany(() => LancamentoPagamento, (pagamento) => pagamento.lancamento, { cascade: true })
+  @JoinColumn({ name: 'lancamentoid', referencedColumnName: 'código' })
+  pagamentos: LancamentoPagamento[];
 
   @OneToMany(() => Conta, (conta) => conta.lancamento, { cascade: true })
   @JoinColumn({ name: 'lançamento', referencedColumnName: 'código' })

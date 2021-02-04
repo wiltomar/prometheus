@@ -1,9 +1,9 @@
 import { Entity, Column, OneToOne, JoinColumn, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
 import Pedido from './pedido';
 import Conexao from './conexao';
-import Estabelecimento from './estabelecimento';
-import Departamento from './departamento';
-import Produto from './produto';
+import { EstabelecimentoR } from './estabelecimento';
+import { DepartamentoR } from './departamento';
+import { ProdutoR } from './produto';
 import Lancamento from './lancamento';
 
 @Entity('Pedidos_Produtos')
@@ -64,13 +64,13 @@ class PedidoProduto {
   @Column({ name: 'natureza' })
   natureza: number;
 
-  @OneToOne(() => Estabelecimento, (estabelecimento) => estabelecimento.id)
+  @OneToOne(() => EstabelecimentoR, (estabelecimento) => estabelecimento.id)
   @JoinColumn({ name: 'unidade' })
-  estabelecimento: Estabelecimento;
+  estabelecimento: EstabelecimentoR;
 
-  @OneToOne(() => Departamento, (departamento) => departamento.id)
+  @OneToOne(() => DepartamentoR, (departamento) => departamento.id)
   @JoinColumn({ name: 'setor' })
-  departamento: Departamento;
+  departamento: DepartamentoR;
 
   @Column({ name: 'entrega' })
   entrega: Date;
@@ -78,9 +78,9 @@ class PedidoProduto {
   @Column({ name: 'emissao' })
   emissao: Date;
 
-  @OneToOne(() => Produto, (produto) => produto.id)
+  @OneToOne(() => ProdutoR, (produto) => produto.id)
   @JoinColumn({ name: 'produto' })
-  produto: Produto;
+  produto: ProdutoR;
 
   @Column({ name: 'qde' })
   qde: number;

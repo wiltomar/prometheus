@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
 import Categoria from '@models/categoria';
@@ -7,8 +7,11 @@ class CategoriaController {
   async lista(req: Request, res: Response) {
     try {
       const repositorio = getRepository(Categoria);
-      const categorias = await repositorio.find({ order: { nome: 'ASC' }, where: { venda: true } });
-
+      const categorias = await repositorio.find({
+        select: ['id', 'nome'], 
+        where: { venda: true, status: Raw(alias => `(${alias} & 1) = 0`) }, 
+        order: { nome: 'ASC' }
+      });
       return res.status(200).json(categorias);
     } catch (error) {
       return res.status(500).json({ message: error.message });

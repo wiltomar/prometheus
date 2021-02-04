@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
 import Basex from './basex';
 import Categoria from './categoria';
 
@@ -25,6 +25,15 @@ class Produto extends Basex {
 
   @Column({ name: 'disponível' })
   venda: boolean;
+}
+
+@Entity('produtos')
+export class ProdutoR {
+  @PrimaryGeneratedColumn({ name: 'código' })
+  id: number;
+
+  @Column({ name: 'descrição' })
+  nome: string;
 }
 
 export default Produto;

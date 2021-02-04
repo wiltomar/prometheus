@@ -1,4 +1,4 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import Basex from './basex';
 
 @Entity('históricos')
@@ -23,6 +23,15 @@ export const enum HistoricoTipo {
   Venda = 16,
   Adiantamento = 150,
   Compra = 201
+}
+
+@Entity('históricos')
+export class HistoricoR {
+  @PrimaryGeneratedColumn({ name: 'código' })
+  id: number;
+
+  @Column({ name: 'descrição' })
+  nome: string;
 }
 
 export default Historico;

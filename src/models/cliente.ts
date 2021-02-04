@@ -1,11 +1,18 @@
-import {
-  Entity, Column, OneToOne, JoinColumn,
-} from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
 import Base from './base';
 import Estabelecimento from './estabelecimento';
 import ClienteTipo from './clientetipo';
 import Preco from './preco';
 import Municipio from './municipio';
+
+@Entity('clientes')
+export class ClienteR {
+  @PrimaryGeneratedColumn({ name: 'código' })
+  id: number;
+
+  @Column({ name: 'nome' })
+  nome: string;
+}
 
 @Entity('Mosaico.Cliente')
 class Cliente extends Base {

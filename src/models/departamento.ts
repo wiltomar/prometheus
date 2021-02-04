@@ -1,4 +1,4 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import Basex from './basex';
 
 @Entity('setores')
@@ -11,6 +11,15 @@ class Departamento extends Basex {
 
   @Column({ name: 'venda' })
   venda: boolean;
+}
+
+@Entity('setores')
+export class DepartamentoR {
+  @PrimaryGeneratedColumn({ name: 'código' })
+  id: number;
+
+  @Column({ name: 'descrição' })
+  nome: string;
 }
 
 export default Departamento;

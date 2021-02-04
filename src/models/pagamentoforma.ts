@@ -1,4 +1,4 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import Base from './base';
 
 @Entity('Mosaico.PagamentoForma')
@@ -27,6 +27,15 @@ export const enum Especie {
   Cheque = 2,
   Cartao = 3,
   Boleto = 4
+}
+
+@Entity('formasdepagamento')
+export class PagamentoFormaR {
+  @PrimaryGeneratedColumn({ name: 'código' })
+  id: number;
+
+  @Column({ name: 'descrição' })
+  nome: string;
 }
 
 export default PagamentoForma;

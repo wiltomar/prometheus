@@ -1,8 +1,9 @@
-import { getManager, getRepository } from 'typeorm';
+import { getManager, getRepository, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 import Lancamento from '@models/lancamento';
 import Pedido from '@models/pedido';
 import Conta from '@models/conta';
+import LancamentoPagamento from '@models/lancamentopagamento';
 
 class LancamentoController {
   async grava(req: Request, res: Response) {
@@ -35,6 +36,7 @@ class LancamentoController {
       if (!clienteid) { clienteid = '-1'; }
       const lancamentos = await repositorio.find(
         {
+          where: { status: Raw(alias => `(${alias} & 1) = 0`) },
           order: { id: 'ASC' },
           relations: ['conexao', 'estabelecimento', 'historico', 'cliente']
         },
@@ -50,7 +52,7 @@ class LancamentoController {
       const repositorio = getRepository(Lancamento);
       let lancamentox = await repositorio.findOne(
         {
-          where: { id: req.params.id },
+          where: { id: req.params.id, status: Raw(alias => `(${alias} & 1) = 0`) },
           relations: ['conexao', 'estabelecimento', 'historico', 'cliente']
         }
       );
@@ -58,8 +60,7 @@ class LancamentoController {
         return res.status(404).json({ message: 'Lançamento não encontrado!' });
       }
       // Pedidos
-      const pedidoRepositorio = getRepository(Pedido);
-      lancamentox.pedidos = await pedidoRepositorio.find(
+      lancamentox.pedidos = await getRepository(Pedido).find(
         {
           where: { lancamento: { id: lancamentox.id } },
           relations: [
@@ -67,10 +68,16 @@ class LancamentoController {
             'pedidoProdutos.estabelecimento', 'pedidoProdutos.departamento'
           ]
         },
-      );      
+      );
+      // Pagamentos
+      lancamentox.pagamentos = await getRepository(LancamentoPagamento).find(
+        {
+          where: { lancamento: { id: lancamentox.id } },
+          relations: ['conexao', 'pagamentoPlano', 'pagamentoForma']
+        },
+      );
       // Contas
-      const contaRepositorio = getRepository(Conta);
-      lancamentox.contas = await contaRepositorio.find(
+      lancamentox.contas = await getRepository(Conta).find(
         {
           where: { lancamento: { id: lancamentox.id } },
           relations: ['conexao', 'pagamentoforma', 'contacorrente']

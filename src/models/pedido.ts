@@ -2,8 +2,8 @@ import { Entity, Column, OneToOne, JoinColumn, ManyToOne, OneToMany } from 'type
 import Basex from './basex';
 import Lancamento from './lancamento';
 import Conexao from './conexao';
-import Estabelecimento from './estabelecimento';
-import Vendedor from './vendedor';
+import { EstabelecimentoR } from './estabelecimento';
+import { VendedorR } from './vendedor';
 import PedidoProduto from './pedidoproduto';
 
 @Entity('pedidos')
@@ -22,9 +22,9 @@ class Pedido extends Basex {
   @Column({ name: 'natureza' })
   natureza: number;
 
-  @OneToOne(() => Estabelecimento, (estabelecimento) => estabelecimento.id)
+  @OneToOne(() => EstabelecimentoR, (estabelecimento) => estabelecimento.id)
   @JoinColumn({ name: 'unidade' })
-  estabelecimento: Estabelecimento;
+  estabelecimento: EstabelecimentoR;
 
   @Column({ name: 'datadarequisição' })
   requisicao: Date;
@@ -35,9 +35,9 @@ class Pedido extends Basex {
   @Column({ name: 'emissao' })
   emissao: Date;
 
-  @OneToOne(() => Vendedor, (vendedor) => vendedor.id)
+  @OneToOne(() => VendedorR, (vendedor) => vendedor.id)
   @JoinColumn({ name: 'vendedor' })
-  vendedor: Vendedor;
+  vendedor: VendedorR;
 
   @JoinColumn({ name: 'comissão' })
   vendedorComissao: number;

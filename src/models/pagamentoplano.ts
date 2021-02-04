@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
 import Base from './base';
 import PagamentoForma from './pagamentoforma';
 
@@ -34,6 +34,15 @@ class PagamentoPlano extends Base {
   @OneToOne(() => PagamentoForma, (pagamentoforma) => pagamentoforma.id)
   @JoinColumn({ name: 'pagamentoformaid' })
   pagamentoforma: PagamentoForma;
+}
+
+@Entity('planosdepagamento')
+export class PagamentoPlanoR {
+  @PrimaryGeneratedColumn({ name: 'código' })
+  id: number;
+
+  @Column({ name: 'descrição' })
+  nome: string;
 }
 
 export default PagamentoPlano;
