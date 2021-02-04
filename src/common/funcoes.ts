@@ -1,6 +1,7 @@
 import Lancamento from "@models/lancamento";
 import LancamentoPagamento from "@models/lancamentopagamento";
 import Pedido from "@models/pedido";
+import PedidoProduto from "@models/pedidoproduto";
 import { Venda, VendaItem, VendaPagamento } from "@models/venda";
 import { EntityManager, getManager, getRepository } from "typeorm";
 
@@ -15,7 +16,7 @@ class VendaHelper {
         let lancamento = await getRepository(Lancamento).findOne(
             {
                 where: { id: id },
-                relations: ['conexao', 'estabelecimento', 'historico', 'cliente']
+                relations: ['conexao', 'estabelecimento', 'historico', 'cliente', 'vendedor']
             }
         );
         if (!lancamento) {
@@ -35,6 +36,7 @@ class VendaHelper {
         retorno.frete = lancamento.taxaEntrega;
         retorno.total = lancamento.total;
         retorno.memorando = lancamento.memorando;
+        retorno.vendedor = lancamento.vendedor;
         if (!retorno.emissao)
             retorno.situacao = 'Pendente'
         else
@@ -44,14 +46,14 @@ class VendaHelper {
         let pedidos = await getRepository(Pedido).find(
             {
                 where: { lancamento: { id: retorno.id } },
-                relations: ['conexao', 'estabelecimento', 'vendedor', 'pedidoProdutos', 'pedidoProdutos.departamento', 'pedidoProdutos.produto']
+                relations: ['conexao', 'estabelecimento', 'vendedor']
+                //, 'pedidoProdutos', 'pedidoProdutos.departamento', 'pedidoProdutos.produto'
             }
         );
-        if (!pedidos)
-            throw new Error("Lançamento sem pedidos");
+        if (!pedidos || (pedidos.length == 0))
+            throw new Error("Lançamento sem pedidos");        
         // if (pedidos.length > 1)
         //     throw new Error("Lançamento com múltiplos pedidos");
-        retorno.vendedor = pedidos[0].vendedor;
         let pagamentos = await getRepository(LancamentoPagamento).find({
             where: { lancamento: { id: retorno.id } },
             relations: ['conexao', 'pagamentoPlano', 'pagamentoForma']
@@ -68,9 +70,28 @@ class VendaHelper {
             vendaPagamento.valor = pagamento.valor;
             retorno.pagamentos.push(vendaPagamento);
         });
-        // Itens
+        // Itens, com filtro
         retorno.itens = [];
-        pedidos.forEach(pedido => {
+        for (const pedido of pedidos) {
+            const pedidoProdutos = await getRepository(PedidoProduto).find({
+                where: { pedido: { id: pedido.id }, subitem: 0 },
+                relations: ['departamento', 'produto']
+            });
+            for (const pedidoProduto of pedidoProdutos) {
+                let vendaItem = new VendaItem();
+                vendaItem.id = pedidoProduto.id;
+                vendaItem.pedido = pedidoProduto.pedido;
+                vendaItem.item = pedidoProduto.item;
+                vendaItem.departamento = pedidoProduto.departamento;
+                vendaItem.produto = pedidoProduto.produto;
+                vendaItem.qde = pedidoProduto.qde;
+                vendaItem.preco = pedidoProduto.preco;
+                vendaItem.precoTotal = pedidoProduto.precoTotal;
+                vendaItem.observacao = pedidoProduto.observacoes;
+                retorno.itens.push(vendaItem);
+            }
+        }
+        /*pedidos.forEach(pedido => {
             pedido.pedidoProdutos.forEach(pedidoProduto => {
                 let vendaItem = new VendaItem();
                 vendaItem.id = pedidoProduto.id;
@@ -84,7 +105,7 @@ class VendaHelper {
                 vendaItem.observacao = pedidoProduto.observacoes;
                 retorno.itens.push(vendaItem);
             });
-        });
+        });*/
         return retorno;
     }
   }

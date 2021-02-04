@@ -9,7 +9,7 @@ class LancamentoController {
   async grava(req: Request, res: Response) {
     try {
       const repositorio = getRepository(Lancamento);
-      const lancamento = repositorio.create(req.body);      
+      const lancamento = repositorio.create(req.body);
       const retorno = await repositorio.save(lancamento);
       // Atualiza os campos lançamento e tipo da tabela pedidos_produtos
       // Wiltomar

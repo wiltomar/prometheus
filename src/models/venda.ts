@@ -1,12 +1,14 @@
+import { Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { EstabelecimentoR } from './estabelecimento';
 import { DepartamentoR } from './departamento';
 import { ClienteR } from './cliente';
 import { HistoricoR } from './historico';
 import { ProdutoR } from './produto';
 import { VendedorR } from './vendedor';
+import { PagamentoPlanoR } from './pagamentoplano';
+import { PagamentoFormaR } from './pagamentoforma';
 import Pedido from './pedido';
 
-// Wiltomar
 export class VendaItem {    
     id: number;
     pedido: Pedido;
@@ -28,7 +30,9 @@ export class VendaPagamento {
     valor: number;
 }
 
+@Entity('lançamentos')
 export class Venda {
+    @PrimaryGeneratedColumn('increment')
     id: number;
     situacao: string;
     historico: HistoricoR;

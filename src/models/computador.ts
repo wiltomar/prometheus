@@ -1,7 +1,7 @@
 import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
 import Basex from './basex';
-import Estabelecimento from './estabelecimento';
-import Departamento from './departamento';
+import { EstabelecimentoR } from './estabelecimento';
+import { DepartamentoR } from './departamento';
 
 @Entity('computadores')
 class Computador extends Basex {
@@ -14,13 +14,13 @@ class Computador extends Basex {
   @Column({ name: 'ativo' })
   ativo: boolean;
 
-  @OneToOne(() => Estabelecimento, (estabelecimento) => estabelecimento.id)
+  @OneToOne(() => EstabelecimentoR, (estabelecimento) => estabelecimento.id)
   @JoinColumn({ name: 'unidade' })
-  estabelecimento: Estabelecimento;
+  estabelecimento: EstabelecimentoR;
 
-  @OneToOne(() => Departamento, (departamento) => departamento.id)
+  @OneToOne(() => DepartamentoR, (departamento) => departamento.id)
   @JoinColumn({ name: 'setor' })
-  usuario: Departamento;  
+  departamento: DepartamentoR;  
 
   @Column({ name: 'impressora', length: 120 })
   impressora: string;
