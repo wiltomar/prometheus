@@ -9,7 +9,7 @@ class LancamentoController {
   async grava(req: Request, res: Response) {
     try {
       const repositorio = getRepository(Lancamento);
-      const lancamento = repositorio.create(req.body);
+      const lancamento = repositorio.create(req.body as Lancamento);
       const retorno = await repositorio.save(lancamento);
       // Atualiza os campos lançamento e tipo da tabela pedidos_produtos
       // Wiltomar
@@ -20,7 +20,7 @@ class LancamentoController {
       s.push('FROM');
       s.push('  Pedidos P');
       s.push('  JOIN Pedidos_Produtos R ON R.Pedido = P.Código');
-      s.push('WHERE P.Lançamento = ' + retorno['id'] + ';');
+      s.push('WHERE P.Lançamento = ' + retorno.id + ';');
       getManager().query(s.join('\n')); // promise
       // Retorna
       return res.status(201).json(retorno);      

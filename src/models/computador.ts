@@ -26,4 +26,7 @@ class Computador extends Basex {
   impressora: string;
 }
 
+export const
+  COMPUTADOR_PROMETHEUS = 'PROMETHEUS';
+
 export default Computador;
