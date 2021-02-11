@@ -1,4 +1,5 @@
 import { Entity, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
+import Base from './base';
 import Basex from './basex';
 import { ClienteR } from './cliente';
 import Conexao from './conexao';
@@ -104,7 +105,7 @@ class Lancamento extends Basex {
 }
 
 @Entity('lançamentos_situações')
-export class LancamentoSituacao extends Basex {
+export class LancamentoSituacao extends Base {
   @ManyToOne(() => Lancamento, (lancamento) => lancamento.id)
   @JoinColumn({ name: 'lancamentoid', referencedColumnName: 'id' })
   lancamento: Lancamento;
@@ -127,7 +128,7 @@ export class LancamentoSituacao extends Basex {
 }
 
 @Entity('lançamentos_complementos')
-export class LancamentoComplemento extends Basex {
+export class LancamentoComplemento extends Base {
   @ManyToOne(() => Lancamento, (lancamento) => lancamento.id)
   @JoinColumn({ name: 'lancamentoid', referencedColumnName: 'id' })
   lancamento: Lancamento;
@@ -152,7 +153,7 @@ export class LancamentoComplemento extends Basex {
 }
 
 @Entity('lançamentos_requisições')
-export class LancamentoRequisicao extends Basex {
+export class LancamentoRequisicao extends Base {
   @ManyToOne(() => Lancamento, (lancamento) => lancamento.id)
   @JoinColumn({ name: 'lancamentoid', referencedColumnName: 'id' })
   lancamento: Lancamento;
