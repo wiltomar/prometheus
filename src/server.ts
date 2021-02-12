@@ -9,6 +9,7 @@ import { load } from 'ts-dotenv';
 import routes from './routes';
 import manipuladorDeErro from './middlewares/erros.midlleware';
 import manipuladorDeErroNaoEncontrado from './middlewares/naoencontrado.middleware';
+import AgendamentoController from '@controllers/agendamento.controller';
 
 const app = express();
 const env = load({
@@ -34,16 +35,9 @@ app.use(routes);
 app.use(manipuladorDeErro);
 app.use(manipuladorDeErroNaoEncontrado);
 
+//const cron = require("node-cron");
+//cron.schedule("*/3 * * * * *", AgendamentoController.procedimentos);
+
 app.listen(serverPort, serverName, () => {
   console.log(`🚀 - Prometheus API Server started at http://${serverName}:${serverPort}`);
 });
-
-const cron = require("node-cron");
-
-cron.schedule("* * * * *", () => console.log("Executando a tarefa a cada 1 minuto"));
-cron.schedule('5 * * * * *', () => {
-  console.log('running a task every minute at the 5th second');
-});
-
-/*cron.schedule("* * * * *", () => console.log("Executando a tarefa a cada 1 minuto"));
-*/

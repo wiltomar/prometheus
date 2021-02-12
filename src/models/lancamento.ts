@@ -1,21 +1,22 @@
 import { Entity, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
-import Base from './base';
 import Basex from './basex';
 import { ClienteR } from './cliente';
 import Conexao from './conexao';
 import Conta from './conta';
 import { EstabelecimentoR } from './estabelecimento';
 import { HistoricoR } from './historico';
-import Integradora from './integradora';
+import LancamentoComplemento from './lancamentocomplemento';
 import LancamentoPagamento from './lancamentopagamento';
+import LancamentoRequisicao from './lancamentorequisicao';
+import LancamentoSituacao from './lancamentosituacao';
 import Pedido from './pedido';
 import { VendedorR } from './vendedor';
 
 export enum LancamentoSituacaoConstantes {
   Pendente = 10,
-  Confirmado = 20,
-  Produzido = 30,
-  Expedido = 40,
+  Confirmado = 30,
+  Produzido = 40,
+  Expedido = 60,
   Encerrado = 70,
   Cancelado = 90
 }
@@ -79,6 +80,9 @@ class Lancamento extends Basex {
   @JoinColumn({ name: 'vendedor', referencedColumnName: 'id' })
   vendedor: VendedorR;
 
+  @OneToOne(type => LancamentoComplemento, complemento => complemento.lancamento)
+  complemento: LancamentoComplemento;
+
   @OneToMany(() => Pedido, (pedido) => pedido.lancamento, { cascade: true })
   @JoinColumn({ name: 'lançamento', referencedColumnName: 'código' })
   pedidos: Pedido[];
@@ -95,91 +99,9 @@ class Lancamento extends Basex {
   @JoinColumn({ name: 'lancamentoid', referencedColumnName: 'código' })
   situacoes: LancamentoSituacao[];
 
-  @OneToOne(() => LancamentoComplemento, (complemento) => complemento.lancamento, { cascade: true })
-  @JoinColumn({ name: 'lancamentoid', referencedColumnName: 'código' })
-  complemento: LancamentoComplemento[];
-
   @OneToMany(() => LancamentoRequisicao, (requisicao) => requisicao.lancamento, { cascade: true })
   @JoinColumn({ name: 'lancamentoid', referencedColumnName: 'código' })
   requisicoes: LancamentoRequisicao[];
-}
-
-@Entity('lançamentos_situações')
-export class LancamentoSituacao extends Base {
-  @ManyToOne(() => Lancamento, (lancamento) => lancamento.id)
-  @JoinColumn({ name: 'lancamentoid', referencedColumnName: 'id' })
-  lancamento: Lancamento;
-
-  @OneToOne(() => Conexao, (conexao) => conexao.id)
-  @JoinColumn({ name: 'conexaoid' })
-  conexao: Conexao;
-
-  @Column({ name: 'situacao' })
-  situacao: number;
-
-  @Column({ name: 'momento' })
-  momento: Date;
-
-  @Column({ name: 'catracanotificada' })
-  catracaNotificada: boolean;
-
-  @Column({ name: 'entreganotificada' })
-  entregaNotificada: boolean;
-}
-
-@Entity('lançamentos_complementos')
-export class LancamentoComplemento extends Base {
-  @ManyToOne(() => Lancamento, (lancamento) => lancamento.id)
-  @JoinColumn({ name: 'lancamentoid', referencedColumnName: 'id' })
-  lancamento: Lancamento;
-
-  @OneToOne(() => Conexao, (conexao) => conexao.id)
-  @JoinColumn({ name: 'conexaoid' })
-  conexao: Conexao;
-
-  @OneToOne(() => Integradora, (integradora) => integradora.id)
-  @JoinColumn({ name: 'catracaintegradoraid' })
-  catracaIntegradora: Integradora;
-
-  @Column({ name: 'catracaintegradorauid' })
-  catracaIntegradoraUID: string;
-
-  @OneToOne(() => Integradora, (integradora) => integradora.id)
-  @JoinColumn({ name: 'entregaintegradoraid' })
-  entregaIntegradora: Integradora;
-
-  @Column({ name: 'entregaintegradorauid' })
-  entregraIntegradoraUID: string;
-}
-
-@Entity('lançamentos_requisições')
-export class LancamentoRequisicao extends Base {
-  @ManyToOne(() => Lancamento, (lancamento) => lancamento.id)
-  @JoinColumn({ name: 'lancamentoid', referencedColumnName: 'id' })
-  lancamento: Lancamento;
-
-  @OneToOne(() => Conexao, (conexao) => conexao.id)
-  @JoinColumn({ name: 'conexaoid' })
-  conexao: Conexao;
-
-  @OneToOne(() => Integradora, (integradora) => integradora.id)
-  @JoinColumn({ name: 'integradoraid' })
-  integradora: Integradora;
-
-  @Column({ name: 'recurso' })
-  recurso: string;
-
-  @Column({ name: 'metodo' })
-  metodo: string;
-
-  @Column({ name: 'requisicao' })
-  requisicao: string;
-
-  @Column({ name: 'resposta' })
-  resposta: string;
-
-  @Column({ name: 'situacao' })
-  situacao: string;
 }
 
 export default Lancamento;
