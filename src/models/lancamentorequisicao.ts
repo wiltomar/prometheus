@@ -14,10 +14,6 @@ export class LancamentoRequisicao extends Base {
   @JoinColumn({ name: 'conexaoid' })
   conexao: Conexao;
 
-  @OneToOne(() => Integradora, (integradora) => integradora.id)
-  @JoinColumn({ name: 'integradoraid' })
-  integradora: Integradora;
-
   @Column({ name: 'recurso' })
   recurso: string;
 
@@ -31,6 +27,6 @@ export class LancamentoRequisicao extends Base {
   resposta: string;
 
   @Column({ name: 'situacao' })
-  situacao: string;
+  situacao: number;
 }
 export default LancamentoRequisicao;

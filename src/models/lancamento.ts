@@ -12,15 +12,6 @@ import LancamentoSituacao from './lancamentosituacao';
 import Pedido from './pedido';
 import { VendedorR } from './vendedor';
 
-export enum LancamentoSituacaoConstantes {
-  Pendente = 10,
-  Confirmado = 30,
-  Produzido = 40,
-  Expedido = 60,
-  Encerrado = 70,
-  Cancelado = 90
-}
-
 @Entity('lançamentos')
 class Lancamento extends Basex {  
   @OneToOne(() => Conexao, (conexao) => conexao.id)
@@ -102,6 +93,15 @@ class Lancamento extends Basex {
   @OneToMany(() => LancamentoRequisicao, (requisicao) => requisicao.lancamento, { cascade: true })
   @JoinColumn({ name: 'lancamentoid', referencedColumnName: 'código' })
   requisicoes: LancamentoRequisicao[];
+}
+
+export enum LancamentoSituacaoConstantes {
+  Pendente = 10,
+  Confirmado = 30,
+  Produzido = 40,
+  Expedido = 60,
+  Encerrado = 70,
+  Cancelado = 90
 }
 
 export default Lancamento;

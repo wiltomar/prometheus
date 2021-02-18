@@ -9,6 +9,7 @@ import { load } from 'ts-dotenv';
 import routes from './routes';
 import manipuladorDeErro from './middlewares/erros.midlleware';
 import manipuladorDeErroNaoEncontrado from './middlewares/naoencontrado.middleware';
+import config from 'src/config';
 import AgendamentoController from '@controllers/agendamento.controller';
 
 const app = express();
@@ -35,8 +36,10 @@ app.use(routes);
 app.use(manipuladorDeErro);
 app.use(manipuladorDeErroNaoEncontrado);
 
-//const cron = require("node-cron");
-//cron.schedule("*/3 * * * * *", AgendamentoController.procedimentos);
+if (config.foodyDelivery.ativo) {
+  const cron = require("node-cron");
+  cron.schedule("*/7 * * * * *", AgendamentoController.procedimentos);  
+}
 
 app.listen(serverPort, serverName, () => {
   console.log(`🚀 - Prometheus API Server started at http://${serverName}:${serverPort}`);

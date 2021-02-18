@@ -9,6 +9,28 @@ import { PagamentoPlanoR } from './pagamentoplano';
 import { PagamentoFormaR } from './pagamentoforma';
 import Pedido from './pedido';
 
+@Entity('lançamentos')
+export class Venda {
+    @PrimaryGeneratedColumn('increment')
+    id: number;
+    situacao: string;
+    historico: HistoricoR;
+    estabelecimento: EstabelecimentoR;
+    tipo: number;
+    cliente: ClienteR;
+    emissao: Date;
+    pedido: Pedido;
+    subtotal: number;
+    desconto: number;
+    frete: number;
+    total: number;
+    memorando: string;
+    vendedor: VendedorR;
+    entrega: VendaEntrega;
+    itens: VendaItem[];
+    pagamentos: VendaPagamento[];
+}
+
 export class VendaItem {    
     id: number;
     pedido: Pedido;
@@ -30,23 +52,24 @@ export class VendaPagamento {
     valor: number;
 }
 
-@Entity('lançamentos')
-export class Venda {
-    @PrimaryGeneratedColumn('increment')
-    id: number;
-    situacao: string;
-    historico: HistoricoR;
-    estabelecimento: EstabelecimentoR;
-    tipo: number;
-    cliente: ClienteR;
-    emissao: Date;
-    pedido: Pedido;
-    subtotal: number;
-    desconto: number;
-    frete: number;
-    total: number;
-    memorando: string;
-    vendedor: VendedorR;
-    itens: VendaItem[];
-    pagamentos: VendaPagamento[];    
+export class VendaEntrega {    
+    nome: string;
+    cep: string;
+    endereco: string;
+    numero: number;
+    complemento: string;
+    bairro: string;
+    cidade: string;
+    uf: string;
+    referencia: string;
+    telefones: string;
+    celulares: string;
+    dinheiro: number;
+    cheque: number;    
+    pagamentoForma1: PagamentoFormaR;
+    valor1: number;
+    pagamentoForma2: PagamentoFormaR;
+    valor2: number;
+    pagamentoForma3: PagamentoFormaR;
+    valor3: number;
 }

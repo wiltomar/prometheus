@@ -1,9 +1,10 @@
 import Lancamento from "@models/lancamento";
 import LancamentoPagamento from "@models/lancamentopagamento";
+import LancamentoVenda from "@models/lancamentovenda";
 import Pedido from "@models/pedido";
 import PedidoProduto from "@models/pedidoproduto";
-import { Venda, VendaItem, VendaPagamento } from "@models/venda";
-import { EntityManager, getManager, getRepository } from "typeorm";
+import { Venda, VendaItem, VendaPagamento, VendaEntrega } from "@models/venda";
+import { getRepository } from "typeorm";
 
 class VendaHelper {
     constructor() {
@@ -43,13 +44,35 @@ class VendaHelper {
             retorno.situacao = 'Encerrado';
         if (!completo)
             return retorno;
-        let pedidos = await getRepository(Pedido).find(
-            {
-                where: { lancamento: { id: retorno.id } },
-                relations: ['conexao', 'estabelecimento', 'vendedor']
-                //, 'pedidoProdutos', 'pedidoProdutos.departamento', 'pedidoProdutos.produto'
-            }
-        );
+        // Entrega
+        retorno.entrega = new VendaEntrega();        
+        let lancamentovenda = await getRepository(LancamentoVenda).findOne({ where: { lancamento: { id: retorno.id } } });
+        if (lancamentovenda) {
+            retorno.entrega.nome = lancamentovenda.nome;            
+            retorno.entrega.cep = lancamentovenda.cep;
+            retorno.entrega.endereco = lancamentovenda.endereco;
+            retorno.entrega.numero = lancamentovenda.numero;
+            retorno.entrega.complemento = lancamentovenda.complemento;
+            retorno.entrega.bairro = lancamentovenda.bairro;
+            retorno.entrega.cidade = lancamentovenda.cidade;
+            retorno.entrega.uf = lancamentovenda.uf;
+            retorno.entrega.referencia = lancamentovenda.referencia;
+            retorno.entrega.telefones = lancamentovenda.telefones;
+            retorno.entrega.celulares = lancamentovenda.celulares;
+            retorno.entrega.dinheiro = lancamentovenda.dinheiro;
+            retorno.entrega.cheque = lancamentovenda.cheque;
+            retorno.entrega.pagamentoForma1 = lancamentovenda.pagamentoForma1;
+            retorno.entrega.valor1 = lancamentovenda.valor1;
+            retorno.entrega.pagamentoForma2 = lancamentovenda.pagamentoForma2;
+            retorno.entrega.valor2 = lancamentovenda.valor2;
+            retorno.entrega.pagamentoForma3 = lancamentovenda.pagamentoForma3;
+            retorno.entrega.valor3 = lancamentovenda.valor3;
+        }
+        let pedidos = await getRepository(Pedido).find({
+            where: { lancamento: { id: retorno.id } },
+            relations: ['conexao', 'estabelecimento', 'vendedor']
+            //, 'pedidoProdutos', 'pedidoProdutos.departamento', 'pedidoProdutos.produto'
+        });
         if (!pedidos || (pedidos.length == 0))
             throw new Error("Lançamento sem pedidos");        
         // if (pedidos.length > 1)

@@ -34,6 +34,9 @@ export class ProdutoR {
 
   @Column({ name: 'descrição' })
   nome: string;
+
+  @Column({ name: 'une' })
+  un: string;
 }
 
 export default Produto;

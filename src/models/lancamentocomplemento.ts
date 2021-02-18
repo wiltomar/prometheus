@@ -29,9 +29,7 @@ export class LancamentoComplemento extends Base {
   entregraIntegradoraUID: string;
 }
 
-export default LancamentoComplemento;
-
-
+/*
 export enum LancamentoComplementoSituacao {
   Pendente = 10,
   Confirmado = 30,
@@ -40,3 +38,6 @@ export enum LancamentoComplementoSituacao {
   Encerrado = 70,
   Cancelado = 90
 }
+*/
+
+export default LancamentoComplemento;

@@ -4,6 +4,7 @@ import Lancamento from '@models/lancamento';
 import Pedido from '@models/pedido';
 import Conta from '@models/conta';
 import LancamentoPagamento from '@models/lancamentopagamento';
+import LancamentoRequisicao from '@models/lancamentorequisicao';
 
 class LancamentoController {
   async grava(req: Request, res: Response) {

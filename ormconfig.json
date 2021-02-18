@@ -5,6 +5,11 @@
   "username": "sa",
   "password": "Syscon13!",
   "database": "Gerencial",
+  "ahost": "SRVLJ01",
+  "aport": 1433,
+  "ausername": "sa",
+  "apassword": "sisco12!@",
+  "adatabase": "BarneysBurger_Matriz_02_2",
   "synchronize": false,
   "logging": false,
   "extra": {

@@ -38,4 +38,12 @@ export class LancamentoSituacao extends Base {
   entregaTentarivas: boolean;
 }
 
+export enum LancamentoSituacaoIntegracaoConstantes {
+  Pendente = 10,
+  Processando = 11,
+  Confirmado = 30,
+  Cancelado = 90,
+  Erro = 91
+}
+
 export default LancamentoSituacao;
