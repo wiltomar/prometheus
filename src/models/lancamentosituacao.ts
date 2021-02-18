@@ -42,6 +42,7 @@ export enum LancamentoSituacaoIntegracaoConstantes {
   Pendente = 10,
   Processando = 11,
   Confirmado = 30,
+  Encerrado = 70,  
   Cancelado = 90,
   Erro = 91
 }

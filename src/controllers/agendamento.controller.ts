@@ -1,12 +1,12 @@
 import { Between, getManager, getRepository, IsNull, Raw } from 'typeorm';
 import config from 'src/config';
-import Lancamento, { LancamentoSituacaoConstantes } from '@models/lancamento';
-import { LancamentoSituacaoIntegracaoConstantes } from '@models/lancamentosituacao';
+import Lancamento, { LancamentoSituacaoConstantes } from 'src/models/lancamento';
+import { LancamentoSituacaoIntegracaoConstantes } from 'src/models/lancamentosituacao';
 import VendaHelper from 'src/common/funcoes';
-import Cliente from '@models/cliente';
-import LancamentoComplemento from '@models/lancamentocomplemento';
-import LancamentoRequisicao from '@models/lancamentorequisicao';
-import Conexao from '@models/conexao';
+import Cliente from 'src/models/cliente';
+import LancamentoComplemento from 'src/models/lancamentocomplemento';
+import LancamentoRequisicao from 'src/models/lancamentorequisicao';
+import Conexao from 'src/models/conexao';
 
 class AgendamentoController {  
   async procedimentos() {
@@ -57,11 +57,11 @@ class AgendamentoController {
     }
     let lancamentosConcluidos = await getRepository(Lancamento).find({
       where: {
-        emissao: IsNull(),
+        emissao: Raw(alias => `${alias} IS NOT NULL`),
         estabelecimento: { id: config.estabelecimento.id },
         tipo: Between(22, 22), // Delivery/Encomenda
         status: Raw(alias => `(${alias} & 1) = 0`),
-        id: Raw(alias => `${alias} IN (SELECT L.ID FROM Mosaico.Lancamento L JOIN Mosaico.LancamentoSituacao S ON S.LancamentoID = L.ID WHERE (L.Emissao IS NULL) AND (S.Situacao = ${LancamentoSituacaoConstantes.Encerrado}) AND (S.EntregaSituacao = ${LancamentoSituacaoIntegracaoConstantes.Pendente}))`)
+        id: Raw(alias => `${alias} IN (SELECT L.ID FROM Mosaico.Lancamento L JOIN Mosaico.LancamentoSituacao S ON S.LancamentoID = L.ID WHERE (L.Emissao IS NOT NULL) AND (S.Situacao = ${LancamentoSituacaoConstantes.Encerrado}) AND (S.EntregaSituacao = ${LancamentoSituacaoIntegracaoConstantes.Pendente}))`)
       },
       relations: ['cliente']
     });    
@@ -80,6 +80,8 @@ class AgendamentoController {
     const cliente = await getRepository(Cliente).findOne(lancamento.cliente.id);
     let data = lancamento.inclusao.toISOString().substring(0, 19) + 'Z';
     let delivery = new Delivery();    
+    if (!config.foodyDelivery.token)
+      console.log('token não informado');
     delivery.id = lancamento.id.toString();
     delivery.status = "open";
     delivery.notes = venda.memorando;
@@ -136,7 +138,7 @@ class AgendamentoController {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'bf48f99d5a594df7aa2b6d629ea2b487'
+            'Authorization': config.foodyDelivery.token
             //'Authorization': '9a36939f74e44704a6f033fbd193be37'
         }
     }
