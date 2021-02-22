@@ -22,11 +22,11 @@ class PagamentoForma extends Base {
   operacao: number;  
 }
 
-export const enum Especie {
-  Dinheiro = 1,
-  Cheque = 2,
-  Cartao = 3,
-  Boleto = 4
+export const Especie = {
+  Dinheiro: 1,
+  Cheque: 2,
+  Cartao: 3,
+  Boleto: 4
 }
 
 @Entity('formasdepagamento')

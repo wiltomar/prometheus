@@ -1,0 +1,35 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ],
+    "typescript"
+  ],
+  "plugins": [
+      ["@babel/proposal-decorators", {
+        "legacy": true
+      }],
+      ["module-resolver", {
+        "alias": {
+          "@modules": "./src/modules",
+          "@core": "./src/core",
+          "@shared": "./src/shared",
+          "@infra": "./src/infra",
+          "@config": "./src/config",
+          "@controllers": "./src/controllers",
+          "@models": "./src/models",
+          "@views": "./src/views",
+          "@config": "./src/config",
+          "@middlewares": "./src/middlewares"          
+        }
+      }]
+  ],
+  "ignore": [
+    "**/*.spec.ts"
+  ]
+}

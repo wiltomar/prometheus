@@ -19,10 +19,10 @@ class Historico extends Basex {
   analitico: boolean;
 }
 
-export const enum HistoricoTipo {
-  Venda = 16,
-  Adiantamento = 150,
-  Compra = 201
+export const HistoricoTipo = {
+  Venda: 16,
+  Adiantamento: 150,
+  Compra: 201
 }
 
 @Entity('históricos')
