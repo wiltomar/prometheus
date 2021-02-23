@@ -1,8 +1,8 @@
-import { getManager, getRepository, Not, Raw, SimpleConsoleLogger } from 'typeorm';
+import { getManager, getRepository, Not, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 import Lancamento from '@models/lancamento';
 import { Venda } from '@models/venda';
-import VendaHelper from 'src/common/funcoes';
+import VendaHelper from '../common/funcoes';
 import Computador, { COMPUTADOR_PROMETHEUS } from '@models/computador';
 import Historico from '@models/historico';
 import Conexao from '@models/conexao';

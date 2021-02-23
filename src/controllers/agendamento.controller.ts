@@ -1,12 +1,12 @@
 import { Between, getManager, getRepository, IsNull, Raw } from 'typeorm';
-import config from 'src/config';
-import Lancamento, { LancamentoSituacaoConstantes } from 'src/models/lancamento';
-import { LancamentoSituacaoIntegracaoConstantes } from 'src/models/lancamentosituacao';
-import VendaHelper from 'src/common/funcoes';
-import Cliente from 'src/models/cliente';
-import LancamentoComplemento from 'src/models/lancamentocomplemento';
-import LancamentoRequisicao from 'src/models/lancamentorequisicao';
-import Conexao from 'src/models/conexao';
+import config from '../config';
+import Lancamento, { LancamentoSituacaoConstantes } from '../models/lancamento';
+import { LancamentoSituacaoIntegracaoConstantes } from '../models/lancamentosituacao';
+import VendaHelper from '../common/funcoes';
+import Cliente from '@models/cliente';
+import LancamentoComplemento from '../models/lancamentocomplemento';
+import LancamentoRequisicao from '../models/lancamentorequisicao';
+import Conexao from '../models/conexao';
 
 class AgendamentoController {  
   async procedimentos() {

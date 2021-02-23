@@ -1,10 +1,27 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "target": "ES6",                          
-    "module": "commonjs",                     
-    "lib": ["ES6"],                           
-    "allowJs": true,                       
-    "outDir": "./dist",                    
+    "target": "es2016",                          
+    "module": "commonjs", 
+    "moduleResolution": "node",                    
+    "lib": [
+      "es2015",
+      "es2016",
+      "dom"
+    ],                           
+    "allowJs": true,       
+    "sourceMap": true,
+    "jsx": "preserve",
+    "allowSyntheticDefaultImports": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "noEmit": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": true,
+    "allowUnreachableCode": true,
+    "checkJs": false,
+    "outDir": "./dist",
     "rootDir": "./src",                       
     "removeComments": true,                
     "typeRoots": [
@@ -26,12 +43,14 @@
       "@models/*": ["./src/models/*"],
       "@views": ["./src/views/*"],
       "@config": ["./src/config/*"],
+      "@common": ["./src/common/*"],
       "@middlewares": ["./src/middlewares/*"],
     }
   },
   "include": ["src/**/*"],
   "exclude": [
     "node_modules",
+    "**/*.spec.ts",
     "dist"
   ]
 }

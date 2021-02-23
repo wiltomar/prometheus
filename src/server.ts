@@ -9,7 +9,7 @@ import { load } from 'ts-dotenv';
 import routes from './routes';
 import manipuladorDeErro from './middlewares/erros.midlleware';
 import manipuladorDeErroNaoEncontrado from './middlewares/naoencontrado.middleware';
-import config from 'src/config';
+import config from './config/config.json';
 import AgendamentoController from '@controllers/agendamento.controller';
 
 const app = express();
