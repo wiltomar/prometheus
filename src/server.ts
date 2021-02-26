@@ -9,8 +9,8 @@ import { load } from 'ts-dotenv';
 import routes from './routes';
 import manipuladorDeErro from './middlewares/erros.midlleware';
 import manipuladorDeErroNaoEncontrado from './middlewares/naoencontrado.middleware';
-import config from 'src/config';
-import AgendamentoController from '@controllers/agendamento.controller';
+import config from './config';
+import AgendamentoController from './controllers/agendamento.controller';
 
 const app = express();
 const env = load({

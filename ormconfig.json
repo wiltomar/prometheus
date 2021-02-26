@@ -1,15 +1,15 @@
 {
   "type": "mssql",
-  "host": "SRVLJ01",
+  "yhost": "SRVLJ01",
+  "yport": 1433,
+  "yusername": "sa",
+  "ypassword": "sisco12!@",
+  "ydatabase": "BarneysBurger_Matriz_02_2",
+  "host": "localhost",
   "port": 1433,
   "username": "sa",
-  "password": "sisco12!@",
-  "database": "BarneysBurger_Matriz_02_2",
-  "zhost": "localhost",
-  "zport": 1433,
-  "zusername": "sa",
-  "zpassword": "Syscon13!",
-  "zdatabase": "Gerencial",
+  "password": "Syscon13!",
+  "database": "Gerencial",
   "synchronize": false,
   "logging": false,
   "extra": {
@@ -24,7 +24,7 @@
       }
   },
   "entities": [
-     "src/models/**/*.ts"
+     "src/models/*.ts"
   ],
   "migrations": [
      "src/database/migrations/**/*.ts"

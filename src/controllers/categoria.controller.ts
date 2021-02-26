@@ -1,8 +1,8 @@
 import { getRepository, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
-import Categoria from '@models/categoria';
-import Computador, { COMPUTADOR_PROMETHEUS } from '@models/computador';
+import Categoria from '../models/categoria';
+import Computador, { COMPUTADOR_PROMETHEUS } from '../models/computador';
 
 class CategoriaController {
   async lista(req: Request, res: Response) {

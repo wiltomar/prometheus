@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn, PrimaryGeneratedColumn, AfterLoad } from 'typeorm';
 import Basex from './basex';
 import Categoria from './categoria';
 
@@ -25,6 +25,14 @@ class Produto extends Basex {
 
   @Column({ name: 'disponível' })
   venda: boolean;
+
+  preco: number;
+
+  @AfterLoad()
+  setPreco() {
+    this.preco = 0; 
+  }
+
 }
 
 @Entity('produtos')

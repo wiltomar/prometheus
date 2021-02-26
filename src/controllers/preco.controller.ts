@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response } from 'express';
 
-import Preco from '@models/preco';
+import Preco from '../models/preco';
 
 class PrecoController {
   async lista(req: Request, res: Response) {

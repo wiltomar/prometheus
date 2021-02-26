@@ -1,6 +1,6 @@
 import { getRepository, Like, Raw } from 'typeorm';
 import { Request, Response } from 'express';
-import Pessoa from '@models/pessoa';
+import Pessoa from '../models/pessoa';
 
 class PessoaController {
   async grava(req: Request, res: Response) {

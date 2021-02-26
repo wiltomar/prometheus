@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response } from 'express';
 
-import Municipio from '@models/municipio';
+import Municipio from '../models/municipio';
 
 class MunicipioController {
   async lista(req: Request, res: Response) {

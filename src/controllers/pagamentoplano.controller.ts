@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response } from 'express';
 
-import PagamentoPlano from '@models/pagamentoplano';
+import PagamentoPlano from '../models/pagamentoplano';
 
 class PagamentoPlanoController {
   async lista(req: Request, res: Response) {

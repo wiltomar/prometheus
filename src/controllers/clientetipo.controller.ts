@@ -1,7 +1,7 @@
 import { getRepository, Like, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
-import ClienteTipo from '@models/clientetipo';
+import ClienteTipo from '../models/clientetipo';
 
 class ClienteTipoController {
   async lista(req: Request, res: Response) {

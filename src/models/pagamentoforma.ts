@@ -22,7 +22,7 @@ class PagamentoForma extends Base {
   operacao: number;  
 }
 
-export const enum Especie {
+export enum Especie {
   Dinheiro = 1,
   Cheque = 2,
   Cartao = 3,

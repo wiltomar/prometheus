@@ -1,6 +1,6 @@
 import { getRepository, Like, Raw } from 'typeorm';
 import { Request, Response } from 'express';
-import Cliente from '@models/cliente';
+import Cliente from '../models/cliente';
 
 class ClienteController {
   async grava(req: Request, res: Response) {

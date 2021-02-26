@@ -1,7 +1,7 @@
 import { getRepository, Like, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
-import Departamento from '@models/departamento';
+import Departamento from '../models/departamento';
 
 class DepartamentoController {
   async lista(req: Request, res: Response) {

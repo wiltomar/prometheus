@@ -2,8 +2,7 @@ import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-
-import Usuario from '@models/usuario';
+import Usuario from '../models/usuario';
 
 class AutorizacaoController {
   async autentica(req: Request, res: Response) {

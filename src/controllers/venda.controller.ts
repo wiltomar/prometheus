@@ -1,15 +1,15 @@
-import { getManager, getRepository, Not, Raw, SimpleConsoleLogger } from 'typeorm';
+﻿import { getManager, getRepository, Not, Raw, SimpleConsoleLogger } from 'typeorm';
 import { Request, Response } from 'express';
-import Lancamento from '@models/lancamento';
-import { Venda } from '@models/venda';
-import VendaHelper from 'src/common/funcoes';
-import Computador, { COMPUTADOR_PROMETHEUS } from '@models/computador';
-import Historico from '@models/historico';
-import Conexao from '@models/conexao';
-import LancamentoPagamento from '@models/lancamentopagamento';
-import Pedido from '@models/pedido';
-import PedidoProduto from '@models/pedidoproduto';
-import Conta from '@models/conta';
+import Lancamento from '../models/lancamento';
+import { Venda } from '../models/venda';
+import VendaHelper from '../common/funcoes';
+import Computador, { COMPUTADOR_PROMETHEUS } from '../models/computador';
+import Historico from '../models/historico';
+import Conexao from '../models/conexao';
+import LancamentoPagamento from '../models/lancamentopagamento';
+import Pedido from '../models/pedido';
+import PedidoProduto from '../models/pedidoproduto';
+import Conta from '../models/conta';
 
 class VendaController {
   async grava(req: Request, res: Response) {

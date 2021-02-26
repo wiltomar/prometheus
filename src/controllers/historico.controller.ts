@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response } from 'express';
 
-import Historico from '@models/historico';
+import Historico from '../models/historico';
 
 class HistoricoController {
   async lista(req: Request, res: Response) {

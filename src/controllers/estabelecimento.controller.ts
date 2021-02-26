@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response } from 'express';
 
-import Estabelecimento from '@models/estabelecimento';
+import Estabelecimento from '../models/estabelecimento';
 
 class EstabelecimentoController {
   async lista(req: Request, res: Response) {

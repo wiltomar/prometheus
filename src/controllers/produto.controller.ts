@@ -1,8 +1,9 @@
 import { getRepository, Like, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
-import Produto from '@models/produto';
-import Computador, { COMPUTADOR_PROMETHEUS } from '@models/computador';
+import Produto from '../models/produto';
+import Computador, { COMPUTADOR_PROMETHEUS } from '../models/computador';
+import Cliente from 'src/models/cliente';
 
 class ProdutoController {
   async lista(req: Request, res: Response) {
@@ -10,12 +11,12 @@ class ProdutoController {
     try {
       const computador = await getRepository(Computador).findOne({
         where: { nome: COMPUTADOR_PROMETHEUS },
-        relations: ['estabelecimento']
+        relations: ['estabelecimento', 'preco']
       });
       if (!computador)
         throw new Error(`não existe um perfil de computador com o nome ${COMPUTADOR_PROMETHEUS}`);
       const repositorio = getRepository(Produto);
-      let { texto } = req.query;
+      let { texto, clienteid } = req.query;
       if (!texto) { texto = ''; }
       const produtos = await repositorio.find(
         {
@@ -24,6 +25,19 @@ class ProdutoController {
           order: { nome: 'ASC' }
         }
       );
+      let precoid = computador.preco?.id;
+      if (clienteid) {
+        let cliente = await getRepository(Cliente).findOne({ where: { id: +clienteid }, relations: ['preco'] });
+        if (cliente && cliente.preco)
+          precoid = cliente.preco.id;
+      }
+      if (!precoid)
+        precoid = 1;
+      for (const produto of produtos) {
+        const preco = await repositorio.manager.query(`SELECT Mosaico.fn_ProdutoPrecoDeVendaPadrao(${produto.id}, ${precoid}) preco`);
+        if (preco && (preco.length > 0))
+          produto.preco = preco[0].preco;
+      }
       return res.status(200).json(produtos);
     } catch (error) {
       return res.status(500).json({ message: error.message });
@@ -32,6 +46,12 @@ class ProdutoController {
 
   async buscaPorId(req: Request, res: Response) {
     try {
+      const computador = await getRepository(Computador).findOne({
+        where: { nome: COMPUTADOR_PROMETHEUS },
+        relations: ['estabelecimento', 'preco']
+      });
+      if (!computador)
+        throw new Error(`não existe um perfil de computador com o nome ${COMPUTADOR_PROMETHEUS}`);
       const repositorio = getRepository(Produto);
       const produto = await repositorio.findOne(
         {
@@ -39,11 +59,15 @@ class ProdutoController {
           relations: ['categoria']
         },
       );
-
       if (!produto) {
         return res.status(404).json({ message: 'Produto não encontrado!' });
       }
-
+      let precoid = computador.preco?.id;
+      if (!precoid)
+        precoid = 1;
+      const preco = await repositorio.manager.query(`SELECT Mosaico.fn_ProdutoPrecoDeVendaPadrao(${produto.id}, ${precoid}) preco`);
+      if (preco && (preco.length > 0))
+        produto.preco = preco[0].preco;
       return res.status(200).json(produto);
     } catch (error) {
       return res.status(500).json({ message: error.message });

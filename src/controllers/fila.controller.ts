@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response } from 'express';
 
-import Fila from '@models/fila';
+import Fila from '../models/fila';
 
 class FilaController {
   async grava(req: Request, res: Response) {

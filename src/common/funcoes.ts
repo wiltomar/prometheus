@@ -1,9 +1,9 @@
-import Lancamento from "@models/lancamento";
-import LancamentoPagamento from "@models/lancamentopagamento";
-import LancamentoVenda from "@models/lancamentovenda";
-import Pedido from "@models/pedido";
-import PedidoProduto from "@models/pedidoproduto";
-import { Venda, VendaItem, VendaPagamento, VendaEntrega } from "@models/venda";
+import Lancamento from "../models/lancamento";
+import LancamentoPagamento from "../models/lancamentopagamento";
+import LancamentoVenda from "../models/lancamentovenda";
+import Pedido from "../models/pedido";
+import PedidoProduto from "../models/pedidoproduto";
+import { Venda, VendaItem, VendaPagamento, VendaEntrega } from "../models/venda";
 import { getRepository } from "typeorm";
 
 class VendaHelper {

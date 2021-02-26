@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response } from 'express';
 
-import Usuario from '@models/usuario';
+import Usuario from '../models/usuario';
 
 class UsuarioController {
   async grava(req: Request, res: Response) {
@@ -18,21 +18,22 @@ class UsuarioController {
         return res.status(200).json({ message: 'Usuário já existe!' });
       }
 
-      const instancia = repositorio.create({
-        nome,
-        inclusao,
-        senha,
-        senhaHash,
-        status,
-        ativo,
-        vendedor,
-        usuario,
-        comissao,
-        estabelecimentoID,
-      });
-      await repositorio.save(instancia);
+      return res.status(200).json({ message: 'Em desenvolvimento!' });
+      // const instancia = repositorio.create({
+      //   nome,
+      //   inclusao,
+      //   senha,
+      //   senhaHash,
+      //   status,
+      //   ativo,
+      //   vendedor,
+      //   usuario,
+      //   comissao,
+      //   estabelecimentoID,
+      // });
+      // await repositorio.save(instancia);
 
-      return res.status(201).json(instancia);
+      // return res.status(201).json(instancia);
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
@@ -42,7 +43,7 @@ class UsuarioController {
     try {
       const repositorio = getRepository(Usuario);
 
-      const lista: UsuarioProtegido[] = await repositorio.find({ status: 0, vendedor: true });
+      const lista: Usuario[] = await repositorio.find({ status: 0, vendedor: true });
       lista.map((usuario) => {
         delete usuario.senha;
         delete usuario.senhaHash;

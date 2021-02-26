@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { Request, Response } from 'express';
 
-import UF from '@models/uf';
+import UF from '../models/uf';
 
 class UFController {
   async lista(req: Request, res: Response) {
