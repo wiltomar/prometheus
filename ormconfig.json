@@ -1,10 +1,5 @@
 {
   "type": "mssql",
-  "yhost": "SRVLJ01",
-  "yport": 1433,
-  "yusername": "sa",
-  "ypassword": "sisco12!@",
-  "ydatabase": "BarneysBurger_Matriz_02_2",
   "host": "localhost",
   "port": 1433,
   "username": "sa",
@@ -24,7 +19,8 @@
       }
   },
   "entities": [
-     "src/models/*.ts"
+     "src/models/**/*.ts",
+     "dist/models/**/*.ts"
   ],
   "migrations": [
      "src/database/migrations/**/*.ts"

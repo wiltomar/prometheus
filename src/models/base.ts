@@ -3,7 +3,7 @@ import {
   BeforeUpdate, BaseEntity,
 } from 'typeorm';
 
-abstract class Base extends BaseEntity {
+class Base extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
