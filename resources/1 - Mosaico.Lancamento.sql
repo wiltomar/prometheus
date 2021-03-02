@@ -1,0 +1,7 @@
+IF (OBJECT_ID('Mosaico.Lancamento') IS NOT NULL)
+	DROP VIEW Mosaico.Lancamento;
+GO
+CREATE VIEW Mosaico.Lancamento AS
+SELECT Código ID, DataDaInclusão Inclusao, DataDeEdição Edicao, Conexão ConexaoID, Status, CONVERT(BIT, CASE WHEN (Status & 1) = 0 THEN 1 ELSE 0 END) Valido, Tipo, Tipo ModalidadeID, Atendimento, Unidade EstabelecimentoID, Histórico HistoricoID, Cliente ClienteID, Fornecedor FornecedorID, Memorando, DataDeEmissão Emissao, TipoDeEmissão EmissaoTipo, SessãoDaEmissão EmissaoSessaoID, ConexãoDaEmissão EmissaoConexaoID, SequenciaItens, ValorDoLançamento SubTotal, Abatimento Desconto, Abatimento_Percentual DescontoPercentual, Bonificacao, Encargos TaxaDeServico, Frete TaxaDeEntregaID, ValorDoFrete TaxaDeEntrega, ValorTotal Total, Troco, ContraVale, Credito, LançamentoOrigem LancamentoOrigemID, LancamentoDestinoID, Vendedor VendedorID, ClienteCPFCNPJ, CIELOID, SeqüencialDiário SequencialDiario, Homens, Mulheres, Crianças Criancas, Transferencia, NF, DataDeRequisição Requisicao, DataDeEnvio Envio, Transportador EntregadorID, NFSérie NFSerie, Operacao OperacaoID, NFE, DFEComputadorID, DFETentativa DFETentativas, Modelo NFEModelo, NFEContingencia, NFE_REcibo NFERecibo, NFE_Chave NFEChave, NFE_DT_Autorizacao NFEAutorizacao, NFEProtocolo, NFE_Status NFEStatus, NFE_Motivo NFEMotivo, NFECancelada, NFECancelamento, NFECancelamentoConexaoID, NFECancelamentoMotivo, NFEProtocoloCancelamento NFECancelamentoProtocolo, NFEImpressa, ContigenciaTipo DFEContingenciaTipo
+FROM Lançamentos;
+GO
