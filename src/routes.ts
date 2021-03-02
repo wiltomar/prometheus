@@ -66,6 +66,8 @@ router.get(`${enderecoAPI}/vendas/:id`, authMiddleware, VendaController.buscaPor
 router.post(`${enderecoAPI}/vendas/grava`, authMiddleware, VendaController.grava);
 router.delete(`${enderecoAPI}/vendas/:id`, authMiddleware, VendaController.exclui);
 router.get(`${enderecoAPI}/resultado/cliente`, authMiddleware, ResultadoController.cliente);
+router.get(`${enderecoAPI}/resultado/produto`, authMiddleware, ResultadoController.produto);
+router.get(`${enderecoAPI}/resultado/emissao`, authMiddleware, ResultadoController.emissao);
 
 export default router;
 

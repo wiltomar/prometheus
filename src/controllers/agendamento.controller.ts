@@ -7,6 +7,7 @@ import Cliente from '../models/cliente';
 import LancamentoComplemento from '../models/lancamentocomplemento';
 import LancamentoRequisicao from '../models/lancamentorequisicao';
 import Conexao from '../models/conexao';
+import Requisicao from '@models/requisicao';
 
 class AgendamentoController {  
   async procedimentos() {
@@ -54,23 +55,23 @@ class AgendamentoController {
         AgendamentoController.situacaoNotifica(lancamento, LancamentoSituacaoConstantes.Expedido);
         AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Expedido, LancamentoSituacaoIntegracaoConstantes.Confirmado);
     }
-    let lancamentosConcluidos = await getRepository(Lancamento).find({
-      where: {
-        emissao: Raw(alias => `${alias} IS NOT NULL`),
-        estabelecimento: { id: config.estabelecimento.id },
-        tipo: Between(22, 22), // Delivery/Encomenda
-        status: Raw(alias => `(${alias} & 1) = 0`),
-        id: Raw(alias => `${alias} IN (SELECT L.ID FROM Mosaico.Lancamento L JOIN Mosaico.LancamentoSituacao S ON S.LancamentoID = L.ID WHERE (L.Emissao IS NOT NULL) AND (S.Situacao = ${LancamentoSituacaoConstantes.Encerrado}) AND (S.EntregaSituacao = ${LancamentoSituacaoIntegracaoConstantes.Pendente}))`)
-      },
-      relations: ['cliente']
-    });    
-    for (const lancamento of lancamentosConcluidos) {
-        console.log('Lançamentos encerrados');
-        console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
-        AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Processando);
-        AgendamentoController.situacaoNotifica(lancamento, LancamentoSituacaoConstantes.Encerrado);
-        AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Confirmado);
-    }
+    // let lancamentosConcluidos = await getRepository(Lancamento).find({
+    //   where: {
+    //     emissao: Raw(alias => `${alias} IS NOT NULL`),
+    //     estabelecimento: { id: config.estabelecimento.id },
+    //     tipo: Between(22, 22), // Delivery/Encomenda
+    //     status: Raw(alias => `(${alias} & 1) = 0`),
+    //     id: Raw(alias => `${alias} IN (SELECT L.ID FROM Mosaico.Lancamento L JOIN Mosaico.LancamentoSituacao S ON S.LancamentoID = L.ID WHERE (L.Emissao IS NOT NULL) AND (S.Situacao = ${LancamentoSituacaoConstantes.Encerrado}) AND (S.EntregaSituacao = ${LancamentoSituacaoIntegracaoConstantes.Pendente}))`)
+    //   },
+    //   relations: ['cliente']
+    // });    
+    // for (const lancamento of lancamentosConcluidos) {
+    //     console.log('Lançamentos encerrados');
+    //     console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
+    //     AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Processando);
+    //     AgendamentoController.situacaoNotifica(lancamento, LancamentoSituacaoConstantes.Encerrado);
+    //     AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Confirmado);
+    // }
     return 1;
   }
 
@@ -78,10 +79,21 @@ class AgendamentoController {
     const venda = await VendaHelper.venda(lancamento.id, true);
     const cliente = await getRepository(Cliente).findOne(lancamento.cliente.id);
     let data = lancamento.inclusao.toISOString().substring(0, 19) + 'Z';
+    let requisicao = await getRepository(Requisicao).findOne({
+      where: { lancamento: { id: lancamento.id } },
+      relations: ['integradora']
+    });
     let delivery = new Delivery();    
     if (!config.foodyDelivery.token)
       console.log('token não informado');
     delivery.id = lancamento.id.toString();
+    if (
+      requisicao
+      && (requisicao.integradora.nome.toLowerCase() == 'ifood')
+      && requisicao.identificador
+    ) {
+      delivery.id = 'i' + requisicao.identificador;
+    }
     delivery.status = "open";
     delivery.notes = venda.memorando;
     delivery.date = data;

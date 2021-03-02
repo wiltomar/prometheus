@@ -5,6 +5,7 @@ import Conexao from './conexao';
 import Conta from './conta';
 import { EstabelecimentoR } from './estabelecimento';
 import { HistoricoR } from './historico';
+import Integradora from './integradora';
 import LancamentoComplemento from './lancamentocomplemento';
 import LancamentoPagamento from './lancamentopagamento';
 import LancamentoRequisicao from './lancamentorequisicao';
