@@ -18,6 +18,7 @@ import PessoaController from './controllers/pessoa.controller';
 import FilaController from './controllers/fila.controller';
 import LancamentoController from './controllers/lancamento.controller';
 import VendaController from './controllers/venda.controller';
+import ResultadoController from './controllers/resultado.controller';
 
 const router = Router();
 const enderecoAPI = process.env.ADDRESS_API;
@@ -64,5 +65,7 @@ router.get(`${enderecoAPI}/vendas`, authMiddleware, VendaController.lista);
 router.get(`${enderecoAPI}/vendas/:id`, authMiddleware, VendaController.buscaPorId);
 router.post(`${enderecoAPI}/vendas/grava`, authMiddleware, VendaController.grava);
 router.delete(`${enderecoAPI}/vendas/:id`, authMiddleware, VendaController.exclui);
+router.get(`${enderecoAPI}/resultado/cliente`, authMiddleware, ResultadoController.cliente);
 
 export default router;
+

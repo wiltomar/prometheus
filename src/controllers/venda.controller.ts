@@ -60,6 +60,7 @@ class VendaController {
       lancamento.taxaServico = 0;
       lancamento.taxaEntrega = venda.taxaEntrega;
       lancamento.total = venda.total;
+      lancamento.vendedor = venda.vendedor;
       // Pedido
       let pedido: Pedido;
       let item = 0;
