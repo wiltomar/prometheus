@@ -1,0 +1,87 @@
+Gravando um lançamento vinculado a um vendedor
+
+POST
+http://localhost:3000/api/v1/lancamentos/grava
+{
+  "status": 64,
+  "tipo": 16,
+  "atendimento": null,
+  "memorando": null,
+  "emissao": null,
+  "subtotal": 7.77,
+  "desconto": 0,
+  "descontoPercentual": 0,
+  "bonificacao": 0,
+  "taxaServico": 0,
+  "taxaEntrega": 0,
+  "total": 7.77,
+  "conexao": {
+    "id": 685725
+	},
+  "estabelecimento": {
+    "id": 1
+  },
+  "historico": {
+    "id": 3
+  },
+  "cliente": {
+    "id": 0
+  },
+	"vendedor": {
+    "id": 1
+  },
+  "pedidos": [
+    {
+      "status": 576,
+      "tipo": 17,
+      "natureza": -1,
+      "requisicao": "2021-02-01T13:27:52.000Z",
+      "entrega": "2021-02-01T13:27:52.000Z",
+      "emissao": null,
+      "vendedorComissaoValor": 0.777,
+      "complemento": null,
+      "conexao": {
+        "id": 685725
+      },
+      "estabelecimento": {
+        "id": 1
+      },
+      "vendedor": {
+        "id": 2
+      },
+      "pedidoProdutos": [
+        {
+          "status": 64,
+          "item": 1,
+          "subitem": 0,
+          "itemTitular": 0,
+          "tipo": 17,
+          "atendimento": 2,
+          "natureza": -1,
+          "entrega": "2021-02-01T13:27:52.000Z",
+          "emissao": null,
+          "qde": 1,
+          "fator": 1,
+          "preco": 7.77,
+          "desconto": null,
+          "precoTotal": 7.77,
+          "comissionado": true,
+          "observacoes": null,
+					"conexao": {
+						"id": 685725
+					},					
+          "produto": {
+            "id": "1013"
+          },
+          "estabelecimento": {
+            "id": 1
+          },
+          "departamento": {
+            "id": 2
+          }
+        }
+      ]
+    }
+  ],
+  "contas": []
+}

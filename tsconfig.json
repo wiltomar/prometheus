@@ -1,26 +1,10 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "es2016",                          
-    "module": "commonjs", 
-    "moduleResolution": "node",                    
-    "lib": [
-      "es2015",
-      "es2016",
-      "dom"
-    ],                           
+    "target": "ES6",                          
+    "module": "commonjs",                
+    "lib": ["ES6"],                           
     "allowJs": true,       
-    "sourceMap": true,
-    "jsx": "preserve",
-    "allowSyntheticDefaultImports": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
-    "noEmit": false,
-    "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "allowUnreachableCode": true,
-    "checkJs": false,
     "outDir": "./dist",
     "rootDir": "./src",                       
     "removeComments": true,                
@@ -50,7 +34,6 @@
   "include": ["src/**/*"],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts",
     "dist"
   ]
 }

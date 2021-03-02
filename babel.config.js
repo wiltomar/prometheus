@@ -4,7 +4,7 @@ module.exports = {
       '@babel/preset-env',
       {
         targets: {
-          node: 'current',
+          node: 'current'
         },
       },
     ],
@@ -32,5 +32,5 @@ module.exports = {
   ignore: [
     '**/*.spec.ts',
   ],
-  
 };
+
