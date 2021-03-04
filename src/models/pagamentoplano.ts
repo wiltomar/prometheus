@@ -31,9 +31,9 @@ class PagamentoPlano extends Base {
   @Column()
   tef: boolean;
 
-  @OneToOne(() => PagamentoForma, (pagamentoforma) => pagamentoforma.id)
+  @OneToOne(() => PagamentoForma, (pagamentoForma) => pagamentoForma.id)
   @JoinColumn({ name: 'pagamentoformaid' })
-  pagamentoforma: PagamentoForma;
+  pagamentoForma: PagamentoForma;
 }
 
 @Entity('planosdepagamento')

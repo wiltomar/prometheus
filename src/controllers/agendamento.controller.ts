@@ -78,6 +78,7 @@ class AgendamentoController {
   static async registra(lancamento: Lancamento) {
     const venda = await VendaHelper.venda(lancamento.id, true);
     const cliente = await getRepository(Cliente).findOne(lancamento.cliente.id);
+    console.log('registrando',);
     let data = lancamento.inclusao.toISOString().substring(0, 19) + 'Z';
     let requisicao = await getRepository(Requisicao).findOne({
       where: { lancamento: { id: lancamento.id } },
@@ -132,8 +133,6 @@ class AgendamentoController {
     endereco += venda.entrega.endereco;
     if (venda.entrega.numero)
       endereco += ', ' + venda.entrega.numero.toString();
-    //if (venda.entrega.complemento)
-    //  endereco += ' ' + venda.entrega.complemento;
     if (venda.entrega.bairro)
       endereco += ', ' + venda.entrega.bairro;
     delivery.deliveryPoint = new DeliveryPoint();
@@ -163,20 +162,20 @@ class AgendamentoController {
         response.statusCode
       );
       if (error) {
+        console.error('Erro:');
         console.error(error);
         AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Erro);
         return 0;
       }
       AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Confirmado);      
-      console.log(response.statusCode, response.statusMessage, response.body);
-      let retorno = JSON.parse(response.body);
-      console.log('uid:');
-      console.log(retorno.uid);
-      if (retorno.uid) {          
+      //console.log(response.statusCode, response.statusMessage, response.body);
+      let retorno = JSON.parse(response.body);      
+      if (retorno.uid) {
+        console.log('registrado', 'lançamento', lancamento.id, 'cliente', delivery.customer.customerName, 'uid', retorno.uid);
         AgendamentoController.lancamentoVinculaUID(lancamento.id, retorno.uid);
         return 1;
       }
-      console.error('não foi possível registrar');
+      console.error('não foi possível registrar', response.body);
       AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Erro);
       return 0;        
     });
@@ -185,11 +184,11 @@ class AgendamentoController {
   static async situacaoNotifica(lancamento: Lancamento, situacao: number) {
     const lancamentoComplemento = await getRepository(LancamentoComplemento).findOne({ where: { lancamento: { id: lancamento.id } } });
     if (!lancamentoComplemento)
-      throw new Error(`complemento do lançamento ${lancamento.id} não encontrado`);
-    console.log('complemento', lancamento.id);
+      throw new Error(`complemento do lançamento ${lancamento.id} não encontrado`);    
     const uid = lancamentoComplemento.entregraIntegradoraUID;
+    console.log('complemento', lancamento.id, 'uid', uid);
     if (!uid)
-      throw new Error(`não é possível enviar, uid do lançamento ${lancamento.id} não encontrado`);
+      throw new Error(`não é possível enviar, uid do lançamento ${lancamento.id} não encontrado`);  
     const deliveryStatus = new DeliveryStatus();
     switch (situacao) {
       case LancamentoSituacaoConstantes.Expedido:

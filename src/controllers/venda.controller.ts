@@ -10,6 +10,7 @@ import LancamentoPagamento from '../models/lancamentopagamento';
 import Pedido from '../models/pedido';
 import PedidoProduto from '../models/pedidoproduto';
 import Conta from '../models/conta';
+import PagamentoPlano from '@models/pagamentoplano';
 
 class VendaController {
   async grava(req: Request, res: Response) {
@@ -109,7 +110,8 @@ class VendaController {
           pedidoProduto.atendimento = lancamento.atendimento;
           pedidoProduto.natureza = -1;          
           pedidoProduto.estabelecimento = lancamento.estabelecimento;
-          pedidoProduto.departamento = computador.departamento;
+          if (!pedidoProduto.departamento)
+            pedidoProduto.departamento = computador.departamento;
         }
         pedidoProduto.produto = vendaItem.produto;
         pedidoProduto.preco = vendaItem.preco;
@@ -148,6 +150,12 @@ class VendaController {
         }
         lancamentoPagamento.pagamentoPlano = pagamento.pagamentoPlano;
         lancamentoPagamento.pagamentoForma = pagamento.pagamentoForma;
+        if (!lancamentoPagamento.pagamentoForma) {
+          let pagamentoPlano = await getRepository(PagamentoPlano).findOne({ where: { id: pagamento.pagamentoPlano.id }, relations: ['pagamentoForma'] });
+          if (!pagamentoPlano || !pagamentoPlano.pagamentoForma)
+            throw new Error('plano de pagamento sem forma de pagamento relacionada');
+          lancamentoPagamento.pagamentoForma = pagamentoPlano.pagamentoForma;
+        }          
         lancamentoPagamento.parcelas = pagamento.parcelas;
         lancamentoPagamento.valor = pagamento.valor;
         if (!lancamentoPagamento.id)
@@ -156,6 +164,16 @@ class VendaController {
       //return res.status(201).json(lancamento);
       const retorno = await getRepository(Lancamento).save(lancamento);
       const retornox = await VendaHelper.venda(retorno.id, true);
+      // Atualiza os campos lançamento e tipo da tabela pedidos_produtos
+      let s: string[] = [];
+      s.push('UPDATE R SET');
+      s.push('  R.Lancamento = P.Lançamento,');
+      s.push('  R.Tipo = P.Tipo');
+      s.push('FROM');
+      s.push('  Pedidos P');
+      s.push('  JOIN Pedidos_Produtos R ON R.Pedido = P.Código');
+      s.push('WHERE P.Lançamento = ' + retorno.id + ';');
+      getManager().query(s.join('\n')); // promise
       return res.status(201).json(retornox);
     } catch (error) {
       return res.status(500).json({ message: error.message });
