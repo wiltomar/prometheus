@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
+import { getManager, getRepository } from 'typeorm';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import Usuario from '../models/usuario';
@@ -18,8 +18,15 @@ class AutorizacaoController {
         return res.status(401).json({ message: 'Usuário não encontrado!' });
       }
 
-      const isSenhaValida = await bcrypt.compare(senha, usuario.senhaHash);
-
+      let isSenhaValida = false;
+      if (usuario.senhaHash)
+        isSenhaValida = await bcrypt.compare(senha, usuario.senhaHash);
+      else {
+        let senhaResult = await getManager().query(`SELECT dbo.CriptoStr255('${usuario.senha}', '') senha`);
+        let senhaDecodificada: string = senhaResult[0].senha;
+        let senhaFornecida: string = senha;
+        isSenhaValida = (senhaFornecida.toLowerCase() === senhaDecodificada.toLocaleLowerCase());
+      }
       if (!isSenhaValida) {
         return res.status(401).json({ message: 'Usuário e/ou senha inválidos!' });
       }
