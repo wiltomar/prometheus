@@ -36,6 +36,7 @@ class VendaHelper {
         retorno.desconto = lancamento.desconto;
         retorno.frete = lancamento.taxaEntrega;
         retorno.total = lancamento.total;
+        retorno.modelo = lancamento.modelo;
         retorno.memorando = lancamento.memorando;
         retorno.vendedor = lancamento.vendedor;
         if (!retorno.emissao)

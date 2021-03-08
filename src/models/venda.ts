@@ -24,6 +24,7 @@ export class Venda {
     desconto: number;
     frete: number;
     total: number;
+    modelo: string;
     memorando: string;
     vendedor: VendedorR;
     entrega: VendaEntrega;

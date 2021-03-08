@@ -37,7 +37,8 @@ class VendaController {
       if (!venda.id) { // Novo
         lancamento = new Lancamento();
         lancamento.conexao = conexao;
-        lancamento.tipo = 16;
+        lancamento.tipo = 25;
+        lancamento.modelo = '55';
         lancamento.atendimento = null;
         lancamento.estabelecimento = computador.estabelecimento;
         lancamento.historico = historico;
@@ -188,7 +189,8 @@ class VendaController {
         let lancamentos = await getRepository(Lancamento).find({
           select: ['id'],
           where: { cliente: { id: clienteid }},
-          order: { id: 'ASC' }
+          order: { id: 'ASC' },
+          take: 100
         });
         for (const lancamento of lancamentos) {
           const venda = await VendaHelper.venda(lancamento.id, false);
