@@ -1,8 +1,9 @@
 import { Entity, Column, OneToOne, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
-import Base from './base';
-import Estabelecimento from './estabelecimento';
-import ClienteTipo from './clientetipo';
-import Preco from './preco';
+import Basex from './basex';
+import { EstabelecimentoR } from './estabelecimento';
+import { ClienteTipoR } from './clientetipo';
+import { VendedorR } from './vendedor';
+import { PrecoR } from './preco';
 import Municipio from './municipio';
 
 @Entity('clientes')
@@ -14,9 +15,9 @@ export class ClienteR {
   nome: string;
 }
 
-@Entity('Mosaico.Cliente')
-class Cliente extends Base {
-  @Column({ length: 60 })
+@Entity('clientes')
+class Cliente extends Basex {
+  @Column({ name: 'nome', length: 60 })
   nome: string;
 
   @Column({ length: 20 })
@@ -28,84 +29,89 @@ class Cliente extends Base {
   @Column({ length: 16 })
   senha: string;
 
-  @OneToOne(() => Estabelecimento, (estabelecimento) => estabelecimento.id)
-  @JoinColumn({ name: 'estabelecimentoid' })
-  estabelecimento: Estabelecimento;
+  @OneToOne(() => EstabelecimentoR, (estabelecimento) => estabelecimento.id)
+  @JoinColumn({ name: 'unidade' })
+  estabelecimento: EstabelecimentoR;
 
-  @OneToOne(() => ClienteTipo, (clientetipo) => clientetipo.id)
-  @JoinColumn({ name: 'clientetipoid' })
-  clientetipo: ClienteTipo;
+  @OneToOne(() => ClienteTipoR, (clientetipo) => clientetipo.id)
+  @JoinColumn({ name: 'tipodecliente' })
+  clientetipo: ClienteTipoR;
 
-  @OneToOne(() => Preco, (preco) => preco.id)
+  @OneToOne(() => PrecoR, (preco) => preco.id)
   @JoinColumn({ name: 'precoid' })
-  preco: Preco;
+  preco: PrecoR;
+
+  @OneToOne(() => VendedorR, (vendedor) => vendedor.id)
+  @JoinColumn({ name: 'vendedor' })
+  vendedor: VendedorR;
 
   @Column()
   desconto: number;
 
-  @Column({ length: 80 })
+  @Column({ name: 'endereço', length: 80 })  
   endereco: string;
 
-  @Column()
+  @Column({ name: 'número' })
   enderecoNumero: string;
 
-  @Column({ length: 80 })
+  @Column({ name: 'complemento', length: 80 })
   enderecoComplemento: string;
 
-  @Column({ length: 40 })
+  @Column({ name: 'bairro',length: 40 })
   enderecoBairro: string;
 
-  @Column({ length: 40 })
+  @Column({ name: 'cidade', length: 40 })
   enderecoCidade: string;
 
-  @Column({ length: 2 })
+  @Column({ name: 'uf', length: 2 })
   enderecoUF: string;
 
-  @Column({ length: 8 })
+  @Column({ name: 'cep', length: 8 })
   enderecoCEP: string;
 
-  @Column({ length: 80 })
+  @Column({ name: 'referência', length: 80 })
   enderecoReferencia: string;
 
   @OneToOne(() => Municipio, (municipio) => municipio.id)
-  @JoinColumn({ name: 'municipioid' })
+  @JoinColumn({ name: 'município' })
   municipio: Municipio;
 
-  @Column({ length: 120 })
+  @Column({ name: 'telefones', length: 120 })
   telefones: string;
 
-  @Column({ length: 120 })
+  @Column({ name: 'celulares', length: 120 })
   celulares: string;
 
-  @Column({ length: 160 })
+  @Column({ name: 'email', length: 160 })
   email: string;
 
-  @Column()
+  @Column({ name: 'crédito' })
   credito: number;
 
-  @Column()
+  @Column({ name: 'cpf' })
   cpf: number;
 
-  @Column()
+  @Column({ name: 'cnpj' })
   cnpj: number;
 
-  @Column()
+  @Column({ name: 'ie' })
   ie: number;
 
-  @Column({ length: 100 })
+  @Column({ name: 'razãosocial', length: 100 })
   razaoSocial: string;
 
-  @Column()
+  @Column({ name: 'sexo' })
   sexo: number;
 
-  @Column({ length: 40 })
+  @Column({ name: 'uid', length: 40 })
   uid: string;
 
-  @Column({ length: 40 })
+  @Column({ name: 'rfid', length: 40 })
   rfid: string;
 
-  @Column()
+  @Column({ name: 'observações' })
   observacoes: string;
+
 }
 
 export default Cliente;
