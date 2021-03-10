@@ -5,7 +5,7 @@
     },
     "xfoodyDelivery":
     { 
-        "ativo": true,
+        "ativo": false,
         "token": "9a36939f74e44704a6f033fbd193be37"
     },
     "estabelecimento": {
@@ -14,7 +14,7 @@
     },
     "foodyDelivery":
     {
-        "ativo": true,
+        "ativo": false,
         "token": "bf48f99d5a594df7aa2b6d629ea2b487"
     }
 }
