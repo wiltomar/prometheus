@@ -21,7 +21,14 @@ class ProdutoController {
       const produtos = await repositorio.find(
         {
           select: ['id', 'nome'], 
-          where: { nome: Like(`%${texto}%`), status: Raw(alias => `(${alias} & 1) = 0`), venda: true, ativo: true, id: Raw(alias => `(${alias} IN (SELECT ProdutoID FROM Mosaico.ProdutoEstabelecimento WHERE (EstabelecimentoID = ${computador.estabelecimento.id}) AND (Ativo = 1)))`) },
+          where: {
+            nome: Like(`%${texto}%`),
+            status: Raw(alias => `(${alias} & 1) = 0`),
+            venda: true,
+            ativo: true,
+            id: Raw(alias => `(${alias} IN (SELECT ProdutoID FROM Mosaico.ProdutoEstabelecimento WHERE (EstabelecimentoID = ${computador.estabelecimento.id}) AND (Ativo = 1)))`),
+            categoria: { id: Raw(alias => `(${alias} IN (SELECT ID FROM Mosaico.Categoria WHERE (Venda = 1)))`) }
+          },
           order: { nome: 'ASC' }
         }
       );
