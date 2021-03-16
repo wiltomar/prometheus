@@ -31,7 +31,7 @@ class ClienteController {
         const clientes = await repositorio.find(
           {
             select: ['id', 'nome'], 
-            where: { nome: Like(`%${texto}%`), vendedor: { id: vendedorid }, status: Raw(alias => `(${alias} & 1) = 0`) },
+            where: { nome: Like(`%${texto}%`), vendedorid: { id: vendedorid }, status: Raw(alias => `(${alias} & 1) = 0`) },
             order: { nome: 'ASC' } 
           });
         return res.status(200).json(clientes);
