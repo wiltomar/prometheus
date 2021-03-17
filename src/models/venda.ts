@@ -8,6 +8,8 @@ import { VendedorR } from './vendedor';
 import { PagamentoPlanoR } from './pagamentoplano';
 import { PagamentoFormaR } from './pagamentoforma';
 import Pedido from './pedido';
+import Operacao from './operacao';
+import NaturezaOperacao from './naturezaoperacao';
 
 @Entity('lançamentos')
 export class Venda {
@@ -26,6 +28,8 @@ export class Venda {
     total: number;
     modelo: string;
     memorando: string;
+    operacao: Operacao;
+    naturezaOperacao: NaturezaOperacao;
     vendedor: VendedorR;
     entrega: VendaEntrega;
     itens: VendaItem[];

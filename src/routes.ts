@@ -18,6 +18,8 @@ import PessoaController from './controllers/pessoa.controller';
 import FilaController from './controllers/fila.controller';
 import LancamentoController from './controllers/lancamento.controller';
 import VendaController from './controllers/venda.controller';
+import OperacaoController from './controllers/operacao.controller';
+import NaturezaOperacaoController from './controllers/naturezaoperacao.controller';
 import ResultadoController from './controllers/resultado.controller';
 
 const router = Router();
@@ -63,6 +65,10 @@ router.get(`${enderecoAPI}/lancamentos/:id`, authMiddleware, LancamentoControlle
 router.post(`${enderecoAPI}/lancamentos/grava`, authMiddleware, LancamentoController.grava);
 router.get(`${enderecoAPI}/vendas`, authMiddleware, VendaController.lista);
 router.get(`${enderecoAPI}/vendas/:id`, authMiddleware, VendaController.buscaPorId);
+router.get(`${enderecoAPI}/operacoes`, authMiddleware, OperacaoController.lista);
+router.get(`${enderecoAPI}/operacoes/:id`, authMiddleware, OperacaoController.buscaPorId);
+router.get(`${enderecoAPI}/naturezaoperacoes`, authMiddleware, NaturezaOperacaoController.lista);
+router.get(`${enderecoAPI}/naturezaoperacoes/:id`, authMiddleware, NaturezaOperacaoController.buscaPorId);
 router.post(`${enderecoAPI}/vendas/grava`, authMiddleware, VendaController.grava);
 router.delete(`${enderecoAPI}/vendas/:id`, authMiddleware, VendaController.exclui);
 router.get(`${enderecoAPI}/resultado/cliente`, authMiddleware, ResultadoController.cliente);

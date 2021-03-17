@@ -17,7 +17,7 @@ class VendaHelper {
         let lancamento = await getRepository(Lancamento).findOne(
             {
                 where: { id: id },
-                relations: ['conexao', 'estabelecimento', 'historico', 'cliente', 'vendedor']
+                relations: ['conexao', 'estabelecimento', 'historico', 'cliente', 'vendedor', 'operacao', 'naturezaOperacao']
             }
         );
         if (!lancamento) {
@@ -38,6 +38,8 @@ class VendaHelper {
         retorno.total = lancamento.total;
         retorno.modelo = lancamento.modelo;
         retorno.memorando = lancamento.memorando;
+        retorno.operacao = lancamento.operacao;
+        retorno.naturezaOperacao = lancamento.naturezaOperacao;
         retorno.vendedor = lancamento.vendedor;
         if (!retorno.emissao)
             retorno.situacao = 'Pendente'
