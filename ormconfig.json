@@ -1,9 +1,9 @@
 {
   "type": "mssql",
-  "host": "localhost",
+  "host": "localhost\\SQLEXPRESS",
   "port": 1433,
   "username": "sa",
-  "password": "Syscon13!",
+  "password": "sisco12!@",
   "database": "Gerencial",
   "synchronize": false,
   "logging": false,
