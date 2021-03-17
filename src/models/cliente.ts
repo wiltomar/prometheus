@@ -42,8 +42,8 @@ class Cliente extends Basex {
   preco: PrecoR;
 
   @OneToOne(() => VendedorR, (vendedor) => vendedor.id)
-  @JoinColumn({ name: 'vendedor' })
-  vendedor: VendedorR;
+  @JoinColumn({ name: 'vendedorid' })
+  vendedorid: VendedorR;
 
   @Column()
   desconto: number;

@@ -1,4 +1,5 @@
-import { Entity, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
+import { NaturezaOperacao } from './naturezaoperacao';
+import { Entity, Column, OneToOne, JoinColumn, OneToMany, ManyToOne, InsertValuesMissingError } from 'typeorm';
 import Basex from './basex';
 import { ClienteR } from './cliente';
 import Conexao from './conexao';
@@ -12,6 +13,7 @@ import LancamentoRequisicao from './lancamentorequisicao';
 import LancamentoSituacao from './lancamentosituacao';
 import Pedido from './pedido';
 import { VendedorR } from './vendedor';
+import Operacao from './operacao';
 
 @Entity('lançamentos')
 class Lancamento extends Basex {  
@@ -70,6 +72,14 @@ class Lancamento extends Basex {
 
   @Column({ name: 'modelo' })
   modelo: string;
+
+  @OneToOne(() => Operacao, (operacao) => operacao.id, { cascade: true })
+  @JoinColumn({ name: 'operacao', referencedColumnName: 'id' })
+  operacao: Operacao;
+  
+  @OneToOne(() => NaturezaOperacao, (nfeNaturezaOperacao) => nfeNaturezaOperacao.id, { cascade: true })
+  @JoinColumn({ name: 'nfe_naturezaoperacao', referencedColumnName: 'id' })
+  naturezaOperacao: NaturezaOperacao;
 
   @OneToOne(() => VendedorR, (vendedor) => vendedor.id, { cascade: true })
   @JoinColumn({ name: 'vendedor', referencedColumnName: 'id' })

@@ -1,4 +1,5 @@
-﻿import { getManager, getRepository, Not, Raw, SimpleConsoleLogger } from 'typeorm';
+﻿import { Operacao } from './../models/operacao';
+import { getManager, getRepository, Not, Raw, SimpleConsoleLogger } from 'typeorm';
 import { Request, Response } from 'express';
 import Lancamento from '../models/lancamento';
 import { Venda } from '../models/venda';
@@ -62,6 +63,9 @@ class VendaController {
       lancamento.taxaServico = 0;
       lancamento.taxaEntrega = venda.taxaEntrega;
       lancamento.total = venda.total;
+      lancamento.operacao = venda.operacao;
+      lancamento.naturezaOperacao = venda.naturezaOperacao;
+
       lancamento.vendedor = venda.vendedor;
       // Pedido
       let pedido: Pedido;
