@@ -54,7 +54,7 @@ class LancamentoController {
       let lancamentox = await repositorio.findOne(
         {
           where: { id: req.params.id, status: Raw(alias => `(${alias} & 1) = 0`) },
-          relations: ['conexao', 'estabelecimento', 'historico', 'cliente', 'vendedor', 'operacao', 'naturezaOperacao']
+          relations: ['conexao', 'estabelecimento', 'historico', 'cliente', 'vendedor', 'operacao']
         }
       );
       if (!lancamentox) {

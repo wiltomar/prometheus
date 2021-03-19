@@ -88,11 +88,17 @@ class PedidoProduto {
   @Column({ name: 'fator' })
   fator: number;
 
+  @Column({ name: 'fatorun' })
+  fatorUN: number;
+
   @Column({ name: 'preço' })
   preco: number;
 
   @Column({ name: 'desconto' })
   desconto: number;
+
+  @Column({ name: 'descontopercentual' })
+  descontoPercentual: number;
 
   @Column({ name: 'preçototal' })
   precoTotal: number;

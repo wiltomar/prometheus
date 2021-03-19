@@ -29,7 +29,7 @@ export class Venda {
     modelo: string;
     memorando: string;
     operacao: Operacao;
-    naturezaOperacao: NaturezaOperacao;
+    // naturezaOperacao: NaturezaOperacao;
     vendedor: VendedorR;
     entrega: VendaEntrega;
     itens: VendaItem[];
@@ -43,6 +43,8 @@ export class VendaItem {
     departamento: DepartamentoR;
     produto: ProdutoR;
     qde: number;
+    desconto: number;
+    descontoPercentual: number;
     preco: number;
     precoTotal: number;
     observacao: string;

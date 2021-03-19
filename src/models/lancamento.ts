@@ -77,9 +77,9 @@ class Lancamento extends Basex {
   @JoinColumn({ name: 'operacao', referencedColumnName: 'id' })
   operacao: Operacao;
   
-  @OneToOne(() => NaturezaOperacao, (nfeNaturezaOperacao) => nfeNaturezaOperacao.id, { cascade: true })
-  @JoinColumn({ name: 'nfe_naturezaoperacao', referencedColumnName: 'id' })
-  naturezaOperacao: NaturezaOperacao;
+  // @OneToOne(() => NaturezaOperacao, (nfeNaturezaOperacao) => nfeNaturezaOperacao.id, { cascade: true })
+  // @JoinColumn({ name: 'nfe_naturezaoperacao', referencedColumnName: 'id' })
+  // naturezaOperacao: NaturezaOperacao;
 
   @OneToOne(() => VendedorR, (vendedor) => vendedor.id, { cascade: true })
   @JoinColumn({ name: 'vendedor', referencedColumnName: 'id' })
