@@ -29,7 +29,7 @@ class Pessoa extends Basex {
   @Column({ name: 'entregador' })
   entregador: boolean;  
 
-  @Column({ name: 'comissão' })
+  @Column('numeric', { name: 'comissão' })
   comissao: number;
 
   @Column({ name: 'telefones', length: 120 })

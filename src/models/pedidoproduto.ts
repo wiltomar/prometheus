@@ -47,21 +47,19 @@ class PedidoProduto {
   @Column({ name: 'item' })
   item: number;
 
-  @Column({ name: 'subitem' })
-  @Column()
+  @Column('tinyint', { name: 'subitem' })
   subitem: number;
 
   @Column({ name: 'itemorigem' })
   itemTitular: number;
 
-  @Column({ name: 'tipo' })
-  @Column()
+  @Column('tinyint', { name: 'tipo' })
   tipo: number;
 
-  @Column({ name: 'atendimento' })
+  @Column('int', { name: 'atendimento' })
   atendimento: number;
 
-  @Column({ name: 'natureza' })
+  @Column('smallint', { name: 'natureza' })
   natureza: number;
 
   @OneToOne(() => EstabelecimentoR, (estabelecimento) => estabelecimento.id)
@@ -82,7 +80,7 @@ class PedidoProduto {
   @JoinColumn({ name: 'produto' })
   produto: ProdutoR;
 
-  @Column({ name: 'qde' })
+  @Column('numeric', { name: 'qde' })
   qde: number;
 
   @Column({ name: 'fator' })
@@ -91,10 +89,10 @@ class PedidoProduto {
   @Column({ name: 'fatorun' })
   fatorUN: number;
 
-  @Column({ name: 'preço' })
+  @Column('smallmoney', { name: 'preço' })
   preco: number;
 
-  @Column({ name: 'desconto' })
+  @Column('smallmoney', { name: 'desconto' })
   desconto: number;
 
   @Column({ name: 'descontopercentual' })

@@ -51,7 +51,7 @@ class Lancamento extends Basex {
   @Column({ name: 'abatimento' })
   desconto: number;
 
-  @Column({ name: 'abatimento_percentual' })
+  @Column('numeric', { name: 'abatimento_percentual' })
   descontoPercentual: number;
 
   @Column({ name: 'bonificacao' })
