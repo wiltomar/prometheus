@@ -4,7 +4,7 @@
   "port": 1433,
   "username": "sa",
   "password": "Syscon13!",
-  "database": "Gerencial_Potiguar",
+  "database": "Gerencial",
   "synchronize": false,
   "logging": false,
   "extra": {
