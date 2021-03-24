@@ -18,7 +18,7 @@ class Usuario extends Base {
   @Column()
   vendedor: boolean;
 
-  @Column()
+  @Column('numeric')
   comissao: number;
 
   @Column()
