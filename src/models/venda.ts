@@ -9,7 +9,6 @@ import { PagamentoPlanoR } from './pagamentoplano';
 import { PagamentoFormaR } from './pagamentoforma';
 import Pedido from './pedido';
 import Operacao from './operacao';
-import NaturezaOperacao from './naturezaoperacao';
 
 @Entity('lançamentos')
 export class Venda {
