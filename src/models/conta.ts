@@ -21,7 +21,7 @@ class Conta extends Basex {
   @Column({ name: 'datadevencimento' })
   vencimento: Date;
 
-  @Column({ name: 'valordaconta' })
+  @Column({ name: 'valordaconta', type: 'money' })
   valor: number;
   
   @OneToOne(() => PagamentoForma, (pagamentoforma) => pagamentoforma.id)
@@ -34,13 +34,13 @@ class Conta extends Basex {
   @Column({ name: 'datadepagamento' })
   pagamento: Date;
 
-  @Column({ name: 'acréscimos' })
+  @Column({ name: 'acréscimos', type: 'money' })
   acrescimos: number;
 
-  @Column({ name: 'descontos' })
+  @Column({ name: 'descontos', type: 'money' })
   descontos: number;
 
-  @Column({ name: 'valorpago' })
+  @Column({ name: 'valorpago', type: 'money' })
   total: number;
 
   @OneToOne(() => ContaCorrente, (contacorrente) => contacorrente.id)

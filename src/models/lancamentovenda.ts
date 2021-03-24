@@ -44,31 +44,31 @@ export class LancamentoVenda {
   @Column({ name: 'entregacelulares' })
   celulares: string;
 
-  @Column({ name: 'dinheiro' })
+  @Column({ name: 'dinheiro', type: 'money'  })
   dinheiro: number;
 
-  @Column({ name: 'cheque' })
+  @Column({ name: 'cheque', type: 'money'  })
   cheque: number;
 
   @OneToOne(() => PagamentoFormaR, (pagamentoForma) => pagamentoForma.id)
   @JoinColumn({ name: 'formadepagamento1' })
   pagamentoForma1: PagamentoFormaR;
 
-  @Column({ name: 'valor1' })
+  @Column({ name: 'valor1', type: 'money'  })
   valor1: number;
 
   @OneToOne(() => PagamentoFormaR, (pagamentoForma) => pagamentoForma.id)
   @JoinColumn({ name: 'formadepagamento2' })
   pagamentoForma2: PagamentoFormaR;
 
-  @Column({ name: 'valor2' })
+  @Column({ name: 'valor2', type: 'money'  })
   valor2: number;
 
   @OneToOne(() => PagamentoFormaR, (pagamentoForma) => pagamentoForma.id)
   @JoinColumn({ name: 'formadepagamento3' })
   pagamentoForma3: PagamentoFormaR;
 
-  @Column({ name: 'valor3' })
+  @Column({ name: 'valor3', type: 'money'  })
   valor3: number;
 }
 

@@ -82,25 +82,25 @@ class PedidoProduto {
   @JoinColumn({ name: 'produto' })
   produto: ProdutoR;
 
-  @Column({ name: 'qde' })
+  @Column({ name: 'qde', type: 'real' })
   qde: number;
 
-  @Column({ name: 'fator' })
+  @Column({ name: 'fator', type: 'real' })
   fator: number;
 
   @Column({ name: 'fatorun' })
   fatorUN: number;
 
-  @Column({ name: 'preço' })
+  @Column({ name: 'preço', type: 'money' })
   preco: number;
 
-  @Column({ name: 'desconto' })
+  @Column({ name: 'desconto', type: 'money' })
   desconto: number;
 
-  @Column({ name: 'descontopercentual' })
+  @Column({ name: 'descontopercentual', type: 'real' })
   descontoPercentual: number;
 
-  @Column({ name: 'preçototal' })
+  @Column({ name: 'preçototal', type: 'money' })
   precoTotal: number;
 
   @Column({ name: 'comissionado' })

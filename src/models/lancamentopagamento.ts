@@ -52,7 +52,7 @@ class LancamentoPagamento {
   @Column({ name: 'parcelas' })
   parcelas: number;
 
-  @Column({ name: 'valor' })
+  @Column({ name: 'valor', type: 'money'  })
   valor: number;
 }
 

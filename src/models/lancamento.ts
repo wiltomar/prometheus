@@ -45,26 +45,26 @@ class Lancamento extends Basex {
   @Column({ name: 'datadeemissão' })
   emissao: Date;  
 
-  @Column({ name: 'valordolançamento' })
+  @Column({ name: 'valordolançamento', type: 'money' })
   subtotal: number;
 
-  @Column({ name: 'abatimento' })
+  @Column({ name: 'abatimento', type: 'money' })
   desconto: number;
 
-  @Column({ name: 'abatimento_percentual' })
+  @Column({ name: 'abatimento_percentual', type: 'real' })
   descontoPercentual: number;
 
-  @Column({ name: 'bonificacao' })
+  @Column({ name: 'bonificacao', type: 'money' })
   @Column()
   bonificacao: number;
 
-  @Column({ name: 'encargos' })
+  @Column({ name: 'encargos', type: 'money' })
   taxaServico: number;
 
-  @Column({ name: 'valordofrete' })
+  @Column({ name: 'valordofrete', type: 'money' })
   taxaEntrega: number;
 
-  @Column({ name: 'valortotal' })
+  @Column({ name: 'valortotal', type: 'money' })
   total: number;
 
   @Column({ name: 'situacao' })
