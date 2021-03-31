@@ -70,7 +70,7 @@ class VendaController {
       lancamento.operacao = venda.operacao;
       //lancamento.naturezaOperacao = venda.naturezaOperacao;
       lancamento.vendedor = venda.vendedor;
-      console.log('desconto ', venda.desconto, lancamento.desconto);
+      //console.log('desconto ', venda.desconto, lancamento.desconto);
       // Pedido
       let pedido: Pedido;
       let item = 0;
