@@ -73,6 +73,9 @@ class Lancamento extends Basex {
   @Column({ name: 'modelo' })
   modelo: string;
 
+  @Column({ name: 'integradora' })
+  integradora: number;
+
   @OneToOne(() => Operacao, (operacao) => operacao.id, { cascade: true })
   @JoinColumn({ name: 'operacao', referencedColumnName: 'id' })
   operacao: Operacao;

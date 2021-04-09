@@ -1,5 +1,10 @@
 {
   "type": "mssql",
+  "yhost": "SRV-BM",
+  "yport": 1433,
+  "yusername": "sa",
+  "ypassword": "solucoes12!@",
+  "ydatabase": "ELChanchoBM",
   "host": "localhost",
   "port": 1433,
   "username": "sa",

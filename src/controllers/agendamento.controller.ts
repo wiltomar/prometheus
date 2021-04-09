@@ -8,6 +8,7 @@ import LancamentoComplemento from '../models/lancamentocomplemento';
 import LancamentoRequisicao from '../models/lancamentorequisicao';
 import Conexao from '../models/conexao';
 import Requisicao from '@models/requisicao';
+import { execPath } from 'node:process';
 
 class AgendamentoController {  
   async procedimentos() {
@@ -19,60 +20,111 @@ class AgendamentoController {
     }
   }
 
-  static async processa() {    
-    // verificar se a configuração de integração está ativa 
-    let lancamentosPendentes = await getRepository(Lancamento).find({
-      where: {
-        emissao: IsNull(),
-        estabelecimento: { id: config.estabelecimento.id },
-        tipo: Between(22, 22), // Delivery/Encomenda
-        status: Raw(alias => `(${alias} & 1) = 0`),
-        id: Raw(alias => `${alias} IN (SELECT L.ID FROM Mosaico.Lancamento L JOIN Mosaico.LancamentoSituacao S ON S.LancamentoID = L.ID WHERE (L.Emissao IS NULL) AND (S.Situacao = ${LancamentoSituacaoConstantes.Pendente}) AND (S.EntregaSituacao = ${LancamentoSituacaoIntegracaoConstantes.Pendente}))`)
-      },
-      relations: ['cliente']
-    });    
-    for (const lancamento of lancamentosPendentes) {
+  private static processando = false;
+
+  static async sleep(ms: number) {
+    console.log(`sleep ${ms / 1000} segundos`);
+    //return new Promise(resolve => setTimeout(resolve, ms));
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < ms);
+  }
+
+  static async processa() {
+    if (this.processando) {
+      console.log('processamento concorrente, rejeitado');
+      return 0;
+    }      
+    try {
+      console.log(new Date());
+      console.log('iniciando');
+      //await this.sleep(7000);
+      // verificar se a configuração de integração está ativa
+      var integracoesComEntrega = config.integracoesComEntrega.join(',');    
+      if (!integracoesComEntrega)
+        integracoesComEntrega = '-1';
+      let lancamentosPendentes = await getRepository(Lancamento).find({
+        where: {
+          emissao: IsNull(),
+          estabelecimento: { id: config.estabelecimento.id },
+          tipo: Between(22, 22), // Delivery/Encomenda
+          status: Raw(alias => `(${alias} & 1) = 0`),
+          id: Raw(alias => `${alias} IN (SELECT L.ID FROM Mosaico.Lancamento L JOIN Mosaico.LancamentoSituacao S ON S.LancamentoID = L.ID WHERE (L.Emissao IS NULL) AND (S.Situacao = ${LancamentoSituacaoConstantes.Pendente}) AND (S.EntregaSituacao = ${LancamentoSituacaoIntegracaoConstantes.Pendente}))`),
+          integradora: Raw(alias => `ISNULL(${alias}, 0) NOT IN (${integracoesComEntrega})`),
+          inclusao: Raw(alias => `DATEDIFF(SECOND, ${alias}, GETDATE()) > 3`)
+        },
+        relations: ['cliente']
+      });
+      if (lancamentosPendentes)
         console.log('Lançamentos pendentes');
+      for (const lancamento of lancamentosPendentes) {
         console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
-        AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Processando);
-        AgendamentoController.registra(lancamento);
-        AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Confirmado);
-    }
-    let lancamentosExpedidos = await getRepository(Lancamento).find({
-      where: {
-        emissao: IsNull(),
-        estabelecimento: { id: config.estabelecimento.id },
-        tipo: Between(22, 22), // Delivery/Encomenda
-        status: Raw(alias => `(${alias} & 1) = 0`),
-        id: Raw(alias => `${alias} IN (SELECT L.ID FROM Mosaico.Lancamento L JOIN Mosaico.LancamentoSituacao S ON S.LancamentoID = L.ID WHERE (L.Emissao IS NULL) AND (S.Situacao = ${LancamentoSituacaoConstantes.Expedido}) AND (S.EntregaSituacao = ${LancamentoSituacaoIntegracaoConstantes.Pendente}))`)
-      },
-      relations: ['cliente']
-    });    
-    for (const lancamento of lancamentosExpedidos) {
+        try {
+          await AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Processando);
+          AgendamentoController.registra(lancamento);
+        } catch {
+          AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Erro);
+          return 0;
+        }        
+        return 1; // A sobrecarga do serviço causa timeout
+      }
+      let lancamentosExpedidos = await getRepository(Lancamento).find({
+        where: {
+          emissao: IsNull(),
+          estabelecimento: { id: config.estabelecimento.id },
+          tipo: Between(22, 22), // Delivery/Encomenda
+          status: Raw(alias => `(${alias} & 1) = 0`),
+          id: Raw(alias => `(${alias} IN (SELECT L.ID FROM Mosaico.Lancamento L JOIN Mosaico.LancamentoSituacao S ON S.LancamentoID = L.ID WHERE (L.Emissao IS NULL) AND (S.Situacao = ${LancamentoSituacaoConstantes.Expedido}) AND (S.EntregaSituacao = ${LancamentoSituacaoIntegracaoConstantes.Pendente}))) AND (${alias} IN (SELECT L.ID FROM Mosaico.Lancamento L JOIN Mosaico.LancamentoComplemento C ON C.LancamentoID = L.ID WHERE (L.Emissao IS NULL) AND (C.EntregaIntegradoraUID IS NOT NULL)))`),
+          integradora: Raw(alias => `ISNULL(${alias}, 0) NOT IN (${integracoesComEntrega})`),
+          inclusao: Raw(alias => `DATEDIFF(SECOND, ${alias}, GETDATE()) > 12`)
+        },
+        relations: ['cliente']
+      });
+      if (lancamentosExpedidos)
         console.log('Lançamentos expedidos');
+      for (const lancamento of lancamentosExpedidos) {
         console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
-        AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Expedido, LancamentoSituacaoIntegracaoConstantes.Processando);
-        AgendamentoController.situacaoNotifica(lancamento, LancamentoSituacaoConstantes.Expedido);
-        AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Expedido, LancamentoSituacaoIntegracaoConstantes.Confirmado);
+        try {
+          await AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Expedido, LancamentoSituacaoIntegracaoConstantes.Processando);
+          AgendamentoController.situacaoNotifica(lancamento, LancamentoSituacaoConstantes.Expedido);
+        } catch {
+          AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Expedido, LancamentoSituacaoIntegracaoConstantes.Erro);
+          return 0;
+        }        
+        return 1; // A sobrecarga do serviço causa timeout
+      }
+      let lancamentosConcluidos = await getRepository(Lancamento).find({
+        where: {
+          emissao: Raw(alias => `${alias} IS NOT NULL`),
+          estabelecimento: { id: config.estabelecimento.id },
+          tipo: Between(22, 22), // Delivery/Encomenda
+          status: Raw(alias => `(${alias} & 1) = 0`),
+          id: Raw(alias => `(${alias} IN (SELECT L.ID FROM Mosaico.Lancamento L JOIN Mosaico.LancamentoSituacao S ON S.LancamentoID = L.ID WHERE (L.Emissao IS NOT NULL) AND (L.Inclusao >= (GETDATE() - 1)) AND (S.Situacao = ${LancamentoSituacaoConstantes.Encerrado}) AND (S.EntregaSituacao = ${LancamentoSituacaoIntegracaoConstantes.Pendente}))) AND (${alias} IN (SELECT L.ID FROM Mosaico.Lancamento L JOIN Mosaico.LancamentoComplemento C ON C.LancamentoID = L.ID WHERE (L.Emissao IS NOT NULL) AND (L.Inclusao >= (GETDATE() - 1)) AND (C.EntregaIntegradoraUID IS NOT NULL)))`),
+          integradora: Raw(alias => `ISNULL(${alias}, 0) NOT IN (${integracoesComEntrega})`),
+          inclusao: Raw(alias => `DATEDIFF(SECOND, ${alias}, GETDATE()) > 12`)
+        },
+        relations: ['cliente']
+      });
+      if (lancamentosConcluidos)
+        console.log('Lançamentos encerrados');
+      for (const lancamento of lancamentosConcluidos) {          
+        console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
+        try {
+          await AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Processando);
+          AgendamentoController.situacaoNotifica(lancamento, LancamentoSituacaoConstantes.Encerrado);  
+        } catch {
+          AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Erro);
+          return 0;
+        }
+        return 1; // A sobrecarga do serviço causa timeout
+      }
+      console.log('finalizando');
+      return 1;
+    } finally {
+      this.processando = false;
     }
-    // let lancamentosConcluidos = await getRepository(Lancamento).find({
-    //   where: {
-    //     emissao: Raw(alias => `${alias} IS NOT NULL`),
-    //     estabelecimento: { id: config.estabelecimento.id },
-    //     tipo: Between(22, 22), // Delivery/Encomenda
-    //     status: Raw(alias => `(${alias} & 1) = 0`),
-    //     id: Raw(alias => `${alias} IN (SELECT L.ID FROM Mosaico.Lancamento L JOIN Mosaico.LancamentoSituacao S ON S.LancamentoID = L.ID WHERE (L.Emissao IS NOT NULL) AND (S.Situacao = ${LancamentoSituacaoConstantes.Encerrado}) AND (S.EntregaSituacao = ${LancamentoSituacaoIntegracaoConstantes.Pendente}))`)
-    //   },
-    //   relations: ['cliente']
-    // });    
-    // for (const lancamento of lancamentosConcluidos) {
-    //     console.log('Lançamentos encerrados');
-    //     console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
-    //     AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Processando);
-    //     AgendamentoController.situacaoNotifica(lancamento, LancamentoSituacaoConstantes.Encerrado);
-    //     AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Confirmado);
-    // }
-    return 1;
   }
 
   static async registra(lancamento: Lancamento) {
@@ -88,19 +140,17 @@ class AgendamentoController {
     if (!config.foodyDelivery.token)
       console.log('token não informado');
     delivery.id = lancamento.id.toString();
-    if (
-      requisicao
-      && (requisicao.integradora.nome.toLowerCase() == 'ifood')
-      && requisicao.identificador
-    ) {
-      delivery.id = 'i' + requisicao.identificador;
-    }
+    // if (
+    //   requisicao
+    //   && (requisicao.integradora.nome.toLowerCase() == 'ifood')
+    //   && requisicao.identificador
+    // ) {
+    //   delivery.id = 'i' + requisicao.identificador;
+    // }
     delivery.status = "open";
     delivery.notes = venda.memorando;
     delivery.date = data;
     delivery.deliveryFee = venda.frete;
-      //courierFee: number;
-      //orderTotal: number;
     // Itens
     let valor = 0;
     let produtos: string[] = [];
@@ -147,19 +197,26 @@ class AgendamentoController {
         body: JSON.stringify(delivery),
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': config.foodyDelivery.token
-            //'Authorization': '9a36939f74e44704a6f033fbd193be37'
+          'Content-Type': 'application/json',
+          'Authorization': config.foodyDelivery.token
         }
     }
     request(clientServerOptions, function (error: any, response: any) {
+      let responseBody = '';
+      let responseStatus = 500;
+      if (response) {
+        responseBody = response.body;
+        responseStatus = response.statusCode;
+      }      
+      if (!responseBody)
+        responseBody = '(no body response)';
       AgendamentoController.requisicaoGrava(
         lancamento.id,
         clientServerOptions.uri,
         clientServerOptions.method,
         clientServerOptions.body,
-        response.body,
-        response.statusCode
+        responseBody,
+        responseStatus        
       );
       if (error) {
         console.error('Erro:');
@@ -167,7 +224,7 @@ class AgendamentoController {
         AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Erro);
         return 0;
       }
-      AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Confirmado);      
+      AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Confirmado);
       //console.log(response.statusCode, response.statusMessage, response.body);
       let retorno = JSON.parse(response.body);      
       if (retorno.uid) {
@@ -188,7 +245,16 @@ class AgendamentoController {
     const uid = lancamentoComplemento.entregraIntegradoraUID;
     console.log('complemento', lancamento.id, 'uid', uid);
     if (!uid)
-      throw new Error(`não é possível enviar, uid do lançamento ${lancamento.id} não encontrado`);  
+      throw new Error(`não é possível enviar, uid do lançamento ${lancamento.id} não encontrado`);
+    // if (!uid) { // Se não tiver o identificador, registra
+    //   await AgendamentoController.registra(lancamento);
+    //   const lancamentoComplemento = await getRepository(LancamentoComplemento).findOne({ where: { lancamento: { id: lancamento.id } } });
+    //   if (!lancamentoComplemento)
+    //     throw new Error(`complemento do lançamento ${lancamento.id} não encontrado`);    
+    //   uid = lancamentoComplemento.entregraIntegradoraUID;
+    //   if (!uid)
+    //     throw new Error(`não é possível enviar, uid do lançamento ${lancamento.id} não encontrado`);
+    // }      
     const deliveryStatus = new DeliveryStatus();
     switch (situacao) {
       case LancamentoSituacaoConstantes.Expedido:
@@ -207,26 +273,33 @@ class AgendamentoController {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': config.foodyDelivery.token
-            //'Authorization': '9a36939f74e44704a6f033fbd193be37'
         }
     }
-    request(clientServerOptions, function (error: any, response: any) {
-        AgendamentoController.requisicaoGrava(
-          lancamento.id,
-          clientServerOptions.uri,
-          clientServerOptions.method,
-          clientServerOptions.body,
-          response.body,
-          response.statusCode
-        );
-        if (error) {
-          console.error(error);
-          AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, situacao, LancamentoSituacaoIntegracaoConstantes.Erro);
-          return 0;
-        }
-        AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, situacao, LancamentoSituacaoIntegracaoConstantes.Confirmado);
-        console.log(response.statusCode, response.statusMessage, response.body);
-        return 1;
+    request(clientServerOptions, function (error: any, response: any) {      
+      let responseBody = '';
+      let responseStatus = 500;
+      if (response) {
+        responseBody = response.body;
+        responseStatus = response.statusCode;
+      }      
+      if (!responseBody)
+        responseBody = '(no body response)';
+      AgendamentoController.requisicaoGrava(
+        lancamento.id,
+        clientServerOptions.uri,
+        clientServerOptions.method,
+        clientServerOptions.body,
+        responseBody,
+        responseStatus        
+      );
+      if (error) {
+        console.error(error);
+        AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, situacao, LancamentoSituacaoIntegracaoConstantes.Erro);
+        return 0;
+      }
+      AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, situacao, LancamentoSituacaoIntegracaoConstantes.Confirmado);
+      console.log(response.statusCode, response.statusMessage, response.body);
+      return 1;
     });
   }
 
@@ -246,7 +319,7 @@ class AgendamentoController {
     getRepository(LancamentoRequisicao).save(lancamentoRequisicao);
   }
 
-  static lancamentoSituacaoEntrega(lancamentoid: number, situacao: number, situacaoIntegracao: number) {
+  static async lancamentoSituacaoEntrega(lancamentoid: number, situacao: number, situacaoIntegracao: number) {
     let s: string[] = [];
     s.push(`UPDATE Mosaico.LancamentoSituacao SET`);
     s.push(`  Edicao = GETDATE(),`);
@@ -254,17 +327,17 @@ class AgendamentoController {
     s.push(`WHERE`);
     s.push(`  (LancamentoID = ${lancamentoid})`);
     s.push(`  AND (Situacao = ${situacao});`);
-    getManager().query(s.join('\n'));
+    await getManager().query(s.join('\n'));
   }
 
-  static lancamentoVinculaUID(lancamentoid: number, uid: string) {
+  static async lancamentoVinculaUID(lancamentoid: number, uid: string) {
     let s: string[] = [];
     s.push(`UPDATE Mosaico.LancamentoComplemento SET`);
     s.push(`  Edicao = GETDATE(),`);
     s.push(`  EntregaIntegradoraUID = '${uid}'`);
     s.push(`WHERE`);
     s.push(`  (LancamentoID = ${lancamentoid});`);
-    getManager().query(s.join('\n'));
+    await getManager().query(s.join('\n'));
   }
 
   static commando() {

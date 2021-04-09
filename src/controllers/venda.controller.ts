@@ -57,7 +57,6 @@ class VendaController {
       lancamento.estabelecimento = venda.estabelecimento;
       if (!lancamento.estabelecimento)
         throw new Error('estabelecimento não informado');
-        //lancamento.estabelecimento = computador.estabelecimento;      
       lancamento.cliente = venda.cliente;
       lancamento.memorando = venda.memorando;
       lancamento.subtotal = venda.subtotal;
@@ -68,9 +67,7 @@ class VendaController {
       lancamento.taxaEntrega = venda.taxaEntrega;
       lancamento.total = venda.total;
       lancamento.operacao = venda.operacao;
-      //lancamento.naturezaOperacao = venda.naturezaOperacao;
       lancamento.vendedor = venda.vendedor;
-      console.log('desconto ', venda.desconto, lancamento.desconto);
       // Pedido
       let pedido: Pedido;
       let item = 0;
@@ -175,15 +172,7 @@ class VendaController {
       const retorno = await getRepository(Lancamento).save(lancamento);
       const retornox = await VendaHelper.venda(retorno.id, true);
       // Atualiza os campos lançamento e tipo da tabela pedidos_produtos
-      // let s: string[] = [];
-      // s.push('UPDATE R SET');
-      // s.push('  R.Lancamento = P.Lançamento,');
-      // s.push('  R.Tipo = P.Tipo');
-      // s.push('FROM');
-      // s.push('  Pedidos P');
-      // s.push('  JOIN Pedidos_Produtos R ON R.Pedido = P.Código');
-      // s.push('WHERE P.Lançamento = ' + retorno.id + ';');
-      // await getManager().query(s.join('\n')); // promise
+      getManager().query(`EXEC Mosaico.sp_Lancamento_Insumos ${retorno.id};`);
       getManager().query(`EXEC Mosaico.sp_Lancamento_AplicaTributacao ${retorno.id};`);
       return res.status(201).json(retornox);
     } catch (error) {

@@ -12,6 +12,7 @@ export interface Config
 {
     estabelecimento: Estabelecimento;
     foodyDelivery: FoodyDelivery;
+    integracoesComEntrega: number[];
 }
 
 let config: Config = require('./config/config.json');
