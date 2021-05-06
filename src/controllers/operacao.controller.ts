@@ -7,7 +7,13 @@ class OperacaoController {
   async lista(req: Request, res: Response) {
     try {
       const repositorio = getRepository(Operacao);
-      const lista = await repositorio.find({ where: { nome: ILike('%venda%') }, order: { nome: 'ASC' } });
+      const lista = await repositorio.find({
+        where: {
+          modulo: 16,
+          submodulo: 0
+        },
+        order: { nome: 'ASC' }
+      });
       return res.status(200).json(lista);
     } catch (error) {
       return res.status(500).json({ message: error.message });

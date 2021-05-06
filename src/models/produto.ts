@@ -32,7 +32,6 @@ class Produto extends Basex {
   setPreco() {
     this.preco = 0; 
   }
-
 }
 
 @Entity('produtos')

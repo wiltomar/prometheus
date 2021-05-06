@@ -7,8 +7,6 @@ import Cliente from '../models/cliente';
 import LancamentoComplemento from '../models/lancamentocomplemento';
 import LancamentoRequisicao from '../models/lancamentorequisicao';
 import Conexao from '../models/conexao';
-import Requisicao from '@models/requisicao';
-import { execPath } from 'node:process';
 
 class AgendamentoController {  
   async procedimentos() {
@@ -22,16 +20,6 @@ class AgendamentoController {
 
   private static processando = false;
 
-  static async sleep(ms: number) {
-    console.log(`sleep ${ms / 1000} segundos`);
-    //return new Promise(resolve => setTimeout(resolve, ms));
-    const date = Date.now();
-    let currentDate = null;
-    do {
-      currentDate = Date.now();
-    } while (currentDate - date < ms);
-  }
-
   static async processa() {
     if (this.processando) {
       console.log('processamento concorrente, rejeitado');
@@ -40,7 +28,6 @@ class AgendamentoController {
     try {
       console.log(new Date());
       console.log('iniciando');
-      //await this.sleep(7000);
       // verificar se a configuração de integração está ativa
       var integracoesComEntrega = config.integracoesComEntrega.join(',');    
       if (!integracoesComEntrega)
@@ -95,7 +82,7 @@ class AgendamentoController {
         }        
         return 1; // A sobrecarga do serviço causa timeout
       }
-      let lancamentosConcluidos = await getRepository(Lancamento).find({
+      let lancamentosEncerrados = await getRepository(Lancamento).find({
         where: {
           emissao: Raw(alias => `${alias} IS NOT NULL`),
           estabelecimento: { id: config.estabelecimento.id },
@@ -107,9 +94,9 @@ class AgendamentoController {
         },
         relations: ['cliente']
       });
-      if (lancamentosConcluidos)
+      if (lancamentosEncerrados)
         console.log('Lançamentos encerrados');
-      for (const lancamento of lancamentosConcluidos) {          
+      for (const lancamento of lancamentosEncerrados) {          
         console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
         try {
           await AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Processando);
@@ -132,10 +119,6 @@ class AgendamentoController {
     const cliente = await getRepository(Cliente).findOne(lancamento.cliente.id);
     console.log('registrando',);
     let data = lancamento.inclusao.toISOString().substring(0, 19) + 'Z';
-    let requisicao = await getRepository(Requisicao).findOne({
-      where: { lancamento: { id: lancamento.id } },
-      relations: ['integradora']
-    });
     let delivery = new Delivery();    
     if (!config.foodyDelivery.token)
       console.log('token não informado');

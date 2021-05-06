@@ -1,12 +1,10 @@
-import { NaturezaOperacao } from './naturezaoperacao';
-import { Entity, Column, OneToOne, JoinColumn, OneToMany, ManyToOne, InsertValuesMissingError } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import Basex from './basex';
 import { ClienteR } from './cliente';
 import Conexao from './conexao';
 import Conta from './conta';
 import { EstabelecimentoR } from './estabelecimento';
 import { HistoricoR } from './historico';
-import Integradora from './integradora';
 import LancamentoComplemento from './lancamentocomplemento';
 import LancamentoPagamento from './lancamentopagamento';
 import LancamentoRequisicao from './lancamentorequisicao';
