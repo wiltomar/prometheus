@@ -1,4 +1,4 @@
-import { getRepository, ILike } from 'typeorm';
+import { getRepository, ILike, In } from 'typeorm';
 import { Request, Response } from 'express';
 
 import Operacao from '@models/operacao';
@@ -9,8 +9,9 @@ class OperacaoController {
       const repositorio = getRepository(Operacao);
       const lista = await repositorio.find({
         where: {
+          nome: ILike('VENDA%'),
           modulo: 16,
-          submodulo: 0
+          submodulo: In([1, 83])
         },
         order: { nome: 'ASC' }
       });
