@@ -2,6 +2,7 @@ import { Router } from 'express';
 import authMiddleware from './middlewares/autenticacao.middleware';
 import UsuarioController from './controllers/usuario.controller';
 import AutenticacaoController from './controllers/autorizacao.controller';
+import AgendamentoController from './controllers/agendamento.controller';
 import CategoriaController from './controllers/categoria.controller';
 import ProdutoController from './controllers/produto.controller';
 import EstabelecimentoController from './controllers/estabelecimento.controller';
@@ -26,6 +27,7 @@ const router = Router();
 const enderecoAPI = process.env.ADDRESS_API;
 
 router.post(`${enderecoAPI}/autenticacao`, AutenticacaoController.autentica);
+router.get(`${enderecoAPI}/procedimentos`, AgendamentoController.procedimentox);
 router.post(`${enderecoAPI}/usuarios/novo`, authMiddleware, UsuarioController.grava);
 router.get(`${enderecoAPI}/usuarios`, authMiddleware, UsuarioController.lista);
 router.get(`${enderecoAPI}/usuarios/:id`, authMiddleware, UsuarioController.buscaPorId);

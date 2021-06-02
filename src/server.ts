@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 import 'reflect-metadata';
-import express from 'express';
+import express, { request } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import './database/connect';
@@ -10,7 +10,6 @@ import routes from './routes';
 import manipuladorDeErro from './middlewares/erros.midlleware';
 import manipuladorDeErroNaoEncontrado from './middlewares/naoencontrado.middleware';
 import config from './config';
-import AgendamentoController from './controllers/agendamento.controller';
 
 const app = express();
 const env = load({
@@ -38,7 +37,20 @@ app.use(manipuladorDeErroNaoEncontrado);
 
 if (config.foodyDelivery.ativo) {
   const cron = require("node-cron");
-  cron.schedule("*/7 * * * * *", AgendamentoController.procedimentos);  
+  const request = require('request');
+  //cron.schedule("*/7 * * * * *", AgendamentoController.procedimentos);
+  cron.schedule("*/7 * * * * *", () => {
+    //http://localhost:3000/api/v1/procedimentos
+    request(`http://${serverName}:${serverPort}/api/v1/procedimentos`, (error: any, response: any) => {
+      if (error)
+        console.error('erro ao executar o agendamento', error);
+      console.log(new Date(), 'chamada normal');
+      if (response.statusCode === 200)
+        console.log(response.body);
+      else
+        console.error('* erro: ', response.body);
+    });
+  });  
 }
 
 app.listen(serverPort, serverName, () => {

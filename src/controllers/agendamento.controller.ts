@@ -7,20 +7,37 @@ import Cliente from '../models/cliente';
 import LancamentoComplemento from '../models/lancamentocomplemento';
 import LancamentoRequisicao from '../models/lancamentorequisicao';
 import Conexao from '../models/conexao';
+import { Request, Response } from 'express';
+import { Licenca, infoLicenca } from './../common/criptografia/licenca';
 
 class AgendamentoController {  
+
+  async procedimentox(req: Request, res: Response) {
+    try {
+      let licenca = await infoLicenca();
+      licenca.verificaFoodyDelivery();
+      console.log('iniciando from request', req.route.path);
+      await getManager().query(AgendamentoController.commando());
+      await AgendamentoController.processa();
+      return res.status(200).json({ message: 'ok' });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }    
+  }
+
   async procedimentos() {
-    try {      
+    try {
       await getManager().query(AgendamentoController.commando());
       AgendamentoController.processa();
     } catch (error) {
-      console.error(error.messagem);
+      if (error)
+        console.error(new Date(), error.message);
     }
   }
 
   private static processando = false;
 
-  static async processa() {
+  static async processa() {    
     if (this.processando) {
       console.log('processamento concorrente, rejeitado');
       return 0;
@@ -29,7 +46,9 @@ class AgendamentoController {
       console.log(new Date());
       console.log('iniciando');
       // verificar se a configuração de integração está ativa
-      var integracoesComEntrega = config.integracoesComEntrega.join(',');    
+      let integracoesComEntrega = '';
+      if (config.integracoesComEntrega)
+        integracoesComEntrega = config.integracoesComEntrega.join(',');
       if (!integracoesComEntrega)
         integracoesComEntrega = '-1';
       let lancamentosPendentes = await getRepository(Lancamento).find({
@@ -50,7 +69,7 @@ class AgendamentoController {
         console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
         try {
           await AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Processando);
-          AgendamentoController.registra(lancamento);
+          await AgendamentoController.registra(lancamento);
         } catch {
           AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Erro);
           return 0;
@@ -75,7 +94,7 @@ class AgendamentoController {
         console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
         try {
           await AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Expedido, LancamentoSituacaoIntegracaoConstantes.Processando);
-          AgendamentoController.situacaoNotifica(lancamento, LancamentoSituacaoConstantes.Expedido);
+          await AgendamentoController.situacaoNotifica(lancamento, LancamentoSituacaoConstantes.Expedido);
         } catch {
           AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Expedido, LancamentoSituacaoIntegracaoConstantes.Erro);
           return 0;
@@ -100,7 +119,7 @@ class AgendamentoController {
         console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
         try {
           await AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Processando);
-          AgendamentoController.situacaoNotifica(lancamento, LancamentoSituacaoConstantes.Encerrado);  
+          await AgendamentoController.situacaoNotifica(lancamento, LancamentoSituacaoConstantes.Encerrado);  
         } catch {
           AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Erro);
           return 0;
