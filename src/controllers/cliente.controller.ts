@@ -8,7 +8,7 @@ class ClienteController {
       const repositorio = getRepository(Cliente);
       const cliente = repositorio.create(req.body);
       return res.status(201).json(await repositorio.save(cliente));
-    } catch (error) {
+    } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
   }
@@ -36,7 +36,7 @@ class ClienteController {
           });
         return res.status(200).json(clientes);
       }
-    } catch (error) {
+    } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
   }
@@ -55,7 +55,7 @@ class ClienteController {
       }
 
       return res.status(200).json(cliente);
-    } catch (error) {
+    } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
   }

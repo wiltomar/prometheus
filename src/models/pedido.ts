@@ -19,6 +19,12 @@ class Pedido extends Basex {
   @Column({ name: 'tipo' })
   tipo: number;
 
+  @Column({ name: 'atendimento' })
+  atendimento: number;
+
+  @Column({ name: 'localizacao' })
+  localizacao: number;
+
   @Column({ name: 'natureza' })
   natureza: number;
 
@@ -34,6 +40,9 @@ class Pedido extends Basex {
 
   @Column({ name: 'emissao' })
   emissao: Date;
+
+  @Column({ name: 'ambiente' })
+  ambienteid: number;
 
   @OneToOne(() => VendedorR, (vendedor) => vendedor.id)
   @JoinColumn({ name: 'vendedor' })

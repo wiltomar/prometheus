@@ -1,4 +1,4 @@
-import { getRepository, Like, Raw } from 'typeorm';
+import { getManager, getRepository, Like, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
 import Produto from '../models/produto';
@@ -6,6 +6,7 @@ import Computador, { COMPUTADOR_PROMETHEUS } from '../models/computador';
 import Cliente from 'src/models/cliente';
 
 class ProdutoController {
+
   async lista(req: Request, res: Response) {
     // http://localhost:3000/api/v1/produtos?texto=refri
     try {
@@ -46,7 +47,7 @@ class ProdutoController {
           produto.preco = preco[0].preco;
       }
       return res.status(200).json(produtos);
-    } catch (error) {
+    } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
   }
@@ -76,7 +77,27 @@ class ProdutoController {
       if (preco && (preco.length > 0))
         produto.preco = preco[0].preco;
       return res.status(200).json(produto);
-    } catch (error) {
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+
+  async estoque(req: Request, res: Response) {
+    try {
+      const computador = await getRepository(Computador).findOne({
+        where: { nome: COMPUTADOR_PROMETHEUS },
+        relations: ['estabelecimento', 'preco']
+      });
+      if (!computador)
+        throw new Error(`não existe um perfil de computador com o nome ${COMPUTADOR_PROMETHEUS}`);
+      let produtoid = req.query.produtoid || -1;      
+      let estabelecimentoid = computador.estabelecimento.id;
+      let estoque = 0;
+      const consulta = await getManager().query(`SELECT qde FROM Mosaico.fn_Estoque(GETDATE(), ${produtoid}, ${estabelecimentoid}, 0, 'E');`);
+      if (consulta && (consulta.length > 0))
+        estoque = +consulta[0].qde;       
+      return res.status(200).json({ estoque });
+    } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
   }

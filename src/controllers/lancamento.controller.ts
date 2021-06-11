@@ -6,6 +6,7 @@ import Conta from '../models/conta';
 import LancamentoPagamento from '../models/lancamentopagamento';
 
 class LancamentoController {
+
   async grava(req: Request, res: Response) {
     try {
       const repositorio = getRepository(Lancamento);
@@ -88,6 +89,7 @@ class LancamentoController {
       return res.status(500).json({ message: error.message });
     }
   }
+  
 }
 
 export default new LancamentoController();

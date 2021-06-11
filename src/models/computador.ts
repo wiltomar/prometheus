@@ -21,7 +21,10 @@ class Computador extends Basex {
 
   @OneToOne(() => DepartamentoR, (departamento) => departamento.id)
   @JoinColumn({ name: 'setor' })
-  departamento: DepartamentoR;  
+  departamento: DepartamentoR;
+
+  @Column({ name: 'ambienteid' })
+  ambienteid: number;
 
   @Column({ name: 'impressora', length: 120 })
   impressora: string;

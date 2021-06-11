@@ -34,6 +34,7 @@ router.get(`${enderecoAPI}/usuarios/:id`, authMiddleware, UsuarioController.busc
 router.get(`${enderecoAPI}/categorias`, authMiddleware, CategoriaController.lista);
 router.get(`${enderecoAPI}/categorias/:id`, authMiddleware, CategoriaController.buscaPorId);
 router.get(`${enderecoAPI}/produtos`, authMiddleware, ProdutoController.lista);
+router.get(`${enderecoAPI}/produtos/estoque`, authMiddleware, ProdutoController.estoque);
 router.get(`${enderecoAPI}/produtos/:id`, authMiddleware, ProdutoController.buscaPorId);
 router.get(`${enderecoAPI}/estabelecimentos`, authMiddleware, EstabelecimentoController.lista);
 router.get(`${enderecoAPI}/estabelecimentos/:id`, authMiddleware, EstabelecimentoController.buscaPorId);
@@ -72,8 +73,12 @@ router.get(`${enderecoAPI}/operacoes/:id`, authMiddleware, OperacaoController.bu
 router.get(`${enderecoAPI}/naturezaoperacoes`, authMiddleware, NaturezaOperacaoController.lista);
 router.get(`${enderecoAPI}/naturezaoperacoes/:id`, authMiddleware, NaturezaOperacaoController.buscaPorId);
 router.post(`${enderecoAPI}/vendas/grava`, authMiddleware, VendaController.grava);
+router.post(`${enderecoAPI}/vendas/gravaAtendimento`, authMiddleware, VendaController.gravaAtendimento);
 router.delete(`${enderecoAPI}/vendas/:id`, authMiddleware, VendaController.exclui);
 router.get(`${enderecoAPI}/resultado/cliente`, authMiddleware, ResultadoController.cliente);
+router.get(`${enderecoAPI}/resultado/clienteausente`, authMiddleware, ResultadoController.clienteAusente);
+router.get(`${enderecoAPI}/resultado/clienteinadimplente`, authMiddleware, ResultadoController.clienteInadimplente);
+router.get(`${enderecoAPI}/resultado/venda`, authMiddleware, ResultadoController.venda);
 router.get(`${enderecoAPI}/resultado/produto`, authMiddleware, ResultadoController.produto);
 router.get(`${enderecoAPI}/resultado/emissao`, authMiddleware, ResultadoController.emissao);
 

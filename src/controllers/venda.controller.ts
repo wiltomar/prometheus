@@ -12,6 +12,8 @@ import Pedido from '../models/pedido';
 import PedidoProduto from '../models/pedidoproduto';
 import Conta from '../models/conta';
 import PagamentoPlano from '@models/pagamentoplano';
+import Atendimento from '@models/atendimento';
+import Vendedor from '@models/vendedor';
 
 class VendaController {
   async grava(req: Request, res: Response) {
@@ -175,9 +177,151 @@ class VendaController {
       getManager().query(`EXEC Mosaico.sp_Lancamento_Insumos ${retorno.id};`);
       getManager().query(`EXEC Mosaico.sp_Lancamento_AplicaTributacao ${retorno.id};`);
       return res.status(201).json(retornox);
-    } catch (error) {
+    } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
+  }
+
+  async gravaAtendimento(req: Request, res: Response) {
+
+    try {
+      const computador = await getRepository(Computador).findOne({
+        where: { nome: COMPUTADOR_PROMETHEUS },
+        relations: ['estabelecimento', 'departamento']
+      });
+      if (!computador)
+        throw new Error('não existe um perfil de computador com o nome "PROMETHEUS"');
+      const historico = await getRepository(Historico).findOne( {
+        where: { tipo: 16 }
+      });
+      if (!historico)
+        throw new Error('não existe um histórico do tipo venda');
+      const conexao = await getRepository(Conexao).findOne({
+        where: { id: 0 }
+      });
+      if (!conexao)
+        throw new Error('não existe uma conexão com o código 0');
+      const vendedor = await getRepository(Vendedor).findOne({
+        where: { nome: COMPUTADOR_PROMETHEUS },
+        relations: ['estabelecimento']
+      });
+      if (!vendedor)
+        throw new Error('não existe um vendedor com o nome "PROMETHEUS"');  
+      let venda = Object.assign(new Venda(), req.body);
+      const atendimento = await getRepository(Atendimento).findOne({
+        where: {
+          estabelecimento: { id: computador.estabelecimento.id },
+          atendimento: venda.atendimento          
+        },
+        relations: ['estabelecimento', 'modalidade']
+      });    
+      if (!atendimento)
+        throw new Error('atendimento inválido');      
+      if (!atendimento.ativo)
+        throw new Error('atendimento inativo');
+      if (!atendimento.modalidade)
+        throw new Error('a modalidade do atendimento é inválida');
+      if (!atendimento.ambienteid) {
+        atendimento.ambienteid = computador.ambienteid;
+        if (!atendimento.ambienteid)
+          atendimento.ambienteid = 1;
+      }
+      if (!venda.id)
+        venda.id = 0;
+      let comissionado = false;
+      if ((atendimento.modalidade.id == 17) || (atendimento.modalidade.id == 21) && (vendedor.comissao > 0))
+        comissionado = true;
+      let s: string[] = [];
+      s.push(`DECLARE @LancamentoID BIGINT = ` +venda.id + `;`);
+      s.push(`EXEC Mosaico.sp_Lancamento_Garante`);
+      s.push(`  @LancamentoID OUTPUT,`);
+      s.push(`  0,`);
+      s.push(`  0,`);
+      s.push(`  ${computador.estabelecimento.id},`);
+      s.push(`  0,`); // Histórico: 0 = Padrão
+      s.push(`  ${atendimento.modalidade.id},`)
+      s.push(`  ${atendimento.atendimento},`)
+      s.push(`  '',`);
+      s.push(`  0,`);
+      s.push(`  0,`);
+      s.push(`  ${comissionado},`);
+      s.push(`  0;`);
+      s.push(`SELECT @LancamentoID id;`);
+      let qr = await getManager().query(s.join('\n'));
+      let lancamentoid = +qr[0].id;
+      // Pedido      
+      let lancamento = await getRepository(Lancamento).findOne({ where: { id: lancamentoid }})
+      if (!lancamento || !lancamento.id)
+        throw new Error('lançamento inválido');
+      let pedido: Pedido;
+      let item = 0;
+      pedido = new Pedido();
+      pedido.estabelecimento = computador.estabelecimento;
+      pedido.ambienteid = atendimento.ambienteid;
+      pedido.tipo = atendimento.modalidade.id;
+      pedido.atendimento = atendimento.atendimento;
+      pedido.localizacao = 0;
+      pedido.natureza = -1;
+      pedido.requisicao = new Date();
+      pedido.lancamento = lancamento;
+      pedido.entrega = pedido.requisicao;
+      pedido.emissao = null;
+      pedido.complemento = null;
+      pedido.conexao = conexao;
+      pedido.pedidoProdutos = [];      
+      pedido.vendedor = vendedor;
+      pedido.vendedorComissao = vendedor.comissao;
+      pedido.vendedorComissaoValor = 0;
+      let comissaoBase = 0;
+      // Pedidos: Produtos
+      for (const vendaItem of venda.itens) {
+        let pedidoProduto = new PedidoProduto();
+        pedidoProduto.item = ++item;
+        pedidoProduto.conexao = conexao;
+        pedidoProduto.subitem = 0;
+        pedidoProduto.itemTitular = 0;
+        pedidoProduto.entrega = pedido.entrega;
+        pedidoProduto.tipo = atendimento.modalidade.id;
+        pedidoProduto.atendimento = atendimento.atendimento;
+        pedidoProduto.natureza = -1;          
+        pedidoProduto.estabelecimento = computador.estabelecimento;
+        if (!pedidoProduto.departamento)
+          pedidoProduto.departamento = computador.departamento;        
+        pedidoProduto.produto = vendaItem.produto;
+        pedidoProduto.preco = vendaItem.preco;
+        pedidoProduto.qde = vendaItem.qde;
+        pedidoProduto.fator = 1;
+        pedidoProduto.desconto = vendaItem.desconto || 0;
+        pedidoProduto.descontoPercentual = vendaItem.descontoPercentual || 0;
+        pedidoProduto.precoTotal = vendaItem.precoTotal;
+        pedidoProduto.taxa = 0;
+        //pedidoProduto.impressora = ?        
+        pedidoProduto.comissionado = true;
+        pedidoProduto.observacoes = vendaItem.observacoes;
+        if (!pedidoProduto.id)
+          pedido.pedidoProdutos.push(pedidoProduto);
+        comissaoBase += vendaItem.precoTotal;
+      }
+      if ((comissaoBase > 0) && (pedido.vendedorComissao > 0))
+        pedido.vendedorComissaoValor = Math.trunc(((comissaoBase / 100.0) * comissaoBase) * 100) / 100;
+      const pedidox = await getRepository(Pedido).save(pedido);
+      console.log('retorno', pedidox.id);
+      const retorno = await VendaHelper.venda(lancamentoid, true);
+      // Atualiza os campos lançamento e tipo da tabela pedidos_produtos
+      s = [];
+      s.push(`UPDATE Mosaico.PedidoProduto SET`);
+			s.push(`  Edicao = GETDATE(),`);
+			s.push(`  LancamentoID = ${lancamentoid}`);
+      s.push(`WHERE PedidoID = ${pedidox.id}`);
+      console.log('consulta', s.join('\n'));
+      await getManager().query(s.join('\n'));
+      //getManager().query(`EXEC Mosaico.sp_Lancamento_Insumos ${retorno.id};`);
+      //getManager().query(`EXEC Mosaico.sp_Lancamento_AplicaTributacao ${retorno.id};`);
+      return res.status(201).json(retorno);
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
+    }
+  
   }
 
   async lista(req: Request, res: Response) {
@@ -207,7 +351,7 @@ class VendaController {
         }
       }
       return res.status(200).json(vendas);      
-    } catch (error) {
+    } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
   }
@@ -261,7 +405,7 @@ class VendaController {
       s.push(`	AND (SP < 200);`);      
       await getManager().query(s.join('\n')); // promise
       res.status(200).send({ message: 'registro excluído' });
-    } catch (error) {
+    } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
   }

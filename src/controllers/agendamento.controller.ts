@@ -8,7 +8,7 @@ import LancamentoComplemento from '../models/lancamentocomplemento';
 import LancamentoRequisicao from '../models/lancamentorequisicao';
 import Conexao from '../models/conexao';
 import { Request, Response } from 'express';
-import { Licenca, infoLicenca } from './../common/criptografia/licenca';
+import { infoLicenca } from './../common/criptografia/licenca';
 
 class AgendamentoController {  
 
@@ -17,11 +17,13 @@ class AgendamentoController {
       let licenca = await infoLicenca();
       licenca.verificaFoodyDelivery();
       console.log('iniciando from request', req.route.path);
+      throw new Error('erro para testes');
       await getManager().query(AgendamentoController.commando());
       await AgendamentoController.processa();
       return res.status(200).json({ message: 'ok' });
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
+    } catch (error: any) {
+      console.log(typeof error);
+      return res.status(500).json({ message: error.message }); //{ message: error.message }
     }    
   }
 
@@ -29,9 +31,8 @@ class AgendamentoController {
     try {
       await getManager().query(AgendamentoController.commando());
       AgendamentoController.processa();
-    } catch (error) {
-      if (error)
-        console.error(new Date(), error.message);
+    } catch (error: any) {
+      console.error(new Date(), error.message);
     }
   }
 
@@ -43,8 +44,7 @@ class AgendamentoController {
       return 0;
     }      
     try {
-      console.log(new Date());
-      console.log('iniciando');
+      console.log(new Date(), 'verificando');
       // verificar se a configuração de integração está ativa
       let integracoesComEntrega = '';
       if (config.integracoesComEntrega)
@@ -63,15 +63,18 @@ class AgendamentoController {
         },
         relations: ['cliente']
       });
-      if (lancamentosPendentes)
-        console.log('Lançamentos pendentes');
+      // if (lancamentosPendentes)
+      //   console.log('Lançamentos pendentes');
       for (const lancamento of lancamentosPendentes) {
         console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
         try {
+          throw new Error('*** Erro na integração');
+          return;
           await AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Processando);
           await AgendamentoController.registra(lancamento);
-        } catch {
+        } catch (error: any) {
           AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Erro);
+          console.error(new Date(), error.message);
           return 0;
         }        
         return 1; // A sobrecarga do serviço causa timeout
@@ -88,16 +91,17 @@ class AgendamentoController {
         },
         relations: ['cliente']
       });
-      if (lancamentosExpedidos)
-        console.log('Lançamentos expedidos');
+      // if (lancamentosExpedidos)
+      //   console.log('Lançamentos expedidos');
       for (const lancamento of lancamentosExpedidos) {
         console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
         try {
           await AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Expedido, LancamentoSituacaoIntegracaoConstantes.Processando);
           await AgendamentoController.situacaoNotifica(lancamento, LancamentoSituacaoConstantes.Expedido);
-        } catch {
+        } catch (error: any) {
           AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Expedido, LancamentoSituacaoIntegracaoConstantes.Erro);
-          return 0;
+          console.error(new Date(), error.message);
+          return 0;          
         }        
         return 1; // A sobrecarga do serviço causa timeout
       }
@@ -113,20 +117,21 @@ class AgendamentoController {
         },
         relations: ['cliente']
       });
-      if (lancamentosEncerrados)
-        console.log('Lançamentos encerrados');
+      // if (lancamentosEncerrados)
+      //   console.log('Lançamentos encerrados');
       for (const lancamento of lancamentosEncerrados) {          
         console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
         try {
           await AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Processando);
           await AgendamentoController.situacaoNotifica(lancamento, LancamentoSituacaoConstantes.Encerrado);  
-        } catch {
+        } catch (error: any) {
           AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Erro);
+          console.error(new Date(), error.message);
           return 0;
         }
         return 1; // A sobrecarga do serviço causa timeout
       }
-      console.log('finalizando');
+      //console.log('finalizando');
       return 1;
     } finally {
       this.processando = false;
@@ -323,6 +328,13 @@ class AgendamentoController {
 
   static async lancamentoSituacaoEntrega(lancamentoid: number, situacao: number, situacaoIntegracao: number) {
     let s: string[] = [];
+    if (situacaoIntegracao == LancamentoSituacaoIntegracaoConstantes.Erro) {
+      s.push(`UPDATE Mosaico.Lancamento SET`);
+      s.push(`  Edicao = GETDATE(),`);
+      s.push(`  Status = Status | 16`);
+      s.push(`WHERE`);
+      s.push(`  (ID = ${lancamentoid});`);
+    };
     s.push(`UPDATE Mosaico.LancamentoSituacao SET`);
     s.push(`  Edicao = GETDATE(),`);
     s.push(`  EntregaSituacao = ${situacaoIntegracao}`);

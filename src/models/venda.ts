@@ -17,6 +17,7 @@ export class Venda {
     situacao: string;
     historico: HistoricoR;
     estabelecimento: EstabelecimentoR;
+    atendimento: number;
     tipo: number;
     cliente: ClienteR;
     emissao: Date;

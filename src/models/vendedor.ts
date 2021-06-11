@@ -26,7 +26,7 @@ class Vendedor extends Basex {
   @Column({ name: 'vendedor' })
   atendente: boolean;
 
-  @Column({ name: 'comissão' })
+  @Column({ name: 'comissão', type: 'real' })
   comissao: number;
 
   @Column({ name: 'telefones', length: 120 })

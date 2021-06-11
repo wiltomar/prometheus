@@ -102,6 +102,9 @@ class PedidoProduto {
 
   @Column({ name: 'preçototal', type: 'money' })
   precoTotal: number;
+  
+  @Column({ name: 'taxa' })
+  taxa: number;
 
   @Column({ name: 'comissionado' })
   comissionado: boolean;
