@@ -38,10 +38,9 @@ export class Licenca {
 var _infoLicenca: Licenca;
 
 export async function infoLicenca(): Promise<Licenca> {
-    if (!_infoLicenca) {
-        console.info('decriptografando');
+
+    if (!_infoLicenca)
         _infoLicenca = new Licenca();
-    }
     let autorizacao = await getRepository(Autorizacao).findOne(1);
     if (!autorizacao)
         throw new Error('licença não informada');
@@ -60,7 +59,7 @@ export async function infoLicenca(): Promise<Licenca> {
     for (let chave of chaves) {
         let i = chave.indexOf('=');
         if (i > 0)
-        licencaMap.set(chave.substr(0, i), chave.substr(i + 1));
+            licencaMap.set(chave.substr(0, i), chave.substr(i + 1));
     }
     _infoLicenca.id = +licencaMap.get('Código');
     _infoLicenca.nome = licencaMap.get('Nome');

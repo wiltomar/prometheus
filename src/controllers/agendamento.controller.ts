@@ -14,10 +14,10 @@ class AgendamentoController {
 
   async procedimentox(req: Request, res: Response) {
     try {
-      let licenca = await infoLicenca();
-      licenca.verificaFoodyDelivery();
+      //let licenca = await infoLicenca();
+      //licenca.verificaFoodyDelivery();
       console.log('iniciando from request', req.route.path);
-      throw new Error('erro para testes');
+      //throw new Error('erro para testes');
       await getManager().query(AgendamentoController.commando());
       await AgendamentoController.processa();
       return res.status(200).json({ message: 'ok' });
@@ -68,8 +68,6 @@ class AgendamentoController {
       for (const lancamento of lancamentosPendentes) {
         console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
         try {
-          throw new Error('*** Erro na integração');
-          return;
           await AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Processando);
           await AgendamentoController.registra(lancamento);
         } catch (error: any) {
@@ -318,6 +316,9 @@ class AgendamentoController {
     lancamentoRequisicao.conexao = await getRepository(Conexao).findOne({ id: 0 });
     if (!lancamentoRequisicao.lancamento)
       throw new Error(`conexão ${lancamentoid} não encontrada`);
+    let conexao = new Conexao();
+    conexao.id = 0;
+    lancamentoRequisicao.conexao = conexao;
     lancamentoRequisicao.recurso = recurso;
     lancamentoRequisicao.metodo = metodo;
     lancamentoRequisicao.requisicao = requisicao;

@@ -13,7 +13,10 @@ export interface Config
     estabelecimento: Estabelecimento;
     foodyDelivery: FoodyDelivery;
     integracoesComEntrega: number[];
+    impressao: boolean;
+    impressaoUrl: string;
 }
 
 let config: Config = require('./config/config.json');
+
 export default config;

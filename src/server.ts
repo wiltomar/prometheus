@@ -52,6 +52,26 @@ if (config.foodyDelivery.ativo) {
     });
   });  
 }
+if (config.impressao && config.impressaoUrl) {
+  console.log('iniciando o job de impressão');
+  const cron = require("node-cron");
+  const request = require('request');
+  cron.schedule("*/7 * * * * *", () => {
+    request.post({
+      headers: {'content-type': 'application/json' },
+      url: config.impressaoUrl,
+      body: JSON.stringify({ estabelecimentoID: config.estabelecimento.id })
+    }, (error: any, response: any) => {
+      if (error)
+        console.error('erro ao executar o agendamento', error);
+      console.log(new Date(), 'chamada normal');
+      if (response.statusCode === 200)
+        console.log(response.body);
+      else
+        console.error('* erro: ', response.body);
+    });
+  });
+}
 
 app.listen(serverPort, serverName, () => {
   console.log(`🚀 - Prometheus API Server started at http://${serverName}:${serverPort}`);
