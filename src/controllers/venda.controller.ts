@@ -1,4 +1,4 @@
-﻿import { Estabelecimento } from './../config';
+﻿import Produto from './../models/produto';
 import { getManager, getRepository, Not, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 import Lancamento from '../models/lancamento';
@@ -200,21 +200,31 @@ class VendaController {
         where: { id: 0 }
       });
       if (!conexao)
-        throw new Error('não existe uma conexão com o código 0');
-      const vendedor = await getRepository(Vendedor).findOne({
-        where: { nome: COMPUTADOR_PROMETHEUS },
-        relations: ['estabelecimento']
-      });
-      if (!vendedor)
-        throw new Error('não existe um vendedor com o nome "PROMETHEUS"');  
+        throw new Error('não existe uma conexão com o código 0');      
       let venda = Object.assign(new Venda(), req.body);
+      if (!venda.vendedor)
+        throw new Error('vendedor não informado');
+      const vendedor = await getRepository(Vendedor).findOne({
+          where: { id: venda.vendedor.id },
+          relations: ['estabelecimento']
+        });
+      if (!vendedor)
+        throw new Error('não existe um vendedor com o id informado');
       const atendimento = await getRepository(Atendimento).findOne({
         where: {
           estabelecimento: { id: computador.estabelecimento.id },
-          atendimento: venda.atendimento          
+          atendimento: venda.atendimento
         },
         relations: ['estabelecimento', 'modalidade']
-      });    
+      });
+      /*
+        const vendedorx = await getRepository(Vendedor).findOne({
+          where: { nome: COMPUTADOR_PROMETHEUS },
+          relations: ['estabelecimento']
+        });
+        if (!vendedorx)
+          throw new Error('não existe um vendedor com o nome "PROMETHEUS"');  
+      */
       if (!atendimento)
         throw new Error('atendimento inválido');      
       if (!atendimento.ativo)
@@ -256,6 +266,9 @@ class VendaController {
       let pedido: Pedido;
       let item = 0;
       pedido = new Pedido();
+      pedido.status = 0;
+      if (comissionado)
+        pedido.status = 64;
       pedido.estabelecimento = computador.estabelecimento;
       pedido.ambienteid = atendimento.ambienteid;
       pedido.tipo = atendimento.modalidade.id;
@@ -275,7 +288,16 @@ class VendaController {
       let comissaoBase = 0;
       // Pedidos: Produtos
       for (const vendaItem of venda.itens) {
+        let produto = await getRepository(Produto).findOne(vendaItem.id);
+        if (!produto?.id)
+          throw new Error('produto inválido');
+        let subatendimento = vendaItem.subatendimento;
+        if (!subatendimento)
+          subatendimento = venda.subatendimento || '';
         let pedidoProduto = new PedidoProduto();
+        pedidoProduto.status = 0;
+        if (comissionado && produto.comissionado)
+          pedidoProduto.status = 64;
         pedidoProduto.item = ++item;
         pedidoProduto.conexao = conexao;
         pedidoProduto.subitem = 0;
@@ -296,14 +318,16 @@ class VendaController {
         pedidoProduto.precoTotal = vendaItem.precoTotal;
         pedidoProduto.taxa = 0;
         //pedidoProduto.impressora = ?        
-        pedidoProduto.comissionado = true;
+        pedidoProduto.comissionado = comissionado;
+        pedidoProduto.subatendimento = subatendimento;
         pedidoProduto.observacoes = vendaItem.observacoes;
         if (!pedidoProduto.id)
           pedido.pedidoProdutos.push(pedidoProduto);
-        comissaoBase += vendaItem.precoTotal;
+        if ((pedidoProduto.status & 64) > 0)
+          comissaoBase += vendaItem.precoTotal;
       }
       if ((comissaoBase > 0) && (pedido.vendedorComissao > 0))
-        pedido.vendedorComissaoValor = Math.trunc(((comissaoBase / 100.0) * comissaoBase) * 100) / 100;
+        pedido.vendedorComissaoValor = Math.trunc(((comissaoBase / 100.0) * vendedor.comissao) * 100) / 100;
       const pedidox = await getRepository(Pedido).save(pedido);
       console.log('retorno', pedidox.id);
       const retorno = await VendaHelper.venda(lancamentoid, true);

@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 
 import Produto from '../models/produto';
 import Computador, { COMPUTADOR_PROMETHEUS } from '../models/computador';
-import Cliente from 'src/models/cliente';
+import Cliente from '../models/cliente';
 
 class ProdutoController {
 

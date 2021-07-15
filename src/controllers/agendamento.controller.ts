@@ -23,7 +23,7 @@ class AgendamentoController {
       return res.status(200).json({ message: 'ok' });
     } catch (error: any) {
       console.log(typeof error);
-      return res.status(500).json({ message: error.message }); //{ message: error.message }
+      return res.status(500).json({ message: error.message });
     }    
   }
 

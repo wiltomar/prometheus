@@ -23,6 +23,9 @@ class Produto extends Basex {
   @Column({ name: 'une' })
   un: string;
 
+  @Column({ name: 'comissionado' })
+  comissionado: boolean;
+
   @Column({ name: 'disponível' })
   venda: boolean;
 

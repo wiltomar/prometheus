@@ -8,6 +8,7 @@ import Lancamento from './lancamento';
 
 @Entity('Pedidos_Produtos')
 class PedidoProduto {
+
   @PrimaryGeneratedColumn('increment', { name: 'pedidoprodutoid'})
   id: number;
 
@@ -61,6 +62,9 @@ class PedidoProduto {
   @Column({ name: 'atendimento' })
   atendimento: number;
 
+  @Column({ name: 'subatendimento' })
+  subatendimento: string;
+
   @Column({ name: 'natureza' })
   natureza: number;
 
@@ -111,6 +115,7 @@ class PedidoProduto {
 
   @Column({ name: 'observações' })
   observacoes: string;
+
 }
 
 export default PedidoProduto;

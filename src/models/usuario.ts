@@ -6,7 +6,7 @@ import Base from './base';
 
 @Entity('Mosaico.Usuario')
 class Usuario extends Base {
-  @Column()
+  @Column('varchar')
   nome: string;
 
   @Column()

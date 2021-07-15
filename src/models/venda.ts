@@ -18,6 +18,7 @@ export class Venda {
     historico: HistoricoR;
     estabelecimento: EstabelecimentoR;
     atendimento: number;
+    subatendimento: string;
     tipo: number;
     cliente: ClienteR;
     emissao: Date;
@@ -47,7 +48,8 @@ export class VendaItem {
     descontoPercentual: number;
     preco: number;
     precoTotal: number;
-    observacao: string;
+    subatendimento: string;
+    observacoes: string;
 }
 
 export class VendaPagamento {    

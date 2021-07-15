@@ -48,7 +48,7 @@ class Pedido extends Basex {
   @JoinColumn({ name: 'vendedor' })
   vendedor: VendedorR;
 
-  @JoinColumn({ name: 'comissão' })
+  @Column({ name: 'comissão' })
   vendedorComissao: number;
 
   @Column({ name: 'vendedorcomissaovalor', type: 'money' })

@@ -13,7 +13,7 @@ abstract class Basex extends BaseEntity {
   @UpdateDateColumn({ name: 'datadeedição'})
   edicao: Date;
 
-  @Column({nullable: false})
+  @Column({ nullable: false})
   status: number;
 
   @BeforeInsert()

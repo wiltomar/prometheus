@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
-import 'reflect-metadata';
-import express, { request } from 'express';
+import 'module-alias/register';
+import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import './database/connect';
@@ -38,9 +38,7 @@ app.use(manipuladorDeErroNaoEncontrado);
 if (config.foodyDelivery.ativo) {
   const cron = require("node-cron");
   const request = require('request');
-  //cron.schedule("*/7 * * * * *", AgendamentoController.procedimentos);
   cron.schedule("*/7 * * * * *", () => {
-    //http://localhost:3000/api/v1/procedimentos
     request(`http://${serverName}:${serverPort}/api/v1/procedimentos`, (error: any, response: any) => {
       if (error)
         console.error('erro ao executar o agendamento', error);
@@ -65,9 +63,11 @@ if (config.impressao && config.impressaoUrl) {
       if (error)
         console.error('erro ao executar o agendamento', error);
       console.log(new Date(), 'chamada normal');
-      if (response.statusCode === 200)
-        console.log(response.body);
-      else
+      if (!response) {
+        console.error('* erro: não houve resposta');
+        return;
+      }        
+      if (response.statusCode !== 200)
         console.error('* erro: ', response.body);
     });
   });

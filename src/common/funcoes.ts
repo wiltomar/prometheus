@@ -50,7 +50,7 @@ class VendaHelper {
         // Entrega
         retorno.entrega = new VendaEntrega();        
         let lancamentovenda = await getRepository(LancamentoVenda).findOne({ where: { lancamento: { id: retorno.id } } });
-        if (lancamentovenda) {
+        if (lancamentovenda?.nome || lancamentovenda?.cep) {
             retorno.entrega.nome = lancamentovenda.nome;            
             retorno.entrega.cep = lancamentovenda.cep;
             retorno.entrega.endereco = lancamentovenda.endereco;
@@ -113,7 +113,7 @@ class VendaHelper {
                 vendaItem.qde = pedidoProduto.qde;
                 vendaItem.preco = pedidoProduto.preco;
                 vendaItem.precoTotal = pedidoProduto.precoTotal;
-                vendaItem.observacao = pedidoProduto.observacoes;
+                vendaItem.observacoes = pedidoProduto.observacoes;
                 retorno.itens.push(vendaItem);
             }
         }
@@ -128,7 +128,7 @@ class VendaHelper {
                 vendaItem.qde = pedidoProduto.qde;
                 vendaItem.preco = pedidoProduto.preco;
                 vendaItem.precoTotal = pedidoProduto.precoTotal;
-                vendaItem.observacao = pedidoProduto.observacoes;
+                vendaItem.observacoes = pedidoProduto.observacoes;
                 retorno.itens.push(vendaItem);
             });
         });*/
