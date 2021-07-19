@@ -1,0 +1,85 @@
+POST
+http://localhost:3000/api/v1/vendas/grava
+
+{
+  "id": 100060951,
+  "cliente": {
+    "id": 0,
+    "nome": "(GERAL)"
+  },
+  "subtotal": 39.06,
+  "desconto": 0,
+  "frete": 0,
+  "total": 39.06,
+  "memorando": null,
+  "vendedor": {
+    "id": 2,
+    "nome": "YERICH SALLES"
+  },
+  "pagamentos": [
+    {
+      "id": 152868,
+      "sp": 1,
+      "pagamentoForma": {
+        "id": 1,
+        "nome": "Dinheiro"
+      },
+      "pagamentoPlano": {
+        "id": 1,
+        "nome": "A VISTA"
+      },
+      "parcelas": 1,
+      "valor": 39.06
+    }
+  ],
+  "itens": [
+    {
+      "id": 223710,
+      "item": 1,
+      "departamento": {
+        "id": 3,
+        "nome": "BAR"
+      },
+      "produto": {
+        "id": "12",
+        "nome": "KUAT GARRAFA"
+      },
+      "qde": 1,
+      "preco": 9.6,
+      "precoTotal": 9.6,
+      "observacao": null
+    },
+    {
+      "id": 223711,
+      "item": 2,
+      "departamento": {
+        "id": 3,
+        "nome": "BAR"
+      },
+      "produto": {
+        "id": "1620",
+        "nome": "CAFE EXPRESSO 120 ML"
+      },
+      "qde": 1,
+      "preco": 25.91,
+      "precoTotal": 25.91,
+      "observacao": null
+    },
+    {
+      "id": 223715,
+      "item": 1,
+      "departamento": {
+        "id": 3,
+        "nome": "BAR"
+      },
+      "produto": {
+        "id": "999",
+        "nome": "TAXA DE SERVICO"
+      },
+      "qde": 1,
+      "preco": 3.55,
+      "precoTotal": 3.55,
+      "observacao": null
+    }
+  ]
+}

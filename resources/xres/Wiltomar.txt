@@ -1,0 +1,845 @@
+Vendas
+
+-- GET - ID
+http://localhost:3000/api/v1/vendas/100060894
+{
+  "id": 100060894,
+  "historico": {
+    "id": 3,
+    "nome": "VENDA"
+  },
+  "estabelecimento": {
+    "id": 1,
+    "nome": "MATRIZ"
+  },
+  "tipo": 17,
+  "cliente": {
+    "id": 0,
+    "nome": "(GERAL)"
+  },
+  "emissao": "2021-02-01T13:29:48.000Z",
+  "subtotal": 8.54,
+  "desconto": 0,
+  "frete": 0,
+  "total": 8.54,
+  "memorando": null,
+  "situacao": "Encerrado",
+  "vendedor": {
+    "id": 2,
+    "nome": "YERICH SALLES"
+  },
+  "pagamentos": [
+    {
+      "id": 152850,
+      "sp": 1,
+      "pagamentoForma": {
+        "id": 1,
+        "nome": "Dinheiro"
+      },
+      "pagamentoPlano": {
+        "id": 1,
+        "nome": "A VISTA"
+      },
+      "parcelas": 1,
+      "valor": 8.54
+    }
+  ],
+  "itens": [
+    {
+      "id": 223638,
+      "item": 1,
+      "departamento": {
+        "id": 2,
+        "nome": "COZINHA"
+      },
+      "produto": {
+        "id": "1013",
+        "nome": "COCA COLA ZERO"
+      },
+      "qde": 1,
+      "preco": 7.77,
+      "precoTotal": 7.77,
+      "observacao": null
+    },
+    {
+      "id": 223640,
+      "item": 1,
+      "departamento": {
+        "id": 3,
+        "nome": "BAR"
+      },
+      "produto": {
+        "id": "999",
+        "nome": "TAXA DE SERVICO"
+      },
+      "qde": 1,
+      "preco": 0.77,
+      "precoTotal": 0.77,
+      "observacao": null
+    }
+  ]
+}
+
+GET - Lista (clienteid ou vendedorid)
+http://localhost:3000/api/v1/vendas?vendedorid=100059
+[
+  {
+    "id": 100000359,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-18T22:41:35.297Z",
+    "subtotal": 60,
+    "desconto": 0,
+    "frete": 0,
+    "total": 60,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100000360,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-18T23:08:59.133Z",
+    "subtotal": 72,
+    "desconto": 0,
+    "frete": 0,
+    "total": 79.2,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100000361,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-18T23:30:19.727Z",
+    "subtotal": 52,
+    "desconto": 0,
+    "frete": 0,
+    "total": 57.2,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100000362,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-19T01:05:33.517Z",
+    "subtotal": 91.92,
+    "desconto": 0,
+    "frete": 0,
+    "total": 91.92,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100000452,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 21,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2012-02-02T21:08:10.470Z",
+    "subtotal": 19,
+    "desconto": 0,
+    "frete": 0,
+    "total": 19,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100001478,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2012-06-08T21:06:33.053Z",
+    "subtotal": 0,
+    "desconto": 0,
+    "frete": 0,
+    "total": 0,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100001880,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-03-01T19:08:23.847Z",
+    "subtotal": 11.5,
+    "desconto": 0,
+    "frete": 2.5,
+    "total": 11.5,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100001881,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-03-01T19:07:56.547Z",
+    "subtotal": 11.5,
+    "desconto": 0,
+    "frete": 2.5,
+    "total": 11.5,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100001886,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-03-01T19:02:42.393Z",
+    "subtotal": 16.3,
+    "desconto": 0,
+    "frete": 2.5,
+    "total": 16.3,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100001887,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-03-01T14:58:28.227Z",
+    "subtotal": 294.9,
+    "desconto": 0,
+    "frete": 6.6,
+    "total": 294.9,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100001891,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-03-01T19:46:48.017Z",
+    "subtotal": 9.25,
+    "desconto": 0,
+    "frete": 1.25,
+    "total": 9.25,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100001895,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-03-07T01:29:11.737Z",
+    "subtotal": 16.8,
+    "desconto": 0,
+    "frete": 3,
+    "total": 16.8,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100001900,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-03-07T01:27:06.587Z",
+    "subtotal": 10.25,
+    "desconto": 0,
+    "frete": 1.25,
+    "total": 10.25,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100001901,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-03-07T01:26:45.683Z",
+    "subtotal": 20.4,
+    "desconto": 0,
+    "frete": 6.6,
+    "total": 20.4,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100001904,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-04-09T00:39:24.843Z",
+    "subtotal": 291.31,
+    "desconto": 0,
+    "frete": 3,
+    "total": 291.31,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100001906,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-03-07T12:29:30.347Z",
+    "subtotal": 12,
+    "desconto": 0,
+    "frete": 3,
+    "total": 12,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100001908,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-03-07T13:44:43.483Z",
+    "subtotal": 32.8,
+    "desconto": 0,
+    "frete": 3,
+    "total": 32.8,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100001998,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-04-16T17:02:47.297Z",
+    "subtotal": 10.25,
+    "desconto": 0,
+    "frete": 1.25,
+    "total": 10.25,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100002127,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-05-14T11:57:26.527Z",
+    "subtotal": 24.05,
+    "desconto": 0,
+    "frete": 1.25,
+    "total": 24.05,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100002128,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-05-14T11:57:06.920Z",
+    "subtotal": 15.05,
+    "desconto": 0,
+    "frete": 1.25,
+    "total": 15.05,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100002138,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 22,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-05-14T14:51:09.473Z",
+    "subtotal": 25.85,
+    "desconto": 0,
+    "frete": 1.25,
+    "total": 25.85,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100002142,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 23,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2013-05-15T16:44:38.017Z",
+    "subtotal": 10.25,
+    "desconto": 0,
+    "frete": 1.25,
+    "total": 10.25,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100002485,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 1,
+      "nome": "MATRIZ"
+    },
+    "tipo": 23,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2014-01-30T12:30:30.137Z",
+    "subtotal": 15.35,
+    "desconto": 0,
+    "frete": 1.25,
+    "total": 15.35,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100060865,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-18T22:41:35.000Z",
+    "subtotal": 60,
+    "desconto": 0,
+    "frete": 0,
+    "total": 60,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100060866,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-18T22:41:35.000Z",
+    "subtotal": 60,
+    "desconto": 0,
+    "frete": 0,
+    "total": 60,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100060867,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-18T22:41:35.000Z",
+    "subtotal": 60,
+    "desconto": 0,
+    "frete": 0,
+    "total": 60,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100060868,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-18T22:41:35.000Z",
+    "subtotal": 60,
+    "desconto": 0,
+    "frete": 0,
+    "total": 60,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100060869,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-18T22:41:35.000Z",
+    "subtotal": 60,
+    "desconto": 0,
+    "frete": 0,
+    "total": 60,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100060870,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-18T22:41:35.000Z",
+    "subtotal": 60,
+    "desconto": 0,
+    "frete": 0,
+    "total": 60,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100060871,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-18T22:41:35.000Z",
+    "subtotal": 60,
+    "desconto": 0,
+    "frete": 0,
+    "total": 60,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100060872,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-18T22:41:35.000Z",
+    "subtotal": 60,
+    "desconto": 0,
+    "frete": 0,
+    "total": 60,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100060874,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-18T22:41:35.000Z",
+    "subtotal": 60,
+    "desconto": 0,
+    "frete": 0,
+    "total": 60,
+    "memorando": null,
+    "situacao": "Encerrado"
+  },
+  {
+    "id": 100060875,
+    "historico": {
+      "id": 3,
+      "nome": "VENDA"
+    },
+    "estabelecimento": {
+      "id": 2,
+      "nome": "FILIAL"
+    },
+    "tipo": 17,
+    "cliente": {
+      "id": 100059,
+      "nome": "MYRON YERICH SALES"
+    },
+    "emissao": "2011-12-18T22:41:35.000Z",
+    "subtotal": 60,
+    "desconto": 0,
+    "frete": 0,
+    "total": 60,
+    "memorando": null,
+    "situacao": "Encerrado"
+  }
+]
