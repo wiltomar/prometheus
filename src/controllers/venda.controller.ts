@@ -14,6 +14,7 @@ import Conta from '../models/conta';
 import PagamentoPlano from '@models/pagamentoplano';
 import Atendimento from '@models/atendimento';
 import Vendedor from '@models/vendedor';
+import { infoLicenca } from './../common/criptografia/licenca';
 
 class VendaController {
   async grava(req: Request, res: Response) {
@@ -185,31 +186,40 @@ class VendaController {
   async gravaAtendimento(req: Request, res: Response) {
 
     try {
+
+      let licenca = await infoLicenca();
+      licenca.verificaAtendimentoMesa();
+
       const computador = await getRepository(Computador).findOne({
         where: { nome: COMPUTADOR_PROMETHEUS },
         relations: ['estabelecimento', 'departamento']
       });
       if (!computador)
         throw new Error('não existe um perfil de computador com o nome "PROMETHEUS"');
+
       const historico = await getRepository(Historico).findOne( {
         where: { tipo: 16 }
       });
       if (!historico)
         throw new Error('não existe um histórico do tipo venda');
+
       const conexao = await getRepository(Conexao).findOne({
         where: { id: 0 }
       });
       if (!conexao)
         throw new Error('não existe uma conexão com o código 0');      
+
       let venda = Object.assign(new Venda(), req.body);
       if (!venda.vendedor)
         throw new Error('vendedor não informado');
+
       const vendedor = await getRepository(Vendedor).findOne({
           where: { id: venda.vendedor.id },
           relations: ['estabelecimento']
         });
       if (!vendedor)
         throw new Error('não existe um vendedor com o id informado');
+        
       const atendimento = await getRepository(Atendimento).findOne({
         where: {
           estabelecimento: { id: computador.estabelecimento.id },

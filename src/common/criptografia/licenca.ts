@@ -24,12 +24,12 @@ export class Licenca {
     }
 
     verificaAtendimentoMesa() {
-        if (!this.apiIntegracaoFoodyDelivery)
+        if (!this.apiIntegracaoMesa)
             this.naoHabilitado('Mesa');
     }
 
     verificaAtendimentoCartao() {
-        if (!this.apiIntegracaoFoodyDelivery)
+        if (!this.apiIntegracaoCartao)
             this.naoHabilitado('Cartão');
     }
 
@@ -70,6 +70,9 @@ export async function infoLicenca(): Promise<Licenca> {
     _infoLicenca.apiIntegracaoDelivery = parseInt(licencaMap.get('APIIntegracaoDelivery')) || 0;
     _infoLicenca.apiIntegracaoEncomenda = parseInt(licencaMap.get('APIIntegracaoEncomenda')) || 0;
     _infoLicenca.apiIntegracaoFoodyDelivery = parseInt(licencaMap.get('APIIntegracaoFoodDelivery')) || 0;    
+
+    //console.log('licenca', _infoLicenca);
+
     return _infoLicenca;
 
 }
