@@ -69,10 +69,8 @@ export async function infoLicenca(): Promise<Licenca> {
     _infoLicenca.apiIntegracaoCartao = parseInt(licencaMap.get('APIIntegracaoCartao')) || 0;
     _infoLicenca.apiIntegracaoDelivery = parseInt(licencaMap.get('APIIntegracaoDelivery')) || 0;
     _infoLicenca.apiIntegracaoEncomenda = parseInt(licencaMap.get('APIIntegracaoEncomenda')) || 0;
-    _infoLicenca.apiIntegracaoFoodyDelivery = parseInt(licencaMap.get('APIIntegracaoFoodDelivery')) || 0;    
-
+    _infoLicenca.apiIntegracaoFoodyDelivery = parseInt(licencaMap.get('APIIntegracaoFoodDelivery')) || 0;   
     //console.log('licenca', _infoLicenca);
-
     return _infoLicenca;
 
 }
