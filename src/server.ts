@@ -10,6 +10,7 @@ import routes from './routes';
 import manipuladorDeErro from './middlewares/erros.midlleware';
 import manipuladorDeErroNaoEncontrado from './middlewares/naoencontrado.middleware';
 import config from './config';
+import { getConnection } from 'typeorm';
 
 const app = express();
 const env = load({
@@ -55,6 +56,19 @@ if (config.impressao && config.impressaoUrl) {
   const cron = require("node-cron");
   const request = require('request');
   cron.schedule("*/7 * * * * *", () => {
+    let s: string[] = [];
+    s.push(`SELECT COUNT(*)`);
+    s.push(`FROM Mosaico.Pedido`);
+    s.push(`WHERE`);
+    s.push(`  (Inclusao >= (GETDATE() - 0.5))`);
+    s.push(`  AND (EstabelecimentoID = ${config.estabelecimento.id})`);
+    s.push(`  AND (Tipo BETWEEN 16 AND 64)`);
+    s.push(`  AND (Natureza = -1)`);
+    s.push(`  AND (DATEDIFF(S, Inclusao, GETDATE()) > 7)`);
+    s.push(`  AND ((Status & 512) = 0);`);
+    const result = getConnection().query(s.join(`\n`));
+    console.log('result - pedidos', result);
+    return;
     request.post({
       headers: {'content-type': 'application/json' },
       url: config.impressaoUrl,
