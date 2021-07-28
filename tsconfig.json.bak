@@ -1,31 +1,24 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "ES6",                          
-    "module": "commonjs",  
-    "moduleResolution": "node",              
-    "lib": [
-      "ES5",
-      "ES6",
-      "ESNext.AsyncIterable"
-    ],                           
-    "allowJs": true, 
-    "allowSyntheticDefaultImports": true,      
+    "target": "ES6",
+    "module": "commonjs",                
+    "lib": ["ES6"],
+    "allowJs": true,
     "outDir": "./dist",
-    "rootDir": "./src",                       
-    "removeComments": true,                
+    "rootDir": "./src",
+    "removeComments": true,
     "typeRoots": [
       "./node_modules/@types",
       "./src/@types"
     ],     
-    "strict": false,                  
+    "strict": true,          
     "strictNullChecks": false,
     "strictPropertyInitialization": false,
     "esModuleInterop": true,                  
     "resolveJsonModule": true,
     "experimentalDecorators": true,       
     "emitDecoratorMetadata": true,       
-    "isolatedModules": true,
     "skipLibCheck": true,                  
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",

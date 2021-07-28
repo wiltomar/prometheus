@@ -339,7 +339,7 @@ class VendaController {
       if ((comissaoBase > 0) && (pedido.vendedorComissao > 0))
         pedido.vendedorComissaoValor = Math.trunc(((comissaoBase / 100.0) * vendedor.comissao) * 100) / 100;
       const pedidox = await getRepository(Pedido).save(pedido);
-      console.log('retorno', pedidox.id);
+      //console.log('retorno', pedidox.id);
       const retorno = await VendaHelper.venda(lancamentoid, true);
       // Atualiza os campos lançamento e tipo da tabela pedidos_produtos
       s = [];
@@ -347,7 +347,7 @@ class VendaController {
 			s.push(`  Edicao = GETDATE(),`);
 			s.push(`  LancamentoID = ${lancamentoid}`);
       s.push(`WHERE PedidoID = ${pedidox.id}`);
-      console.log('consulta', s.join('\n'));
+      //console.log('consulta', s.join('\n'));
       await getManager().query(s.join('\n'));
       //getManager().query(`EXEC Mosaico.sp_Lancamento_Insumos ${retorno.id};`);
       //getManager().query(`EXEC Mosaico.sp_Lancamento_AplicaTributacao ${retorno.id};`);

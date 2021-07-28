@@ -1,6 +1,5 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
-import "reflect-metadata";
 import 'module-alias/register';
 import express from 'express';
 import helmet from 'helmet';
@@ -12,6 +11,7 @@ import manipuladorDeErro from './middlewares/erros.midlleware';
 import manipuladorDeErroNaoEncontrado from './middlewares/naoencontrado.middleware';
 import config from './config';
 import { getConnection } from 'typeorm';
+import { clearScreenDown } from 'readline';
 
 const app = express();
 const env = load({
@@ -95,7 +95,7 @@ if (config.impressao && config.impressaoUrl) {
           console.error('* erro: ', response.body);
       });  
     });
-  });
+  });  
 }
 
 app.listen(serverPort, serverName, () => {
