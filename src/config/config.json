@@ -9,6 +9,6 @@
         "token": "bf48f99d5a594df7aa2b6d629ea2b487"
     },
     "integracoesComEntrega": [],
-    "impressao": true,
+    "impressao": false,
     "impressaoUrl": "http://localhost:8080/datasnap/rest/T_LancamentoServerMethod/PedidoImpressao"
 }

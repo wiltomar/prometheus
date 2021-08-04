@@ -11,9 +11,9 @@ import LancamentoPagamento from '../models/lancamentopagamento';
 import Pedido from '../models/pedido';
 import PedidoProduto from '../models/pedidoproduto';
 import Conta from '../models/conta';
-import PagamentoPlano from '@models/pagamentoplano';
-import Atendimento from '@models/atendimento';
-import Vendedor from '@models/vendedor';
+import PagamentoPlano from '../models/pagamentoplano';
+import Atendimento from '../models/atendimento';
+import Vendedor from '../models/vendedor';
 import { infoLicenca } from './../common/criptografia/licenca';
 
 class VendaController {

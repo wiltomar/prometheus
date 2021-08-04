@@ -1,4 +1,4 @@
-import Autorizacao from "@models/autorizacao";
+import Autorizacao from "../../models/autorizacao";
 import { getRepository } from "typeorm";
 import { Criptografia } from "./criptografia";
 

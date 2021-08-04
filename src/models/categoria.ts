@@ -1,5 +1,5 @@
 import { Entity, Column, JoinColumn, OneToMany } from 'typeorm';
-import XBase from '@models/basex';
+import XBase from './basex';
 
 @Entity('categorias')
 class Categoria extends XBase {

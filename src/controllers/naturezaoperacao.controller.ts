@@ -1,6 +1,6 @@
 import { getRepository, ILike } from 'typeorm';
 import { Request, Response } from 'express';
-import NaturezaOperacao from '@models/naturezaoperacao';
+import NaturezaOperacao from '../models/naturezaoperacao';
 
 class NaturezaOperacaoController {
   async lista(req: Request, res: Response) {

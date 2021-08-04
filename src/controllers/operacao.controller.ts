@@ -1,7 +1,7 @@
 import { getRepository, ILike, In } from 'typeorm';
 import { Request, Response } from 'express';
 
-import Operacao from '@models/operacao';
+import Operacao from '../models/operacao';
 
 class OperacaoController {
   async lista(req: Request, res: Response) {

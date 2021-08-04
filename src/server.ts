@@ -6,24 +6,19 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import './database/connect';
-import { load } from 'ts-dotenv';
 import routes from './routes';
 import manipuladorDeErro from './middlewares/erros.midlleware';
 import manipuladorDeErroNaoEncontrado from './middlewares/naoencontrado.middleware';
 import config from './config';
 import { getConnection } from 'typeorm';
+import fs from 'fs';
+import { parse } from 'ini';
 
 const app = express();
-const env = load({
-  BASE_URL: String,
-  NODE_ENV: [
-    'production' as const,
-    'development' as const,
-  ],
-  PORT: Number,
-});
-const serverPort = env.PORT || 3000;
-const serverName = env.BASE_URL || 'Server';
+
+const iniFile = parse(fs.readFileSync(__dirname + '/config/prometheus.ini', 'utf-8'));
+const serverPort =  iniFile.config.apiport || 1024;
+const serverName = iniFile.config.baseurl || 'Server';
 
 if (!serverPort) {
   process.exit(1);
@@ -37,9 +32,14 @@ app.use(routes);
 app.use(manipuladorDeErro);
 app.use(manipuladorDeErroNaoEncontrado);
 
+app.listen(serverPort, serverName, () => {
+  console.log(`🚀 - Prometheus API Server started at http://${serverName}:${serverPort}`);
+});
+
 if (config.foodyDelivery.ativo) {
   const cron = require("node-cron");
   const request = require('request');
+
   cron.schedule("*/7 * * * * *", () => {
     request(`http://${serverName}:${serverPort}/api/v1/procedimentos`, (error: any, response: any) => {
       if (error)
@@ -50,12 +50,17 @@ if (config.foodyDelivery.ativo) {
       else
         console.error('* erro: ', response.body);
     });
+  }).catch(err => {
+    console.log('Houve uma falha nos pedidos.');
+    console.error(err);
   });  
-}
+};
+
 if (config.impressao && config.impressaoUrl) {
   console.log('iniciando o job de impressão');
   const cron = require("node-cron");
   const request = require('request');
+
   cron.schedule("*/7 * * * * *", () => {
     let s: string[] = [];
     s.push(`SELECT COUNT(*) pedidos`);
@@ -95,9 +100,8 @@ if (config.impressao && config.impressaoUrl) {
           console.error('* erro: ', response.body);
       });  
     });
+  }).catch(err => {
+    console.log('* erro no processamento da impressão.');
+    console.error(err);
   });
-}
-
-app.listen(serverPort, serverName, () => {
-  console.log(`🚀 - Prometheus API Server started at http://${serverName}:${serverPort}`);
-});
+};
