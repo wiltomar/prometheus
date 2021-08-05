@@ -1,6 +1,6 @@
 ﻿import Produto from './../models/produto';
 import { getManager, getRepository, Not, Raw } from 'typeorm';
-import { Request, Response } from 'express';
+import { request, Request, Response } from 'express';
 import Lancamento from '../models/lancamento';
 import { Venda } from '../models/venda';
 import VendaHelper from '../common/funcoes';
@@ -15,6 +15,7 @@ import PagamentoPlano from '../models/pagamentoplano';
 import Atendimento from '../models/atendimento';
 import Vendedor from '../models/vendedor';
 import { infoLicenca } from './../common/criptografia/licenca';
+import config from '../config/config.json';
 
 class VendaController {
   async grava(req: Request, res: Response) {
@@ -252,15 +253,15 @@ class VendaController {
       if ((atendimento.modalidade.id == 17) || (atendimento.modalidade.id == 21) && (vendedor.comissao > 0))
         comissionado = true;
       let s: string[] = [];
-      s.push(`DECLARE @LancamentoID BIGINT = ` +venda.id + `;`);
+      s.push(`DECLARE @LancamentoID BIGINT = 0;`); //` +venda.id + `
       s.push(`EXEC Mosaico.sp_Lancamento_Garante`);
       s.push(`  @LancamentoID OUTPUT,`);
       s.push(`  0,`);
       s.push(`  0,`);
       s.push(`  ${computador.estabelecimento.id},`);
       s.push(`  0,`); // Histórico: 0 = Padrão
-      s.push(`  ${atendimento.modalidade.id},`)
-      s.push(`  ${atendimento.atendimento},`)
+      s.push(`  ${atendimento.modalidade.id},`);
+      s.push(`  ${atendimento.atendimento},`);
       s.push(`  '',`);
       s.push(`  0,`);
       s.push(`  0,`);
@@ -269,6 +270,8 @@ class VendaController {
       s.push(`SELECT @LancamentoID id;`);
       let qr = await getManager().query(s.join('\n'));
       let lancamentoid = +qr[0].id;
+      if (!lancamentoid)
+        throw new Error('não foi possível incluir o lançamento');
       // Pedido      
       let lancamento = await getRepository(Lancamento).findOne({ where: { id: lancamentoid }})
       if (!lancamento || !lancamento.id)
@@ -339,8 +342,6 @@ class VendaController {
       if ((comissaoBase > 0) && (pedido.vendedorComissao > 0))
         pedido.vendedorComissaoValor = Math.trunc(((comissaoBase / 100.0) * vendedor.comissao) * 100) / 100;
       const pedidox = await getRepository(Pedido).save(pedido);
-      //console.log('retorno', pedidox.id);
-      const retorno = await VendaHelper.venda(lancamentoid, true);
       // Atualiza os campos lançamento e tipo da tabela pedidos_produtos
       s = [];
       s.push(`UPDATE Mosaico.PedidoProduto SET`);
@@ -351,7 +352,28 @@ class VendaController {
       await getManager().query(s.join('\n'));
       //getManager().query(`EXEC Mosaico.sp_Lancamento_Insumos ${retorno.id};`);
       //getManager().query(`EXEC Mosaico.sp_Lancamento_AplicaTributacao ${retorno.id};`);
-      return res.status(201).json(retorno);
+      if (config.impressao && config.impressaoUrl) {
+        const request = require('request');
+        request.post({
+          headers: { 'content-type': 'application/json' },
+          url: config.impressaoUrl,
+          body: JSON.stringify({  
+            estabelecimentoID: config.estabelecimento.id,
+            pedidoID: pedidox.id        
+          })
+        }, (error: any, response: any) => {
+          if (error)
+            console.error('* erro: verifique se a api de impressão está em funcionamento', error);
+          console.log(new Date(), 'chamada da impressão concluída');
+          if (!response) {
+            console.error('* erro: não houve resposta, verifique se a api de impressão está em funcionamento');
+            return;
+          }        
+          if (response.statusCode !== 200)
+            console.error('* erro: ', response.body);
+        });
+      }
+      return res.status(201).json(pedidox);
     } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }

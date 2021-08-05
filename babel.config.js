@@ -15,11 +15,11 @@ module.exports = {
     [
       'module-resolver', {
         alias: {
-          '@modules': __dirname + '/modules',
-          '@core': __dirname + '/core',
-          '@shared': __dirname + '/shared',
-          '@infra': __dirname + '/infra',
-          '@config': __dirname + '/config',
+          '@modules': __dirname + '/src/modules',
+          '@core': __dirname + '/src/core',
+          '@shared': __dirname + '/src/shared',
+          '@infra': __dirname + '/src/infra',
+          '@config': __dirname + '/src/config',
         },
       },
     ],

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { parse } from 'ini';
 
-const iniFile = parse(fs.readFileSync(__dirname + '/src/config/prometheus.ini', 'utf-8'));
+const iniFile = parse(fs.readFileSync('./src/config/prometheus.ini', 'utf-8'));
 module.exports = { 
    type: "mssql",
    host: (iniFile.config.environment === 'development') ? iniFile.development.host : iniFile.production.host,
@@ -13,7 +13,6 @@ module.exports = {
    options: {
       synchronize: false,
       logging: false,
-      stream: false,
     
       encrypt: true,
       enableArithAbort: true,
@@ -28,15 +27,15 @@ module.exports = {
       idleTimeoutMillis: 30000     
    },
    entities: [
-     __dirname + "/models/**/*.ts",
-     __dirname + "/models/**/*.js",
-     __dirname + '/models/*{.ts,.js}'
+     "./src/models/**/*.ts",
+     "./src/models/**/*.js",
+     './src/models/*{.ts,.js}'
     ],
     migrations: [
-     __dirname + '/database/migrations/**/*.ts'
+     './src/database/migrations/**/*.ts'
     ],
     cli: {
-       migrationsDir: __dirname + "./database/migrations"
+       migrationsDir: "./src/database/migrations"
     },
     extra: {
        driver: "msnodesqlv8"
