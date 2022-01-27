@@ -20,7 +20,6 @@ abstract class Basex extends BaseEntity {
   setCreateDate(): void {
     this.inclusao = new Date();
     this.edicao = this.inclusao;
-    this.status = 0;
   }
 
   @BeforeUpdate()

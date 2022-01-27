@@ -3,6 +3,7 @@ import { getManager, getRepository } from 'typeorm';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import Usuario from '../models/usuario';
+import { UsuarioProtegido } from 'src/interfaces/usuarioProtegido.interface';
 
 class AutorizacaoController {
   async autentica(req: Request, res: Response) {

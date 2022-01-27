@@ -49,10 +49,7 @@ if (config.foodyDelivery.ativo) {
       else
         console.error('* erro: ', response.body);
     });
-  }).catch(err => {
-    console.log('Houve uma falha nos pedidos.');
-    console.error(err);
-  });  
+  });
 };
 
 // if (config.impressao && config.impressaoUrl) {
@@ -74,7 +71,7 @@ if (config.foodyDelivery.ativo) {
 //     s.push(`  AND (DATEDIFF(S, P.Inclusao, GETDATE()) > 7)`);
 //     s.push(`  AND ((P.Status & 512) = 0)`);
 //     s.push(`  AND ((L.Status & 8192) = 0);`);
-//     getConnection().query(s.join(`\n`)).then(retorno => {      
+//     getConnection().query(s.join(`\n`)).then(retorno => {
 //       if (!retorno) {
 //         console.log('Não houve retorno da consulta dos pedidos a serem impressos');
 //         return;
@@ -94,10 +91,10 @@ if (config.foodyDelivery.ativo) {
 //         if (!response) {
 //           console.error('* erro: não houve resposta, verifique se a api de impressão está em funcionamento');
 //           return;
-//         }        
+//         }
 //         if (response.statusCode !== 200)
 //           console.error('* erro: ', response.body);
-//       });  
+//       });
 //     });
 //   }).catch(err => {
 //     console.log('* erro no processamento da impressão.');

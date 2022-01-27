@@ -1,6 +1,7 @@
-﻿import Produto from './../models/produto';
+﻿import { ImpressoraR } from './../models/impressora';
+import Produto from './../models/produto';
 import { getManager, getRepository, Not, Raw } from 'typeorm';
-import { request, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import Lancamento from '../models/lancamento';
 import { Venda } from '../models/venda';
 import VendaHelper from '../common/funcoes';
@@ -16,10 +17,13 @@ import Atendimento from '../models/atendimento';
 import Vendedor from '../models/vendedor';
 import { infoLicenca } from './../common/criptografia/licenca';
 import config from '../config/config.json';
+import { DepartamentoR } from '@models/departamento';
 
 class VendaController {
   async grava(req: Request, res: Response) {
     try {
+      if (!config.computadorId)
+        throw new Error('perfil não informado');
       const computador = await getRepository(Computador).findOne({
         where: { nome: COMPUTADOR_PROMETHEUS },
         relations: ['estabelecimento', 'departamento']
@@ -32,7 +36,7 @@ class VendaController {
       if (!historico)
         throw new Error('não existe um histórico do tipo venda');
       const conexao = await getRepository(Conexao).findOne({
-        where: { id: 0 }        
+        where: { id: 0 }
       });
       if (!conexao)
         throw new Error('não existe uma conexão com o código 0');
@@ -45,7 +49,7 @@ class VendaController {
         lancamento.conexao = conexao;
         lancamento.tipo = 25;
         lancamento.modelo = '55';
-        lancamento.atendimento = null;        
+        lancamento.atendimento = null;
         lancamento.historico = historico;
         lancamento.emissao = null;
       } else { // Edição
@@ -98,7 +102,7 @@ class VendaController {
         pedido.pedidoProdutos = await getRepository(PedidoProduto).find({
           where: { pedido: { id: pedido.id } },
           relations: [ 'estabelecimento', 'departamento', 'produto' ]
-        });        
+        });
         item = Math.max.apply(Math, pedido.pedidoProdutos.map(i => i.item));
         if (!item)
           item = 0;
@@ -118,7 +122,7 @@ class VendaController {
           pedidoProduto.itemTitular = 0;
           pedidoProduto.tipo = lancamento.tipo;
           pedidoProduto.atendimento = lancamento.atendimento;
-          pedidoProduto.natureza = -1;          
+          pedidoProduto.natureza = -1;
           pedidoProduto.estabelecimento = lancamento.estabelecimento;
           if (!pedidoProduto.departamento)
             pedidoProduto.departamento = computador.departamento;
@@ -191,13 +195,23 @@ class VendaController {
       let licenca = await infoLicenca();
       licenca.verificaAtendimentoMesa();
 
-      const computador = await getRepository(Computador).findOne({
-        where: { nome: COMPUTADOR_PROMETHEUS },
-        relations: ['estabelecimento', 'departamento']
-      });
-      if (!computador)
-        throw new Error('não existe um perfil de computador com o nome "PROMETHEUS"');
-
+      let computador: Computador = null;
+      if (config.computadorId) {
+        computador = await getRepository(Computador).findOne({
+          where: { id: config.computadorId },
+          relations: ['estabelecimento', 'departamento']
+        }); 
+        if (!computador)
+          throw new Error('não existe um perfil de computador com o id "' + config.computadorId + '"');
+      } else {
+        computador = await getRepository(Computador).findOne({
+          where: { nome: COMPUTADOR_PROMETHEUS },
+          relations: ['estabelecimento', 'departamento']
+        });  
+        if (!computador)
+          throw new Error('não existe um perfil de computador com o nome "PROMETHEUS"');
+      }
+      
       const historico = await getRepository(Historico).findOne( {
         where: { tipo: 16 }
       });
@@ -211,31 +225,30 @@ class VendaController {
         throw new Error('não existe uma conexão com o código 0');      
 
       let venda = Object.assign(new Venda(), req.body);
-      if (!venda.vendedor)
-        throw new Error('vendedor não informado');
 
-      const vendedor = await getRepository(Vendedor).findOne({
+      let vendedor: Vendedor = null;
+      if (venda.vendedor) { // Busca o vendedor
+        vendedor = await getRepository(Vendedor).findOne({
           where: { id: venda.vendedor.id },
           relations: ['estabelecimento']
         });
-      if (!vendedor)
-        throw new Error('não existe um vendedor com o id informado');
+      }
+      if (!vendedor) { // Vendedor não informado/encontrado, coloca o vendedor padrão
+        vendedor = await getRepository(Vendedor).findOne({
+          where: { nome: COMPUTADOR_PROMETHEUS },
+          relations: ['estabelecimento']
+        });
+        if (!vendedor)
+          throw new Error('não existe um vendedor com o nome "PROMETHEUS"');        
+      }
         
       const atendimento = await getRepository(Atendimento).findOne({
         where: {
-          estabelecimento: { id: computador.estabelecimento.id },
+          estabelecimento: { id: config.estabelecimento.id },
           atendimento: venda.atendimento
         },
         relations: ['estabelecimento', 'modalidade']
       });
-      /*
-        const vendedorx = await getRepository(Vendedor).findOne({
-          where: { nome: COMPUTADOR_PROMETHEUS },
-          relations: ['estabelecimento']
-        });
-        if (!vendedorx)
-          throw new Error('não existe um vendedor com o nome "PROMETHEUS"');  
-      */
       if (!atendimento)
         throw new Error('atendimento inválido');      
       if (!atendimento.ativo)
@@ -258,7 +271,7 @@ class VendaController {
       s.push(`  @LancamentoID OUTPUT,`);
       s.push(`  0,`);
       s.push(`  0,`);
-      s.push(`  ${computador.estabelecimento.id},`);
+      s.push(`  ${config.estabelecimento.id},`);
       s.push(`  0,`); // Histórico: 0 = Padrão
       s.push(`  ${atendimento.modalidade.id},`);
       s.push(`  ${atendimento.atendimento},`);
@@ -294,23 +307,36 @@ class VendaController {
       pedido.emissao = null;
       pedido.complemento = null;
       pedido.conexao = conexao;
-      pedido.pedidoProdutos = [];      
+      pedido.pedidoProdutos = [];
       pedido.vendedor = vendedor;
       pedido.vendedorComissao = vendedor.comissao;
       pedido.vendedorComissaoValor = 0;
       let comissaoBase = 0;
       // Pedidos: Produtos
       for (const vendaItem of venda.itens) {
-        let produto = await getRepository(Produto).findOne(vendaItem.id);
+        const produto = await getRepository(Produto).findOne(vendaItem.produto?.id);
         if (!produto?.id)
           throw new Error('produto inválido');
+        s = [];
+        s.push(`SELECT departamentoid, impressoraid`);
+        s.push(`FROM Mosaico.ProdutoAmbiente`);
+        s.push(`WHERE`);
+        s.push(`  (ProdutoID = ${produto.id})`);
+        s.push(`  AND (EstabelecimentoID = ${computador.estabelecimento.id})`);
+        s.push(`  AND (AmbienteID = ${atendimento.ambienteid})`);
+        const produtoAmbiente = await getManager().query(s.join('\n'));
+        // const produtoAmbiente = await getManager().query(`SELECT * FROM USERS`);
+        // const produtoAmbiente = await getRepository(ProdutoAmbiente).findOne({
+        //   where: { produto: { id: produto.id }, estabelecimento: { id: computador.estabelecimento.id }, ambienteid: atendimento.ambienteid },
+        //   relations: ['departamento', 'impressora']
+        // });
         let subatendimento = vendaItem.subatendimento;
         if (!subatendimento)
           subatendimento = venda.subatendimento || '';
         let pedidoProduto = new PedidoProduto();
         pedidoProduto.status = 0;
         if (comissionado && produto.comissionado)
-          pedidoProduto.status = 64;
+          pedidoProduto.status = pedidoProduto.status || 64;
         pedidoProduto.item = ++item;
         pedidoProduto.conexao = conexao;
         pedidoProduto.subitem = 0;
@@ -320,8 +346,18 @@ class VendaController {
         pedidoProduto.atendimento = atendimento.atendimento;
         pedidoProduto.natureza = -1;          
         pedidoProduto.estabelecimento = computador.estabelecimento;
+        if (produtoAmbiente?.length) {
+          if (produtoAmbiente[0].departamentoid) {
+            pedidoProduto.departamento = new DepartamentoR();
+            pedidoProduto.departamento.id = produtoAmbiente[0].departamentoid;  
+          }
+          if (produtoAmbiente[0].impressoraid) {
+            pedidoProduto.impressora = new ImpressoraR();
+            pedidoProduto.impressora.id = produtoAmbiente[0].impressoraid;  
+          }
+        }
         if (!pedidoProduto.departamento)
-          pedidoProduto.departamento = computador.departamento;        
+          pedidoProduto.departamento = computador.departamento;
         pedidoProduto.produto = vendaItem.produto;
         pedidoProduto.preco = vendaItem.preco;
         pedidoProduto.qde = vendaItem.qde;

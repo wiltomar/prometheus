@@ -11,6 +11,7 @@ export interface FoodyDelivery {
 export interface Config
 {
     estabelecimento: Estabelecimento;
+    computadorId: number;
     foodyDelivery: FoodyDelivery;
     integracoesComEntrega: number[];
     impressao: boolean;

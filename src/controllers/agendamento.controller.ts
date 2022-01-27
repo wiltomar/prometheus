@@ -10,7 +10,7 @@ import Conexao from '../models/conexao';
 import { Request, Response } from 'express';
 import { infoLicenca } from './../common/criptografia/licenca';
 
-class AgendamentoController {  
+class AgendamentoController {
 
   async procedimentox(req: Request, res: Response) {
     try {
@@ -24,7 +24,7 @@ class AgendamentoController {
     } catch (error: any) {
       console.log(typeof error);
       return res.status(500).json({ message: error.message });
-    }    
+    }
   }
 
   async procedimentos() {
@@ -38,11 +38,11 @@ class AgendamentoController {
 
   private static processando = false;
 
-  static async processa() {    
+  static async processa() {
     if (this.processando) {
       console.log('processamento concorrente, rejeitado');
       return 0;
-    }      
+    }
     try {
       console.log(new Date(), 'verificando');
       // verificar se a configuração de integração está ativa
@@ -74,7 +74,7 @@ class AgendamentoController {
           AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Erro);
           console.error(new Date(), error.message);
           return 0;
-        }        
+        }
         return 1; // A sobrecarga do serviço causa timeout
       }
       let lancamentosExpedidos = await getRepository(Lancamento).find({
@@ -99,8 +99,8 @@ class AgendamentoController {
         } catch (error: any) {
           AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Expedido, LancamentoSituacaoIntegracaoConstantes.Erro);
           console.error(new Date(), error.message);
-          return 0;          
-        }        
+          return 0;
+        }
         return 1; // A sobrecarga do serviço causa timeout
       }
       let lancamentosEncerrados = await getRepository(Lancamento).find({
@@ -117,7 +117,7 @@ class AgendamentoController {
       });
       // if (lancamentosEncerrados)
       //   console.log('Lançamentos encerrados');
-      for (const lancamento of lancamentosEncerrados) {          
+      for (const lancamento of lancamentosEncerrados) {
         console.log(lancamento.id, lancamento.atendimento, lancamento.cliente.nome);
         try {
           await AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Encerrado, LancamentoSituacaoIntegracaoConstantes.Processando);
@@ -139,19 +139,12 @@ class AgendamentoController {
   static async registra(lancamento: Lancamento) {
     const venda = await VendaHelper.venda(lancamento.id, true);
     const cliente = await getRepository(Cliente).findOne(lancamento.cliente.id);
-    console.log('registrando',);
+    console.log('registrando');
     let data = lancamento.inclusao.toISOString().substring(0, 19) + 'Z';
-    let delivery = new Delivery();    
+    let delivery = new Delivery();
     if (!config.foodyDelivery.token)
       console.log('token não informado');
     delivery.id = lancamento.id.toString();
-    // if (
-    //   requisicao
-    //   && (requisicao.integradora.nome.toLowerCase() == 'ifood')
-    //   && requisicao.identificador
-    // ) {
-    //   delivery.id = 'i' + requisicao.identificador;
-    // }
     delivery.status = "open";
     delivery.notes = venda.memorando;
     delivery.date = data;
@@ -168,7 +161,7 @@ class AgendamentoController {
     delivery.orderDetails = produtos.join(', ');
     delivery.orderTotal = valor;
     // Pagamento
-    if (venda.entrega.dinheiro)     
+    if (venda.entrega.dinheiro)
       delivery.paymentMethod = 'Dinheiro';
     else if (venda.entrega.cheque)
       delivery.paymentMethod = 'Cheque';
@@ -196,7 +189,7 @@ class AgendamentoController {
     delivery.deliveryPoint.region = venda.entrega.uf;
     delivery.deliveryPoint.country = 'BR';
     delivery.deliveryPoint.complement = venda.entrega.complemento;
-    const request = require('request');    
+    const request = require('request');
     const clientServerOptions = {
         uri: 'https://app.foodydelivery.com/rest/1.2/orders',
         body: JSON.stringify(delivery),
@@ -212,7 +205,7 @@ class AgendamentoController {
       if (response) {
         responseBody = response.body;
         responseStatus = response.statusCode;
-      }      
+      }
       if (!responseBody)
         responseBody = '(no body response)';
       AgendamentoController.requisicaoGrava(
@@ -221,7 +214,7 @@ class AgendamentoController {
         clientServerOptions.method,
         clientServerOptions.body,
         responseBody,
-        responseStatus        
+        responseStatus
       );
       if (error) {
         console.error('Erro:');
@@ -231,7 +224,7 @@ class AgendamentoController {
       }
       AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Confirmado);
       //console.log(response.statusCode, response.statusMessage, response.body);
-      let retorno = JSON.parse(response.body);      
+      let retorno = JSON.parse(response.body);
       if (retorno.uid) {
         console.log('registrado', 'lançamento', lancamento.id, 'cliente', delivery.customer.customerName, 'uid', retorno.uid);
         AgendamentoController.lancamentoVinculaUID(lancamento.id, retorno.uid);
@@ -239,14 +232,14 @@ class AgendamentoController {
       }
       console.error('não foi possível registrar', response.body);
       AgendamentoController.lancamentoSituacaoEntrega(lancamento.id, LancamentoSituacaoConstantes.Pendente, LancamentoSituacaoIntegracaoConstantes.Erro);
-      return 0;        
+      return 0;
     });
   }
 
   static async situacaoNotifica(lancamento: Lancamento, situacao: number) {
     const lancamentoComplemento = await getRepository(LancamentoComplemento).findOne({ where: { lancamento: { id: lancamento.id } } });
     if (!lancamentoComplemento)
-      throw new Error(`complemento do lançamento ${lancamento.id} não encontrado`);    
+      throw new Error(`complemento do lançamento ${lancamento.id} não encontrado`);
     const uid = lancamentoComplemento.entregraIntegradoraUID;
     console.log('complemento', lancamento.id, 'uid', uid);
     if (!uid)
@@ -255,11 +248,11 @@ class AgendamentoController {
     //   await AgendamentoController.registra(lancamento);
     //   const lancamentoComplemento = await getRepository(LancamentoComplemento).findOne({ where: { lancamento: { id: lancamento.id } } });
     //   if (!lancamentoComplemento)
-    //     throw new Error(`complemento do lançamento ${lancamento.id} não encontrado`);    
+    //     throw new Error(`complemento do lançamento ${lancamento.id} não encontrado`);
     //   uid = lancamentoComplemento.entregraIntegradoraUID;
     //   if (!uid)
     //     throw new Error(`não é possível enviar, uid do lançamento ${lancamento.id} não encontrado`);
-    // }      
+    // }
     const deliveryStatus = new DeliveryStatus();
     switch (situacao) {
       case LancamentoSituacaoConstantes.Expedido:
@@ -280,13 +273,13 @@ class AgendamentoController {
             'Authorization': config.foodyDelivery.token
         }
     }
-    request(clientServerOptions, function (error: any, response: any) {      
+    request(clientServerOptions, function (error: any, response: any) {
       let responseBody = '';
       let responseStatus = 500;
       if (response) {
         responseBody = response.body;
         responseStatus = response.statusCode;
-      }      
+      }
       if (!responseBody)
         responseBody = '(no body response)';
       AgendamentoController.requisicaoGrava(
@@ -295,7 +288,7 @@ class AgendamentoController {
         clientServerOptions.method,
         clientServerOptions.body,
         responseBody,
-        responseStatus        
+        responseStatus
       );
       if (error) {
         console.error(error);
@@ -323,7 +316,7 @@ class AgendamentoController {
     lancamentoRequisicao.metodo = metodo;
     lancamentoRequisicao.requisicao = requisicao;
     lancamentoRequisicao.resposta = resposta;
-    lancamentoRequisicao.situacao = situacao;      
+    lancamentoRequisicao.situacao = situacao;
     getRepository(LancamentoRequisicao).save(lancamentoRequisicao);
   }
 

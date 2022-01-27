@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-interface UsuarioProtegido {
+export class UsuarioProtegido {
   id: number;
   nome: string;
   inclusao: Date;

@@ -2,7 +2,7 @@ import fs from 'fs';
 import { parse } from 'ini';
 
 const iniFile = parse(fs.readFileSync('./src/config/prometheus.ini', 'utf-8'));
-module.exports = { 
+module.exports = {
    type: "mssql",
    host: (iniFile.config.environment === 'development') ? iniFile.development.host : iniFile.production.host,
    port: parseInt((iniFile.config.environment === 'development') ? iniFile.development.dbport : iniFile.production.dbport),
@@ -13,7 +13,7 @@ module.exports = {
    options: {
       synchronize: false,
       logging: false,
-    
+
       encrypt: true,
       enableArithAbort: true,
       trustServerCertificate: true,
@@ -24,7 +24,7 @@ module.exports = {
    pool: {
       max: 20,
       min: 0,
-      idleTimeoutMillis: 30000     
+      idleTimeoutMillis: 30000
    },
    entities: [
      "./src/models/**/*.ts",
@@ -39,5 +39,5 @@ module.exports = {
     },
     extra: {
        driver: "msnodesqlv8"
-    }  
+    }
 }

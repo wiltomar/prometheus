@@ -1,0 +1,1 @@
+ts-node -T ./src/serve.ts

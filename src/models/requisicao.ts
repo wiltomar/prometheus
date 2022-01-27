@@ -14,7 +14,7 @@ class Requisicao extends Base {
   integradora: Integradora;
 
   @Column({ name: 'identificadorpequeno' })
-  identificador: string;
+  identificadorx: string; // Para verificar a compilação
 }
 
 export default Requisicao;

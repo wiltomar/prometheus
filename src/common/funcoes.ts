@@ -12,7 +12,7 @@ class VendaHelper {
       // nothing async can go here
     }
     public static async venda(id: number, completo: Boolean): Promise<Venda> {
-        // do your async stuff here      
+        // do your async stuff here
         // now instantiate and return a class
         let lancamento = await getRepository(Lancamento).findOne(
             {
@@ -48,10 +48,10 @@ class VendaHelper {
         if (!completo)
             return retorno;
         // Entrega
-        retorno.entrega = new VendaEntrega();        
+        retorno.entrega = new VendaEntrega();
         let lancamentovenda = await getRepository(LancamentoVenda).findOne({ where: { lancamento: { id: retorno.id } } });
         if (lancamentovenda?.nome || lancamentovenda?.cep) {
-            retorno.entrega.nome = lancamentovenda.nome;            
+            retorno.entrega.nome = lancamentovenda.nome;
             retorno.entrega.cep = lancamentovenda.cep;
             retorno.entrega.endereco = lancamentovenda.endereco;
             retorno.entrega.numero = lancamentovenda.numero;
@@ -77,7 +77,7 @@ class VendaHelper {
             //, 'pedidoProdutos', 'pedidoProdutos.departamento', 'pedidoProdutos.produto'
         });
         if (!pedidos || (pedidos.length == 0))
-            throw new Error("Lançamento sem pedidos");        
+            throw new Error("Lançamento sem pedidos");
         // if (pedidos.length > 1)
         //     throw new Error("Lançamento com múltiplos pedidos");
         let pagamentos = await getRepository(LancamentoPagamento).find({

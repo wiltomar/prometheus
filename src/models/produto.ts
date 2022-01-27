@@ -1,6 +1,9 @@
-import { Entity, Column, OneToOne, JoinColumn, PrimaryGeneratedColumn, AfterLoad } from 'typeorm';
+import { EstabelecimentoR } from './estabelecimento';
+import { Entity, Column, OneToOne, JoinColumn, PrimaryGeneratedColumn, AfterLoad, PrimaryColumn } from 'typeorm';
 import Basex from './basex';
 import Categoria from './categoria';
+import { DepartamentoR } from './departamento';
+import { ImpressoraR } from './impressora';
 
 @Entity('produtos')
 class Produto extends Basex {
@@ -48,5 +51,27 @@ export class ProdutoR {
   @Column({ name: 'une' })
   un: string;
 }
+
+// @Entity('produtos_ambientes')
+// export class ProdutoAmbiente {
+//   @OneToOne(() => ProdutoR, (produto) => produto.id)
+//   @JoinColumn({ name: 'produto' })
+//   produto: ProdutoR;
+
+//   @OneToOne(() => EstabelecimentoR, (estabelecimento) => estabelecimento.id)
+//   @JoinColumn({ name: 'unidade' })
+//   estabelecimento: EstabelecimentoR;
+
+//   @Column({ name: 'ambiente' })
+//   ambienteid: number;
+
+//   @OneToOne(() => DepartamentoR, (departamento) => departamento.id)
+//   @JoinColumn({ name: 'departamento' })
+//   departamento: DepartamentoR;
+
+//   @OneToOne(() => ImpressoraR, (impressora) => impressora.id)
+//   @JoinColumn({ name: 'impressora' })
+//   impressora: ImpressoraR;
+// }
 
 export default Produto;
