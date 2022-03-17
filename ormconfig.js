@@ -4,7 +4,7 @@ import { parse } from 'ini';
 const iniFile = parse(fs.readFileSync('./src/config/prometheus.ini', 'utf-8'));
 module.exports = {
    type: "mssql",
-   host: (iniFile.config.environment === 'development') ? iniFile.development.host : iniFile.production.host,
+   host: (iniFile.config.environment === 'development') ? iniFile.development.dbhost : iniFile.production.dbhost,
    port: parseInt((iniFile.config.environment === 'development') ? iniFile.development.dbport : iniFile.production.dbport),
    username: (iniFile.config.environment === 'development') ? iniFile.development.dbuser : iniFile.production.dbuser,
    password: (iniFile.config.environment === 'development') ? iniFile.development.dbpassword : iniFile.production.dbpassword,

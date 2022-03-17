@@ -138,7 +138,7 @@ class VendaController {
         pedidoProduto.observacoes = vendaItem.observacoes;
         if (!pedidoProduto.id)
           pedido.pedidoProdutos.push(pedidoProduto);
-      }      
+      }
       // Pagamentos
       let sp = 0;
       if (!venda.id) {
@@ -161,7 +161,7 @@ class VendaController {
         if (!lancamentoPagamento) {
           lancamentoPagamento = new LancamentoPagamento();
           lancamentoPagamento.conexao = conexao;
-          lancamentoPagamento.sp = ++sp;  
+          lancamentoPagamento.sp = ++sp;
         }
         lancamentoPagamento.pagamentoPlano = pagamento.pagamentoPlano;
         lancamentoPagamento.pagamentoForma = pagamento.pagamentoForma;
@@ -170,7 +170,7 @@ class VendaController {
           if (!pagamentoPlano || !pagamentoPlano.pagamentoForma)
             throw new Error('plano de pagamento sem forma de pagamento relacionada');
           lancamentoPagamento.pagamentoForma = pagamentoPlano.pagamentoForma;
-        }          
+        }
         lancamentoPagamento.parcelas = pagamento.parcelas;
         lancamentoPagamento.valor = pagamento.valor;
         if (!lancamentoPagamento.id)
@@ -200,18 +200,19 @@ class VendaController {
         computador = await getRepository(Computador).findOne({
           where: { id: config.computadorId },
           relations: ['estabelecimento', 'departamento']
-        }); 
+        });
         if (!computador)
           throw new Error('não existe um perfil de computador com o id "' + config.computadorId + '"');
       } else {
         computador = await getRepository(Computador).findOne({
           where: { nome: COMPUTADOR_PROMETHEUS },
           relations: ['estabelecimento', 'departamento']
-        });  
+        });
         if (!computador)
           throw new Error('não existe um perfil de computador com o nome "PROMETHEUS"');
       }
-      
+      if (!computador.estabelecimento)
+        throw new Error('estabelecimento não informado no perfil do computador');
       const historico = await getRepository(Historico).findOne( {
         where: { tipo: 16 }
       });
@@ -222,7 +223,7 @@ class VendaController {
         where: { id: 0 }
       });
       if (!conexao)
-        throw new Error('não existe uma conexão com o código 0');      
+        throw new Error('não existe uma conexão com o código 0');
 
       let venda = Object.assign(new Venda(), req.body);
 
@@ -239,9 +240,9 @@ class VendaController {
           relations: ['estabelecimento']
         });
         if (!vendedor)
-          throw new Error('não existe um vendedor com o nome "PROMETHEUS"');        
+          throw new Error('não existe um vendedor com o nome "PROMETHEUS"');
       }
-        
+
       const atendimento = await getRepository(Atendimento).findOne({
         where: {
           estabelecimento: { id: config.estabelecimento.id },
@@ -250,7 +251,7 @@ class VendaController {
         relations: ['estabelecimento', 'modalidade']
       });
       if (!atendimento)
-        throw new Error('atendimento inválido');      
+        throw new Error('atendimento inválido');
       if (!atendimento.ativo)
         throw new Error('atendimento inativo');
       if (!atendimento.modalidade)
@@ -285,7 +286,7 @@ class VendaController {
       let lancamentoid = +qr[0].id;
       if (!lancamentoid)
         throw new Error('não foi possível incluir o lançamento');
-      // Pedido      
+      // Pedido
       let lancamento = await getRepository(Lancamento).findOne({ where: { id: lancamentoid }})
       if (!lancamento || !lancamento.id)
         throw new Error('lançamento inválido');
@@ -344,16 +345,16 @@ class VendaController {
         pedidoProduto.entrega = pedido.entrega;
         pedidoProduto.tipo = atendimento.modalidade.id;
         pedidoProduto.atendimento = atendimento.atendimento;
-        pedidoProduto.natureza = -1;          
+        pedidoProduto.natureza = -1;
         pedidoProduto.estabelecimento = computador.estabelecimento;
         if (produtoAmbiente?.length) {
           if (produtoAmbiente[0].departamentoid) {
             pedidoProduto.departamento = new DepartamentoR();
-            pedidoProduto.departamento.id = produtoAmbiente[0].departamentoid;  
+            pedidoProduto.departamento.id = produtoAmbiente[0].departamentoid;
           }
           if (produtoAmbiente[0].impressoraid) {
             pedidoProduto.impressora = new ImpressoraR();
-            pedidoProduto.impressora.id = produtoAmbiente[0].impressoraid;  
+            pedidoProduto.impressora.id = produtoAmbiente[0].impressoraid;
           }
         }
         if (!pedidoProduto.departamento)
@@ -366,7 +367,7 @@ class VendaController {
         pedidoProduto.descontoPercentual = vendaItem.descontoPercentual || 0;
         pedidoProduto.precoTotal = vendaItem.precoTotal;
         pedidoProduto.taxa = 0;
-        //pedidoProduto.impressora = ?        
+        //pedidoProduto.impressora = ?
         pedidoProduto.comissionado = comissionado;
         pedidoProduto.subatendimento = subatendimento;
         pedidoProduto.observacoes = vendaItem.observacoes;
@@ -393,9 +394,9 @@ class VendaController {
         request.post({
           headers: { 'content-type': 'application/json' },
           url: config.impressaoUrl,
-          body: JSON.stringify({  
+          body: JSON.stringify({
             estabelecimentoID: config.estabelecimento.id,
-            pedidoID: pedidox.id        
+            pedidoID: pedidox.id
           })
         }, (error: any, response: any) => {
           if (error)
@@ -404,7 +405,7 @@ class VendaController {
           if (!response) {
             console.error('* erro: não houve resposta, verifique se a api de impressão está em funcionamento');
             return;
-          }        
+          }
           if (response.statusCode !== 200)
             console.error('* erro: ', response.body);
         });
@@ -413,7 +414,7 @@ class VendaController {
     } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
-  
+
   }
 
   async lista(req: Request, res: Response) {
@@ -442,7 +443,7 @@ class VendaController {
           vendas.push(venda);
         }
       }
-      return res.status(200).json(vendas);      
+      return res.status(200).json(vendas);
     } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
@@ -494,7 +495,7 @@ class VendaController {
       s.push(`	[Status] = [Status] | 1`);
       s.push(`WHERE`);
       s.push(`	(LancamentoID = @LancamentoID)`);
-      s.push(`	AND (SP < 200);`);      
+      s.push(`	AND (SP < 200);`);
       await getManager().query(s.join('\n')); // promise
       res.status(200).send({ message: 'registro excluído' });
     } catch (error: any) {
