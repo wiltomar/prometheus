@@ -1,15 +1,15 @@
 {
     "estabelecimento": {
-        "id": 3,
-        "nome": "BM"
+        "id": 1,
+        "nome": "SG"
     },
     "foodyDelivery":
     {
-        "ativo": true,
+        "ativo": false,
         "token": "24473c679cfd4bc0bc3c55bddd982653"
     },
     "integracoesComEntrega": [],
-    "computadorId": 320000038,
+    "computadorId": 100021,
     "impressao": true,
-    "impressaoUrl": "http://PC-BM-DELIVERY:8080/datasnap/rest/T_LancamentoServerMethod/PedidoImpressao"
+    "impressaoUrl": "http://localhost/datasnap/rest/T_LancamentoServerMethod/PedidoImpressao"
 }
