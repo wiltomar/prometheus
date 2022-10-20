@@ -24,7 +24,7 @@ import NaturezaOperacaoController from './controllers/naturezaoperacao.controlle
 import ResultadoController from './controllers/resultado.controller';
 
 const router = Router();
-const enderecoAPI = process.env.ADDRESS_API;
+const enderecoAPI = '/api/v1';
 
 router.post(`${enderecoAPI}/autenticacao`, AutenticacaoController.autentica);
 router.get(`${enderecoAPI}/procedimentos`, AgendamentoController.procedimentox);

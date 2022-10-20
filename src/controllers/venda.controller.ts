@@ -387,7 +387,7 @@ class VendaController {
       s.push(`WHERE PedidoID = ${pedidox.id}`);
       //console.log('consulta', s.join('\n'));
       await getManager().query(s.join('\n'));
-      //getManager().query(`EXEC Mosaico.sp_Lancamento_Insumos ${retorno.id};`);
+      await getManager().query(`EXEC Mosaico.sp_Pedido_Insumos ${lancamentoid}, ${pedidox.id};`);
       //getManager().query(`EXEC Mosaico.sp_Lancamento_AplicaTributacao ${retorno.id};`);
       if (config.impressao && config.impressaoUrl) {
         const request = require('request');

@@ -6,11 +6,21 @@ import Base from './base';
 
 @Entity('Mosaico.Usuario')
 class Usuario extends Base {
-  @Column('varchar')
+
+  @Column()
+  inclusao: Date;
+
+  @Column()
+  edicao: Date;
+
+  @Column()
+  status: number;
+
+  @Column()
   nome: string;
 
   @Column()
-  ativo: number;
+  ativo: boolean;
 
   @Column()
   usuario: boolean;
@@ -18,7 +28,7 @@ class Usuario extends Base {
   @Column()
   vendedor: boolean;
 
-  @Column('numeric')
+  @Column()
   comissao: number;
 
   @Column()
@@ -36,6 +46,7 @@ class Usuario extends Base {
     const hash = this.senha;
     this.senhaHash = bcrypt.hashSync(hash, 8);
   }
+
 }
 
 export default Usuario;

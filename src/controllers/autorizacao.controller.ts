@@ -3,7 +3,6 @@ import { getManager, getRepository } from 'typeorm';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import Usuario from '../models/usuario';
-import { UsuarioProtegido } from 'src/interfaces/usuarioProtegido.interface';
 
 class AutorizacaoController {
   async autentica(req: Request, res: Response) {
@@ -11,9 +10,12 @@ class AutorizacaoController {
       const repositorio = getRepository(Usuario);
       const { nome, senha } = req.body;
 
-      const usuario: UsuarioProtegido = await repositorio.findOne({
-        where: { nome, vendedor: true },
+      const usuario = await repositorio.findOne({
+        where: { nome: nome },
       });
+
+      if (!usuario.vendedor)
+        return res.status(401).json({ message: 'Usuário não é vendedor!' });
 
       if (!usuario) {
         return res.status(401).json({ message: 'Usuário não encontrado!' });
